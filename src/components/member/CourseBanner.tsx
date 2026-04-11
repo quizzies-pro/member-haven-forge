@@ -8,7 +8,7 @@ const CourseBanner = ({ bannerUrl, title, logoUrl }: CourseBannerProps) => {
   if (!bannerUrl) return null;
 
   return (
-    <div className="relative w-full h-[45vh] max-h-[500px] overflow-hidden">
+    <div className="relative w-full h-[65vh] max-h-[700px] overflow-hidden">
       <img
         src={bannerUrl}
         alt={title}
