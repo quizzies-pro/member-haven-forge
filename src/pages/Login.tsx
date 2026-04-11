@@ -89,7 +89,7 @@ const Login = () => {
       <div className="flex-1 flex items-center justify-center p-8 bg-background">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center space-y-4">
-            <img src={COURSE_LOGO} alt={COURSE_TITLE} className="h-24 mx-auto object-contain" />
+            <img src={COURSE_LOGO} alt={COURSE_TITLE} className="h-40 mx-auto object-contain" />
             <div>
               <h1 className="text-3xl font-bold text-foreground">
                 {mode === "login" && "Entrar"}
