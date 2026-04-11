@@ -9,6 +9,10 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 type Mode = "login" | "register" | "forgot";
 
+const COURSE_LOGO = "https://res.cloudinary.com/dqsuj0pjy/image/upload/v1775933233/By_b_ktyfmv.png";
+const COURSE_BANNER = "https://res.cloudinary.com/dqsuj0pjy/image/upload/v1775882373/freepik_coloca-duas-influencers-d_2761737175_n2faxh.png";
+const COURSE_TITLE = "TTS Academy";
+
 const Login = () => {
   const navigate = useNavigate();
   const [mode, setMode] = useState<Mode>("login");
@@ -72,28 +76,32 @@ const Login = () => {
   return (
     <div className="flex min-h-screen">
       {/* Left - cover */}
-      <div className="hidden lg:flex lg:w-1/2 items-center justify-center bg-secondary relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-background/80" />
-        <div className="relative z-10 text-center px-12">
-          <h2 className="text-4xl font-bold text-foreground mb-4">Área de Membros</h2>
-          <p className="text-muted-foreground text-lg">Acesse seu conteúdo exclusivo</p>
-        </div>
+      <div className="hidden lg:flex lg:w-1/2 items-center justify-center relative overflow-hidden">
+        <img 
+          src={COURSE_BANNER} 
+          alt={COURSE_TITLE}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/50 to-transparent" />
       </div>
 
       {/* Right - form */}
       <div className="flex-1 flex items-center justify-center p-8 bg-background">
         <div className="w-full max-w-md space-y-8">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-foreground">
-              {mode === "login" && "Entrar"}
-              {mode === "register" && "Criar conta"}
-              {mode === "forgot" && "Recuperar senha"}
-            </h1>
-            <p className="mt-2 text-muted-foreground">
-              {mode === "login" && "Acesse sua área de membros"}
-              {mode === "register" && "Preencha seus dados para começar"}
-              {mode === "forgot" && "Enviaremos um link para redefinir sua senha"}
-            </p>
+          <div className="text-center space-y-4">
+            <img src={COURSE_LOGO} alt={COURSE_TITLE} className="h-12 mx-auto object-contain" />
+            <div>
+              <h1 className="text-3xl font-bold text-foreground">
+                {mode === "login" && "Entrar"}
+                {mode === "register" && "Criar conta"}
+                {mode === "forgot" && "Recuperar senha"}
+              </h1>
+              <p className="mt-2 text-muted-foreground">
+                {mode === "login" && `Acesse a ${COURSE_TITLE}`}
+                {mode === "register" && "Preencha seus dados para começar"}
+                {mode === "forgot" && "Enviaremos um link para redefinir sua senha"}
+              </p>
+            </div>
           </div>
 
           <form
