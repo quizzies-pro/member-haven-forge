@@ -20,7 +20,6 @@ const Index = () => {
     if (!user) return;
 
     const fetchData = async () => {
-      // Get enrollment
       const { data: enrollment } = await supabase
         .from("enrollments")
         .select("course_id")
@@ -34,7 +33,6 @@ const Index = () => {
         return;
       }
 
-      // Get course
       const { data: courseData } = await supabase
         .from("courses")
         .select("*")
@@ -43,7 +41,6 @@ const Index = () => {
 
       setCourse(courseData);
 
-      // Get modules with lesson counts
       const { data: modulesData } = await supabase
         .from("course_modules")
         .select("*")
@@ -99,7 +96,7 @@ const Index = () => {
 
   return (
     <MemberLayout logoUrl={course.logo_url}>
-      <CourseBanner bannerUrl={course.banner_url} title={course.title} />
+      <CourseBanner bannerUrl={course.banner_url} title={course.title} logoUrl={course.cover_url} />
       <ModuleCarousel modules={modules} />
     </MemberLayout>
   );
