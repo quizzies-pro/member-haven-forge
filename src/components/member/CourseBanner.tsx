@@ -1,12 +1,10 @@
-import logoCourse from "@/assets/logo-course.png";
-
 interface CourseBannerProps {
   bannerUrl?: string | null;
   title: string;
   logoUrl?: string | null;
 }
 
-const CourseBanner = ({ bannerUrl, title }: CourseBannerProps) => {
+const CourseBanner = ({ bannerUrl, title, logoUrl }: CourseBannerProps) => {
   if (!bannerUrl) return null;
 
   return (
@@ -18,14 +16,15 @@ const CourseBanner = ({ bannerUrl, title }: CourseBannerProps) => {
       />
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
       
-      {/* Course logo centered */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <img
-          src={logoCourse}
-          alt={title}
-          className="max-h-[35%] max-w-[50%] object-contain drop-shadow-2xl"
-        />
-      </div>
+      {logoUrl && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <img
+            src={logoUrl}
+            alt={title}
+            className="max-h-[35%] max-w-[50%] object-contain drop-shadow-2xl"
+          />
+        </div>
+      )}
     </div>
   );
 };
