@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import logoByb from "@/assets/logo-byb.png";
 
 interface MemberHeaderProps {
   logoUrl?: string | null;
@@ -30,13 +31,10 @@ const MemberHeader = ({ logoUrl, onToggleSidebar }: MemberHeaderProps) => {
         <button onClick={onToggleSidebar} className="text-foreground hover:text-primary transition-colors">
           <Menu size={24} />
         </button>
-        {logoUrl && (
-          <img src={logoUrl} alt="Logo" className="h-14 object-contain" />
-        )}
+        <img src={logoByb} alt="By'b" className="h-14 object-contain" />
       </div>
 
       <div className="flex items-center gap-3">
-        {/* Search bar */}
         <div className="hidden md:flex items-center bg-[hsl(0,0%,10%)] rounded-full px-4 py-2 gap-2 w-64">
           <Search size={16} className="text-muted-foreground" />
           <input
