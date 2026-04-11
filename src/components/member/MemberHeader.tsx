@@ -28,10 +28,10 @@ const MemberHeader = ({ logoUrl, onToggleSidebar }: MemberHeaderProps) => {
   return (
     <header className="sticky top-0 z-40 flex h-[60px] items-center justify-between bg-background px-4 md:px-6">
       <div className="flex items-center gap-4">
+        <img src={logoByb} alt="By'b" className="h-10 object-contain rounded-lg" />
         <button onClick={onToggleSidebar} className="text-foreground hover:text-primary transition-colors">
           <Menu size={24} />
         </button>
-        <img src={logoByb} alt="By'b" className="h-9 w-9 object-cover rounded-full" />
       </div>
 
       <div className="flex items-center gap-3">
