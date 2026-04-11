@@ -76,12 +76,13 @@ const Login = () => {
   return (
     <div className="flex min-h-screen">
       {/* Left - cover */}
-      <div className="hidden lg:flex lg:w-1/2 items-center justify-center bg-secondary relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-background/80" />
-        <div className="relative z-10 text-center px-12">
-          <h2 className="text-4xl font-bold text-foreground mb-4">Área de Membros</h2>
-          <p className="text-muted-foreground text-lg">Acesse seu conteúdo exclusivo</p>
-        </div>
+      <div className="hidden lg:flex lg:w-1/2 items-center justify-center relative overflow-hidden">
+        <img 
+          src={COURSE_BANNER} 
+          alt={COURSE_TITLE}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/50 to-transparent" />
       </div>
 
       {/* Right - form */}
