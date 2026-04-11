@@ -31,7 +31,7 @@ const MemberHeader = ({ logoUrl, onToggleSidebar }: MemberHeaderProps) => {
         <button onClick={onToggleSidebar} className="text-foreground hover:text-primary transition-colors">
           <Menu size={24} />
         </button>
-        <img src={logoByb} alt="By'b" className="h-14 object-contain" />
+        <img src={logoByb} alt="By'b" className="h-9 w-9 object-cover rounded-full" />
       </div>
 
       <div className="flex items-center gap-3">
