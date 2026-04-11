@@ -1,12 +1,10 @@
-import logoByb from "@/assets/logo-byb.png";
-
 interface CourseBannerProps {
   bannerUrl?: string | null;
   title: string;
   logoUrl?: string | null;
 }
 
-const CourseBanner = ({ bannerUrl, title }: CourseBannerProps) => {
+const CourseBanner = ({ bannerUrl, title, logoUrl }: CourseBannerProps) => {
   if (!bannerUrl) return null;
 
   return (
@@ -18,14 +16,16 @@ const CourseBanner = ({ bannerUrl, title }: CourseBannerProps) => {
       />
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
       
-      {/* Logo centered */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <img
-          src={logoByb}
-          alt="By'b"
-          className="h-32 md:h-40 object-contain drop-shadow-2xl"
-        />
-      </div>
+      {/* Course logo centered */}
+      {logoUrl && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <img
+            src={logoUrl}
+            alt={title}
+            className="max-h-[40%] max-w-[60%] object-contain drop-shadow-2xl"
+          />
+        </div>
+      )}
     </div>
   );
 };
