@@ -25,32 +25,43 @@ const MemberHeader = ({ logoUrl, onToggleSidebar }: MemberHeaderProps) => {
     : "?";
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border bg-background/95 backdrop-blur px-4 md:px-6">
+    <header className="sticky top-0 z-40 flex h-[60px] items-center justify-between bg-background px-4 md:px-6">
       <div className="flex items-center gap-4">
         <button onClick={onToggleSidebar} className="text-foreground hover:text-primary transition-colors">
           <Menu size={24} />
         </button>
         {logoUrl && (
-          <img src={logoUrl} alt="Logo" className="h-8 object-contain" />
+          <img src={logoUrl} alt="Logo" className="h-14 object-contain" />
         )}
       </div>
 
       <div className="flex items-center gap-3">
+        {/* Search bar */}
+        <div className="hidden md:flex items-center bg-[hsl(0,0%,10%)] rounded-full px-4 py-2 gap-2 w-64">
+          <Search size={16} className="text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Pesquisar"
+            className="bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none w-full"
+          />
+        </div>
+
         <button
           onClick={() => setSearchOpen(!searchOpen)}
-          className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+          className="md:hidden p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
         >
           <Search size={20} />
         </button>
 
         <button className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors relative">
           <Bell size={20} />
+          <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-orange-500" />
         </button>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 p-1 rounded-lg hover:bg-secondary transition-colors">
-              <Avatar className="h-8 w-8">
+            <button className="flex items-center gap-2 p-1 rounded-full hover:ring-2 hover:ring-primary/30 transition-all">
+              <Avatar className="h-10 w-10">
                 <AvatarImage src={student?.avatar_url || undefined} />
                 <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
                   {initials}

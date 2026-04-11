@@ -28,36 +28,37 @@ const ModuleCarousel = ({ modules }: ModuleCarouselProps) => {
   if (!modules.length) return null;
 
   return (
-    <section className="px-4 md:px-6 py-8">
+    <section className="px-4 md:px-6 lg:px-[60px] py-10 max-w-[1280px] mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-foreground">Conteúdo</h2>
+        <h2 className="text-[28px] font-extrabold text-foreground">Conteúdo</h2>
         <div className="flex gap-2">
           <button
             onClick={() => scroll("left")}
-            className="p-2 rounded-lg bg-secondary text-foreground hover:bg-secondary/80 transition-colors"
+            className="p-1 text-primary hover:text-primary/80 transition-colors"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft size={40} />
           </button>
           <button
             onClick={() => scroll("right")}
-            className="p-2 rounded-lg bg-secondary text-foreground hover:bg-secondary/80 transition-colors"
+            className="p-1 text-primary hover:text-primary/80 transition-colors"
           >
-            <ChevronRight size={20} />
+            <ChevronRight size={40} />
           </button>
         </div>
       </div>
 
       <div
         ref={scrollRef}
-        className="flex gap-5 overflow-x-auto pb-4 scrollbar-hide"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        className="flex gap-4 overflow-x-auto scrollbar-hide pb-4"
       >
-        {modules.map((mod) => (
+        {modules.map((mod, i) => (
           <ModuleCard
             key={mod.id}
+            id={mod.id}
             title={mod.title}
             coverUrl={mod.cover_url}
             lessonCount={mod.lessonCount}
+            isFirst={i === 0}
           />
         ))}
       </div>

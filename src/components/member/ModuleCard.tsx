@@ -1,20 +1,28 @@
-import { BookOpen } from "lucide-react";
+import { Play, BookOpen } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface ModuleCardProps {
+  id: string;
   title: string;
   coverUrl?: string | null;
   lessonCount: number;
+  isFirst?: boolean;
 }
 
-const ModuleCard = ({ title, coverUrl, lessonCount }: ModuleCardProps) => {
+const ModuleCard = ({ id, title, coverUrl, lessonCount, isFirst }: ModuleCardProps) => {
+  const navigate = useNavigate();
+
   return (
-    <div className="group flex-shrink-0 w-48 cursor-pointer">
-      <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-secondary mb-3 border border-border transition-all group-hover:border-primary/50 group-hover:shadow-lg group-hover:shadow-primary/5">
+    <div
+      onClick={() => navigate(`/modulo/${id}`)}
+      className="group flex-shrink-0 w-[200px] cursor-pointer"
+    >
+      <div className="relative w-[200px] h-[300px] rounded-xl overflow-hidden bg-secondary transition-all duration-300 group-hover:scale-[1.03] group-hover:shadow-[0_0_20px_hsl(72_100%_47%/0.3)]">
         {coverUrl ? (
           <img
             src={coverUrl}
             alt={title}
-            className="w-full h-full object-cover transition-transform group-hover:scale-105"
+            className="w-full h-full object-cover"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
@@ -22,16 +30,28 @@ const ModuleCard = ({ title, coverUrl, lessonCount }: ModuleCardProps) => {
           </div>
         )}
 
-        {/* Badge */}
-        <div className="absolute bottom-3 left-3 bg-black/70 backdrop-blur-sm text-foreground text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1.5">
-          <BookOpen size={12} />
-          {lessonCount} {lessonCount === 1 ? "aula" : "aulas"}
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+
+        {/* Badge top-left */}
+        <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm text-foreground text-[11px] font-medium px-2.5 py-1 rounded-full">
+          {lessonCount} {lessonCount === 1 ? "Aula" : "Aulas"}
+        </div>
+
+        {/* Title bottom-left */}
+        <div className="absolute bottom-3 left-3 right-10">
+          <h3 className="text-sm font-bold text-foreground leading-tight line-clamp-2">
+            {title}
+          </h3>
+        </div>
+
+        {/* Play button */}
+        <div className={`absolute bottom-3 right-3 transition-opacity ${isFirst ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+          <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
+            <Play size={14} className="text-primary-foreground ml-0.5" fill="currentColor" />
+          </div>
         </div>
       </div>
-
-      <h3 className="text-sm font-medium text-foreground leading-tight line-clamp-2 group-hover:text-primary transition-colors">
-        {title}
-      </h3>
     </div>
   );
 };
