@@ -26,7 +26,7 @@ const MemberHeader = ({ logoUrl, onToggleSidebar }: MemberHeaderProps) => {
     : "?";
 
   return (
-    <header className="sticky top-0 z-40 flex h-[60px] items-center justify-between bg-background px-4 md:px-6">
+    <header className="absolute top-0 left-0 right-0 z-40 flex h-[60px] items-center justify-between bg-transparent px-4 md:px-6">
       <div className="flex items-center gap-4">
         <img src={logoByb} alt="By'b" className="h-10 object-contain rounded-lg" />
         <button onClick={onToggleSidebar} className="text-foreground hover:text-primary transition-colors">
