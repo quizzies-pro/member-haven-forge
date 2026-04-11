@@ -9,6 +9,10 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 type Mode = "login" | "register" | "forgot";
 
+const COURSE_LOGO = "https://res.cloudinary.com/dqsuj0pjy/image/upload/v1775933233/By_b_ktyfmv.png";
+const COURSE_BANNER = "https://res.cloudinary.com/dqsuj0pjy/image/upload/v1775882373/freepik_coloca-duas-influencers-d_2761737175_n2faxh.png";
+const COURSE_TITLE = "TTS Academy";
+
 const Login = () => {
   const navigate = useNavigate();
   const [mode, setMode] = useState<Mode>("login");
