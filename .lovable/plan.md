@@ -1,66 +1,35 @@
 
 
-## Plano: Área de Membros — Fase 1
+## Plano: Integrar dados reais do TTS Academy
 
-### Visão Geral
-Construir a área de membros do aluno com tema escuro premium, seguindo fielmente as referências visuais. O banco de dados **não será modificado** — apenas leitura das tabelas existentes.
+O curso **TTS Academy** já está no banco com logo, banner, cover e 13 módulos publicados. O código atual já busca dados dinamicamente via enrollment, mas a tela de Login ainda usa conteúdo genérico. Vamos ajustar para puxar a identidade visual do curso.
 
-### Design System
-- **Tema escuro**: fundo preto/cinza escuro (#0a0a0a / #1a1a1a)
-- **Acentos amarelo**: para links ativos e elementos de destaque (como na referência)
-- **Cards de módulos**: estilo retrato com imagem de capa, badge de contagem de aulas e título
-- **Tipografia**: moderna e clean, texto branco sobre fundo escuro
+### Alterações
 
----
+**1. Página de Login — exibir branding do TTS Academy**
+- Buscar o curso publicado (query pública: `courses` onde `status = published`) ao carregar a página de login
+- Usar `login_cover_url` ou `cover_url` como imagem de fundo do lado esquerdo (atualmente é um gradiente genérico)
+- Exibir o `logo_url` do curso acima do formulário de login
+- Exibir o título do curso ("TTS Academy") no lugar do texto genérico "Área de Membros"
 
-### Página 1 — Login / Cadastro
-- Tela de login com email + senha usando **Supabase Auth**
-- Opção de "Esqueci minha senha" com fluxo de reset
-- Tela de cadastro para novos alunos
-- Após login, verificar se o aluno existe na tabela `students` e redirecionar para a home do curso
-- Página `/reset-password` para redefinição de senha
-- Layout escuro com possibilidade de exibir o `login_cover_url` do curso como fundo
+**2. Página Index (Home) — já funcional**
+- O código já busca enrollment > course > modules corretamente
+- Já exibe banner, logo no header e carrossel de módulos
+- Nenhuma alteração necessária na lógica, apenas pequenos refinamentos visuais se necessário
 
-### Página 2 — Home do Curso
-- **Header superior**: logo (da tabela `courses.logo_url`), barra de pesquisa, ícone de notificações, avatar do aluno com dropdown (Minha conta / Sair)
-- **Banner hero**: imagem do curso (`banner_url`) em destaque, ocupando toda a largura
-- **Seção "Conteúdo"**: carrossel horizontal de módulos do curso (tabela `course_modules`) com:
-  - Imagem de capa do módulo (`cover_url`)
-  - Badge com contagem de aulas (count de `lessons` por módulo)
-  - Título do módulo
-  - Setas de navegação lateral (< >)
-- **Menu lateral (hamburger)**: abre sidebar com itens: Início, Conteúdo, Ranking, Minha Conta, Contato
-  - Link ativo destacado em amarelo
-  - Ícone para fechar o menu
+**3. Página MyAccount — já funcional**
+- Já lê e atualiza dados do student via RLS
+- Nenhuma alteração necessária
 
-### Página 3 — Minha Conta / Perfil
-- Exibir dados do aluno (tabela `students`): nome, email, telefone, CPF, avatar
-- Permitir edição dos dados pessoais (update na tabela `students` via RLS)
-- Upload/troca de avatar
-- Exibir informações da matrícula ativa (tabela `enrollments`)
+**4. Refinamento visual geral**
+- Garantir que o `login_cover_url` seja preenchido no banco (atualmente é `null`) — como não podemos modificar o banco, usaremos `cover_url` ou `banner_url` como fallback
+- Ajustar o card de login para ficar mais alinhado com o tema escuro premium
 
----
+### Detalhes Técnicos
+- A query na página de Login usará: `supabase.from("courses").select("title, logo_url, login_cover_url, cover_url, banner_url").eq("status", "published").limit(1).single()`
+- O RLS já permite `SELECT` em `courses` para `authenticated` com `status = published`, mas na tela de login o usuário ainda não está autenticado — precisamos verificar se a policy permite acesso anônimo. Se não, usaremos as URLs do curso diretamente como constantes ou criaremos uma abordagem que funcione sem auth.
+- Fallback chain para cover: `login_cover_url` > `banner_url` > `cover_url`
 
-### Estrutura de Rotas
-- `/login` — Página de login/cadastro
-- `/reset-password` — Redefinição de senha
-- `/` — Home do curso (protegida, requer autenticação)
-- `/minha-conta` — Perfil do aluno (protegida)
-
-### Componentes Principais
-1. **AuthLayout** — Layout para páginas de autenticação
-2. **MemberLayout** — Layout com header + sidebar para páginas logadas
-3. **MemberSidebar** — Menu lateral com navegação
-4. **MemberHeader** — Header com logo, busca, notificações, avatar/dropdown
-5. **CourseBanner** — Banner hero do curso
-6. **ModuleCarousel** — Carrossel horizontal de cards de módulos
-7. **ModuleCard** — Card individual de módulo
-8. **ProfileForm** — Formulário de edição de perfil
-9. **ProtectedRoute** — Componente que verifica autenticação
-
-### Segurança
-- Todas as rotas de membro protegidas via `ProtectedRoute`
-- Dados acessados via RLS policies já existentes no banco
-- Session gerenciada com `onAuthStateChange` do Supabase
-- Nenhuma modificação no schema do banco de dados
+### Arquivos modificados
+- `src/pages/Login.tsx` — buscar e exibir branding do curso
 
