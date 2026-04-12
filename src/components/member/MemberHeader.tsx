@@ -32,7 +32,11 @@ const MemberHeader = ({ logoUrl, onToggleSidebar }: MemberHeaderProps) => {
           onClick={() => navigate("/")}
           className="hover:opacity-80 transition-opacity"
         >
-          <img src={logoByb} alt="By'b" className="h-10 object-contain rounded-lg" />
+          <img 
+            src={logoByb} 
+            alt="By'b" 
+            className="h-10 object-contain rounded-lg hover:hue-rotate-[320deg] hover:saturate-150 transition-all" 
+          />
         </button>
         <button onClick={onToggleSidebar} className="text-foreground hover:text-primary transition-colors">
           <Menu size={24} />
