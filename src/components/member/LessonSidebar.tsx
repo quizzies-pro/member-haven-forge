@@ -114,9 +114,9 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
                   />
 
               {isHovered && (
-                <div className="absolute right-full top-1/2 -translate-y-1/2 mr-5 bg-black border border-border rounded-lg px-3 py-2 shadow-lg whitespace-nowrap pointer-events-none" style={{ zIndex: 9999 }}>
-                  <p className="text-[11px] font-semibold text-foreground">{lesson.title}</p>
-                  <p className="text-[9px] text-muted-foreground">{lesson.moduleTitle}</p>
+                <div className="absolute right-full top-1/2 -translate-y-1/2 mr-5 bg-black rounded-lg px-3 py-2 shadow-lg whitespace-nowrap pointer-events-none" style={{ zIndex: 9999 }}>
+                  <p className="text-[11px] font-semibold text-white">{lesson.title}</p>
+                  <p className="text-[9px] text-gray-400">{lesson.moduleTitle}</p>
                 </div>
               )}
                 </div>
