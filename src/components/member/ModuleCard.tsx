@@ -18,7 +18,7 @@ const ModuleCard = ({ id, title, coverUrl, lessonCount, isFirst }: ModuleCardPro
       onClick={() => navigate(`/modulo/${id}`)}
       className="group flex-shrink-0 w-[240px] cursor-pointer"
     >
-      <div className="relative w-[240px] h-[360px] rounded-xl overflow-hidden bg-secondary transition-all duration-300 group-hover:scale-[1.03] group-hover:shadow-[0_0_20px_hsl(72_100%_47%/0.3)]">
+      <div className="relative w-[240px] h-[360px] rounded-xl overflow-hidden bg-secondary transition-all duration-300 group-hover:scale-[1.03]">
         {coverUrl ? (
           <img
             src={coverUrl}
