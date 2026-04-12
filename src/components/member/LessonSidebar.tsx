@@ -17,15 +17,20 @@ interface LessonSidebarProps {
 
 const DOT_SIZE = 18;
 const DOT_GAP = 48;
+const REPEATS = 5; // how many copies of the list to render for infinite illusion
 
 const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonSidebarProps) => {
   const navigate = useNavigate();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [scrollOffset, setScrollOffset] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const stripRef = useRef<HTMLDivElement>(null);
   const [visibleCount, setVisibleCount] = useState(8);
+  const [logicalOffset, setLogicalOffset] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
+  const count = lessons.length;
   const currentIndex = lessons.findIndex((l) => l.id === currentLessonId);
+  const cycleHeight = count * DOT_GAP;
 
   useEffect(() => {
     if (containerRef.current) {
@@ -34,25 +39,52 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
     }
   }, []);
 
-  // Center active dot on mount
+  // Center on current lesson
   useEffect(() => {
     if (currentIndex >= 0) {
-      setScrollOffset(currentIndex * DOT_GAP);
+      setLogicalOffset(currentIndex);
     }
   }, [currentIndex, lessons.length]);
 
+  // The middle copy starts at index REPEATS/2 * count
+  const middleStart = Math.floor(REPEATS / 2) * count;
+  const containerHeight = visibleCount * DOT_GAP;
+  
+  // translateY to center the logicalOffset dot in the viewport
+  const targetDotPosition = (middleStart + logicalOffset) * DOT_GAP;
+  const translateY = -(targetDotPosition - containerHeight / 2 + DOT_GAP / 2);
+
+  // After transition ends, silently snap to keep logicalOffset in [0, count)
+  const handleTransitionEnd = useCallback(() => {
+    if (count === 0) return;
+    const normalized = ((logicalOffset % count) + count) % count;
+    if (normalized !== logicalOffset) {
+      setIsTransitioning(true);
+      setLogicalOffset(normalized);
+      // Force reflow to skip transition
+      requestAnimationFrame(() => {
+        setIsTransitioning(false);
+      });
+    }
+  }, [logicalOffset, count]);
+
   const scrollUp = useCallback(() => {
-    setScrollOffset((prev) => prev - DOT_GAP);
+    setIsTransitioning(false);
+    setLogicalOffset((prev) => prev - 1);
   }, []);
 
   const scrollDown = useCallback(() => {
-    setScrollOffset((prev) => prev + DOT_GAP);
+    setIsTransitioning(false);
+    setLogicalOffset((prev) => prev + 1);
   }, []);
 
-  // Calculate the center offset for the strip
-  const totalHeight = lessons.length * DOT_GAP;
-  const containerHeight = visibleCount * DOT_GAP;
-  const translateY = -(scrollOffset - (containerHeight / 2) + (DOT_GAP / 2));
+  // Build repeated list
+  const repeatedLessons: SidebarLesson[] = [];
+  for (let r = 0; r < REPEATS; r++) {
+    for (let i = 0; i < count; i++) {
+      repeatedLessons.push(lessons[i]);
+    }
+  }
 
   return (
     <div className="flex flex-col items-center h-full relative">
@@ -71,8 +103,13 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
 
         {/* Sliding strip */}
         <div
-          className="relative flex flex-col items-center transition-transform duration-500 ease-in-out"
-          style={{ transform: `translateY(${translateY}px)` }}
+          ref={stripRef}
+          className="relative flex flex-col items-center"
+          style={{
+            transform: `translateY(${translateY}px)`,
+            transition: isTransitioning ? 'none' : 'transform 500ms cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
+          onTransitionEnd={handleTransitionEnd}
         >
           {/* Vertical solid line */}
           <div
@@ -85,17 +122,17 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
             }}
           />
 
-          {lessons.map((lesson, idx) => {
+          {repeatedLessons.map((lesson, idx) => {
             const isActive = lesson.id === currentLessonId;
             const isCompleted = completedLessonIds.includes(lesson.id);
-            const isHovered = hoveredId === lesson.id;
+            const isHovered = hoveredId === `${lesson.id}-${idx}`;
 
             return (
               <div
-                key={lesson.id}
+                key={`${lesson.id}-${idx}`}
                 className="relative flex items-center justify-center"
                 style={{ height: DOT_GAP, zIndex: isHovered ? 9999 : isActive ? 1 : 10 }}
-                onMouseEnter={() => setHoveredId(lesson.id)}
+                onMouseEnter={() => setHoveredId(`${lesson.id}-${idx}`)}
                 onMouseLeave={() => setHoveredId(null)}
               >
                 {isActive && (
