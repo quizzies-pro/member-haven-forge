@@ -48,7 +48,7 @@ const MyAccount = () => {
 
   return (
     <MemberLayout>
-      <div className="max-w-2xl mx-auto p-6 md:p-10">
+      <div className="max-w-2xl mx-auto p-6 md:p-10 pt-[80px] flex flex-col items-center">
         <h1 className="text-2xl font-bold text-foreground mb-8">Minha Conta</h1>
 
         <div className="flex items-center gap-5 mb-10">
