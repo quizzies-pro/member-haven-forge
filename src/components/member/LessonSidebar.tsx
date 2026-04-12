@@ -64,8 +64,19 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
   }
 
   return (
-    <div className="flex flex-col items-center h-full">
-      <div ref={containerRef} className="flex-1 relative flex flex-col items-center justify-center" style={{ minHeight: 0 }}>
+    <div className="flex flex-col items-center h-full relative">
+      <div ref={containerRef} className="flex-1 relative flex flex-col items-center justify-center overflow-hidden" style={{ minHeight: 0 }}>
+        {/* Gradient mask - top */}
+        <div 
+          className="absolute top-0 left-0 right-0 h-16 pointer-events-none z-20"
+          style={{ background: 'linear-gradient(to bottom, hsl(var(--background)) 0%, transparent 100%)' }}
+        />
+        
+        {/* Gradient mask - bottom */}
+        <div 
+          className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none z-20"
+          style={{ background: 'linear-gradient(to top, hsl(var(--background)) 0%, transparent 100%)' }}
+        />
         {/* Vertical solid line */}
         <div
           className="absolute bg-primary/40"
