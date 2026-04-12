@@ -64,7 +64,7 @@ const MyAccount = () => {
           </div>
         </div>
 
-        <form onSubmit={handleSave} className="space-y-6">
+        <form onSubmit={handleSave} className="space-y-6 w-full">
           <div className="space-y-2">
             <Label className="text-foreground">Nome completo</Label>
             <Input
