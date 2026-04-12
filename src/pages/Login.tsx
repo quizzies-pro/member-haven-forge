@@ -87,11 +87,11 @@ const Login = () => {
 
       {/* Right - form */}
       <div className="flex-1 flex items-center justify-center p-8 bg-background">
-        <div className="w-full max-w-md space-y-8">
-          <div className="text-center space-y-4">
-            <img src={COURSE_LOGO} alt={COURSE_TITLE} className="h-40 mx-auto object-contain" />
+        <div className="w-full max-w-md space-y-6">
+          <div className="text-center space-y-2">
+            <img src={COURSE_LOGO} alt={COURSE_TITLE} className="h-28 mx-auto object-contain" />
             <div>
-              <h1 className="text-3xl font-bold text-foreground">
+              <h1 className="text-2xl font-bold text-foreground">
                 {mode === "login" && "Entrar"}
                 {mode === "register" && "Criar conta"}
                 {mode === "forgot" && "Recuperar senha"}
@@ -106,7 +106,7 @@ const Login = () => {
 
           <form
             onSubmit={mode === "login" ? handleLogin : mode === "register" ? handleRegister : handleForgot}
-            className="space-y-5"
+            className="space-y-4"
           >
             {mode === "register" && (
               <div className="space-y-2">
