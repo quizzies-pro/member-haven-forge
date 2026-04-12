@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "@/hooks/use-toast";
-import { Loader2, Save } from "lucide-react";
+import { Loader2, Save, Mail, Phone, CreditCard, User, Camera } from "lucide-react";
 
 const MyAccount = () => {
   const { student, user } = useAuth();
@@ -48,67 +48,100 @@ const MyAccount = () => {
 
   return (
     <MemberLayout>
-      <div className="max-w-2xl mx-auto p-6 md:p-10 pt-[80px] flex flex-col items-center">
-        <h1 className="text-2xl font-bold text-foreground mb-8 text-center">Minha Conta</h1>
+      <div className="min-h-screen pt-[80px] pb-12 px-4">
+        <div className="max-w-xl mx-auto">
+          {/* Profile card */}
+          <div className="relative rounded-2xl bg-card/50 border border-border/30 p-8 mb-8">
+            <div className="flex flex-col items-center">
+              <div className="relative group cursor-pointer mb-4">
+                <Avatar className="h-24 w-24 ring-4 ring-primary/20">
+                  <AvatarImage src={student?.avatar_url || undefined} />
+                  <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-bold">
+                    {initials}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Camera size={20} className="text-white" />
+                </div>
+              </div>
+              <h2 className="text-xl font-bold text-foreground">{student?.name}</h2>
+              <p className="text-sm text-muted-foreground mt-1">{student?.email}</p>
+            </div>
+          </div>
 
-        <div className="flex flex-col items-center gap-5 mb-10">
-          <Avatar className="h-20 w-20">
-            <AvatarImage src={student?.avatar_url || undefined} />
-            <AvatarFallback className="bg-primary text-primary-foreground text-xl font-bold">
-              {initials}
-            </AvatarFallback>
-          </Avatar>
-          <div className="text-center">
-            <p className="text-lg font-semibold text-foreground">{student?.name}</p>
-            <p className="text-sm text-muted-foreground">{student?.email}</p>
+          {/* Form */}
+          <div className="rounded-2xl bg-card/50 border border-border/30 p-8">
+            <h3 className="text-lg font-bold text-foreground mb-6">Informações Pessoais</h3>
+
+            <form onSubmit={handleSave} className="space-y-5">
+              <div className="space-y-2">
+                <Label className="text-sm text-muted-foreground">Nome completo</Label>
+                <div className="relative">
+                  <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="bg-secondary/60 border-border/50 text-foreground h-12 pl-11 rounded-xl focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm text-muted-foreground">Email</Label>
+                <div className="relative">
+                  <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/50" />
+                  <Input
+                    value={student?.email || ""}
+                    disabled
+                    className="bg-secondary/30 border-border/30 text-muted-foreground h-12 pl-11 rounded-xl cursor-not-allowed"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="space-y-2">
+                  <Label className="text-sm text-muted-foreground">Telefone</Label>
+                  <div className="relative">
+                    <Phone size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="(00) 00000-0000"
+                      className="bg-secondary/60 border-border/50 text-foreground h-12 pl-11 rounded-xl focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm text-muted-foreground">CPF</Label>
+                  <div className="relative">
+                    <CreditCard size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      value={cpf}
+                      onChange={(e) => setCpf(e.target.value)}
+                      placeholder="000.000.000-00"
+                      className="bg-secondary/60 border-border/50 text-foreground h-12 pl-11 rounded-xl focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4">
+                <Button
+                  type="submit"
+                  disabled={saving}
+                  className="w-full h-12 text-base font-semibold rounded-xl"
+                >
+                  {saving ? (
+                    <Loader2 className="animate-spin mr-2" size={18} />
+                  ) : (
+                    <Save className="mr-2" size={18} />
+                  )}
+                  Salvar alterações
+                </Button>
+              </div>
+            </form>
           </div>
         </div>
-
-        <form onSubmit={handleSave} className="space-y-6 w-full">
-          <div className="space-y-2">
-            <Label className="text-foreground">Nome completo</Label>
-            <Input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="bg-secondary border-border text-foreground h-12"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label className="text-muted-foreground">Email</Label>
-            <Input
-              value={student?.email || ""}
-              disabled
-              className="bg-secondary/50 border-border text-muted-foreground h-12"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-foreground">Telefone</Label>
-              <Input
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="(00) 00000-0000"
-                className="bg-secondary border-border text-foreground h-12"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-foreground">CPF</Label>
-              <Input
-                value={cpf}
-                onChange={(e) => setCpf(e.target.value)}
-                placeholder="000.000.000-00"
-                className="bg-secondary border-border text-foreground h-12"
-              />
-            </div>
-          </div>
-
-          <Button type="submit" disabled={saving} className="h-12 px-8 text-base font-semibold">
-            {saving ? <Loader2 className="animate-spin mr-2" size={18} /> : <Save className="mr-2" size={18} />}
-            Salvar alterações
-          </Button>
-        </form>
       </div>
     </MemberLayout>
   );
