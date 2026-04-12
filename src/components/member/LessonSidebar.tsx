@@ -86,7 +86,7 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
             <div
               key={`${lesson.id}-${idx}`}
               className="relative flex items-center justify-center"
-              style={{ height: DOT_GAP, zIndex: isActive ? 1 : 10 }}
+              style={{ height: DOT_GAP, zIndex: isHovered ? 9999 : isActive ? 1 : 10 }}
               onMouseEnter={() => setHoveredId(lesson.id)}
               onMouseLeave={() => setHoveredId(null)}
             >
