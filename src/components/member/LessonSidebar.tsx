@@ -1,6 +1,6 @@
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 export interface SidebarLesson {
   id: string;
@@ -15,115 +15,122 @@ interface LessonSidebarProps {
   completedLessonIds: string[];
 }
 
-const DOT_GAP = 48; // px between dots
+const DOT_SIZE = 18;
+const DOT_GAP = 48;
 
 const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonSidebarProps) => {
   const navigate = useNavigate();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [offset, setOffset] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [visibleCount, setVisibleCount] = useState(8);
+
   const currentIndex = lessons.findIndex((l) => l.id === currentLessonId);
 
-  // Scroll to keep active dot visible
+  // Calculate how many dots fit
   useEffect(() => {
-    if (scrollRef.current && currentIndex >= 0) {
-      const scrollTop = Math.max(0, currentIndex * DOT_GAP - 60);
-      scrollRef.current.scrollTo({ top: scrollTop, behavior: "smooth" });
+    if (containerRef.current) {
+      const h = containerRef.current.clientHeight;
+      setVisibleCount(Math.max(3, Math.floor(h / DOT_GAP)));
     }
-  }, [currentIndex]);
+  }, []);
 
-  const goToPrev = () => {
-    if (currentIndex > 0) navigate(`/aula/${lessons[currentIndex - 1].id}`);
+  // Center active dot on mount
+  useEffect(() => {
+    if (currentIndex >= 0) {
+      setOffset(currentIndex);
+    }
+  }, [currentIndex, lessons.length]);
+
+  const getWrappedIndex = (i: number) => {
+    const len = lessons.length;
+    return ((i % len) + len) % len;
   };
 
-  const goToNext = () => {
-    if (currentIndex < lessons.length - 1) navigate(`/aula/${lessons[currentIndex + 1].id}`);
-  };
+  const scrollUp = useCallback(() => {
+    setOffset((prev) => prev - 1);
+  }, []);
+
+  const scrollDown = useCallback(() => {
+    setOffset((prev) => prev + 1);
+  }, []);
+
+  // Build visible list centered around offset
+  const visibleLessons: { lesson: SidebarLesson; realIndex: number }[] = [];
+  const startOffset = offset - Math.floor(visibleCount / 2);
+  for (let i = 0; i < visibleCount; i++) {
+    const realIdx = getWrappedIndex(startOffset + i);
+    visibleLessons.push({ lesson: lessons[realIdx], realIndex: realIdx });
+  }
 
   return (
     <div className="flex flex-col items-center h-full">
-      {/* Scrollable timeline area */}
-      <div
-        ref={scrollRef}
-        className="flex-1 overflow-y-auto overflow-x-visible scrollbar-hide relative"
-        style={{ minHeight: 0 }}
-      >
+      <div ref={containerRef} className="flex-1 relative flex flex-col items-center justify-center" style={{ minHeight: 0 }}>
+        {/* Vertical solid line */}
         <div
-          className="relative flex flex-col items-center"
-          style={{ paddingTop: 8, paddingBottom: 8 }}
-        >
-          {/* Vertical solid line connecting dots */}
-          <div
-            className="absolute bg-primary/40"
-            style={{
-              left: "calc(50% - 0.5px)",
-              width: 1,
-              top: 8 + 9,
-              bottom: 8 + 9,
-            }}
-          />
+          className="absolute bg-primary/40"
+          style={{
+            left: "calc(50% - 0.5px)",
+            width: 1,
+            top: DOT_GAP / 2,
+            bottom: DOT_GAP / 2,
+          }}
+        />
 
-          {lessons.map((lesson, idx) => {
-            const isActive = lesson.id === currentLessonId;
-            const isCompleted = completedLessonIds.includes(lesson.id);
-            const isHovered = hoveredId === lesson.id;
+        {visibleLessons.map(({ lesson, realIndex }, idx) => {
+          const isActive = lesson.id === currentLessonId;
+          const isCompleted = completedLessonIds.includes(lesson.id);
+          const isHovered = hoveredId === lesson.id;
 
-            return (
-              <div
-                key={lesson.id}
-                className="relative z-10 flex items-center justify-center"
-                style={{ height: DOT_GAP }}
-                onMouseEnter={() => setHoveredId(lesson.id)}
-                onMouseLeave={() => setHoveredId(null)}
-              >
-                {/* Horizontal connector for active dot */}
-                {isActive && (
-                  <div
-                    className="absolute border-t-2 border-dashed border-primary/60"
-                    style={{
-                      right: "50%",
-                      width: 60,
-                      top: "50%",
-                    }}
-                  />
-                )}
-
-                <button
-                  onClick={() => navigate(`/aula/${lesson.id}`)}
-                  className={`rounded-full transition-all duration-200 w-[18px] h-[18px] ${
-                    isActive
-                      ? "bg-primary shadow-[0_0_12px_hsl(var(--primary)/0.5)]"
-                      : isCompleted
-                      ? "bg-[#5a6623]"
-                      : "border-[1.5px] border-primary/70 bg-background hover:bg-primary/20"
-                  }`}
+          return (
+            <div
+              key={`${lesson.id}-${idx}`}
+              className="relative z-10 flex items-center justify-center"
+              style={{ height: DOT_GAP }}
+              onMouseEnter={() => setHoveredId(lesson.id)}
+              onMouseLeave={() => setHoveredId(null)}
+            >
+              {isActive && (
+                <div
+                  className="absolute border-t-2 border-dashed border-primary/60"
+                  style={{ right: "50%", width: 60, top: "50%" }}
                 />
+              )}
 
-                {/* Tooltip */}
-                {isHovered && (
-                  <div className="absolute right-full top-1/2 -translate-y-1/2 mr-5 bg-card border border-border rounded-lg px-3 py-2 shadow-lg whitespace-nowrap pointer-events-none z-50">
-                    <p className="text-[11px] font-semibold text-foreground">{lesson.title}</p>
-                    <p className="text-[9px] text-muted-foreground">{lesson.moduleTitle}</p>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+              <button
+                onClick={() => navigate(`/aula/${lesson.id}`)}
+                className={`rounded-full transition-all duration-200 w-[${DOT_SIZE}px] h-[${DOT_SIZE}px] ${
+                  isActive
+                    ? "bg-primary shadow-[0_0_12px_hsl(var(--primary)/0.5)]"
+                    : isCompleted
+                    ? "bg-[#5a6623]"
+                    : "border-[1.5px] border-primary/70 bg-background hover:bg-primary/20"
+                }`}
+                style={{ width: DOT_SIZE, height: DOT_SIZE }}
+              />
+
+              {isHovered && (
+                <div className="absolute right-full top-1/2 -translate-y-1/2 mr-5 bg-card border border-border rounded-lg px-3 py-2 shadow-lg whitespace-nowrap pointer-events-none z-50">
+                  <p className="text-[11px] font-semibold text-foreground">{lesson.title}</p>
+                  <p className="text-[9px] text-muted-foreground">{lesson.moduleTitle}</p>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
 
-      {/* Navigation arrows - side by side below timeline */}
+      {/* Navigation arrows */}
       <div className="flex items-center gap-4 pt-2 pb-2">
         <button
-          onClick={goToPrev}
-          disabled={currentIndex <= 0}
-          className="text-primary disabled:text-muted-foreground/20 hover:scale-110 transition-transform"
+          onClick={scrollUp}
+          className="text-primary hover:scale-110 transition-transform"
         >
           <ChevronUp size={22} />
         </button>
         <button
-          onClick={goToNext}
-          disabled={currentIndex >= lessons.length - 1}
-          className="text-primary disabled:text-muted-foreground/20 hover:scale-110 transition-transform"
+          onClick={scrollDown}
+          className="text-primary hover:scale-110 transition-transform"
         >
           <ChevronDown size={22} />
         </button>
