@@ -51,15 +51,6 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
           className="relative flex flex-col items-center"
           style={{ paddingTop: 8, paddingBottom: 8 }}
         >
-          {/* Vertical dotted line */}
-          <div
-            className="absolute border-l border-dashed border-primary/40"
-            style={{
-              left: "50%",
-              top: 8 + 8,
-              bottom: 8 + 8,
-            }}
-          />
 
           {lessons.map((lesson, idx) => {
             const isActive = lesson.id === currentLessonId;
