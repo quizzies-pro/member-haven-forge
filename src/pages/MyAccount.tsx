@@ -48,23 +48,23 @@ const MyAccount = () => {
 
   return (
     <MemberLayout>
-      <div className="max-w-2xl mx-auto p-6 md:p-10">
-        <h1 className="text-2xl font-bold text-foreground mb-8">Minha Conta</h1>
+      <div className="max-w-2xl mx-auto p-6 md:p-10 pt-[80px] flex flex-col items-center">
+        <h1 className="text-2xl font-bold text-foreground mb-8 text-center">Minha Conta</h1>
 
-        <div className="flex items-center gap-5 mb-10">
+        <div className="flex flex-col items-center gap-5 mb-10">
           <Avatar className="h-20 w-20">
             <AvatarImage src={student?.avatar_url || undefined} />
             <AvatarFallback className="bg-primary text-primary-foreground text-xl font-bold">
               {initials}
             </AvatarFallback>
           </Avatar>
-          <div>
+          <div className="text-center">
             <p className="text-lg font-semibold text-foreground">{student?.name}</p>
             <p className="text-sm text-muted-foreground">{student?.email}</p>
           </div>
         </div>
 
-        <form onSubmit={handleSave} className="space-y-6">
+        <form onSubmit={handleSave} className="space-y-6 w-full">
           <div className="space-y-2">
             <Label className="text-foreground">Nome completo</Label>
             <Input
