@@ -184,18 +184,29 @@ const Lesson = () => {
             </div>
           </div>
 
-          {/* Video Player */}
-          {embedUrl && (
-            <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-card mb-6">
-              <iframe
-                src={embedUrl}
-                className="absolute inset-0 w-full h-full"
-                allow="autoplay; fullscreen; picture-in-picture"
-                allowFullScreen
-                title={lesson.title}
+          {/* Video Player + Sidebar row */}
+          <div className="flex items-stretch gap-6 mb-6">
+            {embedUrl && (
+              <div className="relative flex-1 aspect-video rounded-xl overflow-hidden bg-card">
+                <iframe
+                  src={embedUrl}
+                  className="absolute inset-0 w-full h-full"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowFullScreen
+                  title={lesson.title}
+                />
+              </div>
+            )}
+
+            {/* Sidebar aligned to video height */}
+            <div className="hidden md:flex w-10 flex-shrink-0">
+              <LessonSidebar
+                lessons={allSidebarLessons}
+                currentLessonId={lessonId || ""}
+                completedLessonIds={completedIds}
               />
             </div>
-          )}
+          </div>
 
           {/* Info Block */}
           <div className="flex flex-col md:flex-row gap-6 mb-8">
@@ -295,14 +306,6 @@ const Lesson = () => {
           </div>
         </div>
 
-        {/* Right Sidebar - Timeline */}
-        <div className="hidden md:flex w-10 flex-shrink-0 ml-8 py-6">
-          <LessonSidebar
-            lessons={allSidebarLessons}
-            currentLessonId={lessonId || ""}
-            completedLessonIds={completedIds}
-          />
-        </div>
       </div>
     </MemberLayout>
   );
