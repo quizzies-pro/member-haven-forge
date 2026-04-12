@@ -34,21 +34,21 @@ const ModuleCard = ({ id, title, coverUrl, lessonCount, isFirst }: ModuleCardPro
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
 
         {/* Badge top-left */}
-        <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm text-foreground text-[11px] font-medium px-2.5 py-1 rounded-full">
+        <div className="absolute top-3 left-3 text-white/90 text-xs font-medium tracking-wide">
           {lessonCount} {lessonCount === 1 ? "Aula" : "Aulas"}
         </div>
 
         {/* Title bottom-left */}
-        <div className="absolute bottom-3 left-3 right-10">
-          <h3 className="text-sm font-bold text-foreground leading-tight line-clamp-2">
+        <div className="absolute bottom-4 left-4 right-14">
+          <h3 className="text-lg font-extrabold text-white uppercase leading-tight line-clamp-2">
             {title}
           </h3>
         </div>
 
-        {/* Play button */}
-        <div className={`absolute bottom-3 right-3 transition-opacity ${isFirst ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
-          <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
-            <Play size={14} className="text-primary-foreground ml-0.5" fill="currentColor" />
+        {/* Play button - hover only */}
+        <div className="absolute bottom-4 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="h-10 w-10 rounded-md border-2 border-primary flex items-center justify-center">
+            <Play size={16} className="text-primary ml-0.5" fill="currentColor" />
           </div>
         </div>
       </div>
