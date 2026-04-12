@@ -1,5 +1,6 @@
-import { Play, BookOpen } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import playIcon from "@/assets/play-button.png";
 
 interface ModuleCardProps {
   id: string;
