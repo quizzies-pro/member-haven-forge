@@ -3,7 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import MemberLayout from "@/components/member/MemberLayout";
-import { ArrowLeft, ChevronLeft, ChevronRight, CheckCircle, FileText, Download, ExternalLink } from "lucide-react";
+import LessonSidebar from "@/components/member/LessonSidebar";
+import { Star, FileText, Send, CheckCircle } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import { useToast } from "@/hooks/use-toast";
 
@@ -14,12 +15,16 @@ const Lesson = () => {
   const { toast } = useToast();
 
   const [lesson, setLesson] = useState<Tables<"lessons"> | null>(null);
+  const [module, setModule] = useState<Tables<"course_modules"> | null>(null);
+  const [course, setCourse] = useState<Tables<"courses"> | null>(null);
   const [materials, setMaterials] = useState<Tables<"lesson_materials">[]>([]);
   const [siblings, setSiblings] = useState<Tables<"lessons">[]>([]);
+  const [completedIds, setCompletedIds] = useState<string[]>([]);
   const [isCompleted, setIsCompleted] = useState(false);
   const [enrollmentId, setEnrollmentId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [completing, setCompleting] = useState(false);
+  const [question, setQuestion] = useState("");
 
   useEffect(() => {
     if (!user || !lessonId) return;
@@ -27,7 +32,6 @@ const Lesson = () => {
     const fetchData = async () => {
       setLoading(true);
 
-      // Fetch lesson
       const { data: lessonData } = await supabase
         .from("lessons")
         .select("*")
@@ -37,44 +41,30 @@ const Lesson = () => {
       setLesson(lessonData);
       if (!lessonData) { setLoading(false); return; }
 
-      // Fetch materials
-      const { data: mats } = await supabase
-        .from("lesson_materials")
-        .select("*")
-        .eq("lesson_id", lessonId)
-        .eq("is_visible", true)
-        .order("sort_order");
+      // Fetch module, course, materials, siblings in parallel
+      const [moduleRes, courseRes, matsRes, sibsRes, enrollmentRes] = await Promise.all([
+        supabase.from("course_modules").select("*").eq("id", lessonData.module_id).single(),
+        supabase.from("courses").select("*").eq("id", lessonData.course_id).single(),
+        supabase.from("lesson_materials").select("*").eq("lesson_id", lessonId).eq("is_visible", true).order("sort_order"),
+        supabase.from("lessons").select("*").eq("module_id", lessonData.module_id).eq("status", "published").order("sort_order"),
+        supabase.from("enrollments").select("id").eq("student_id", user.id).eq("course_id", lessonData.course_id).eq("status", "active").single(),
+      ]);
 
-      setMaterials(mats || []);
+      setModule(moduleRes.data);
+      setCourse(courseRes.data);
+      setMaterials(matsRes.data || []);
+      setSiblings(sibsRes.data || []);
 
-      // Fetch sibling lessons for prev/next
-      const { data: sibs } = await supabase
-        .from("lessons")
-        .select("*")
-        .eq("module_id", lessonData.module_id)
-        .eq("status", "published")
-        .order("sort_order");
-
-      setSiblings(sibs || []);
-
-      // Check completion
-      const { data: enrollment } = await supabase
-        .from("enrollments")
-        .select("id")
-        .eq("student_id", user.id)
-        .eq("course_id", lessonData.course_id)
-        .eq("status", "active")
-        .single();
-
-      if (enrollment) {
-        setEnrollmentId(enrollment.id);
-        const { data: completed } = await supabase
+      if (enrollmentRes.data) {
+        setEnrollmentId(enrollmentRes.data.id);
+        const { data: completedLessons } = await supabase
           .from("enrollment_lessons")
-          .select("id")
-          .eq("enrollment_id", enrollment.id)
-          .eq("lesson_id", lessonId);
+          .select("lesson_id")
+          .eq("enrollment_id", enrollmentRes.data.id);
 
-        setIsCompleted(!!(completed && completed.length > 0));
+        const ids = completedLessons?.map((c) => c.lesson_id) || [];
+        setCompletedIds(ids);
+        setIsCompleted(ids.includes(lessonId));
       }
 
       setLoading(false);
@@ -95,9 +85,9 @@ const Lesson = () => {
       toast({ title: "Erro", description: "Não foi possível marcar como concluída.", variant: "destructive" });
     } else {
       setIsCompleted(true);
+      setCompletedIds((prev) => [...prev, lessonId]);
       toast({ title: "Aula concluída! ✅" });
     }
-
     setCompleting(false);
   };
 
@@ -135,114 +125,153 @@ const Lesson = () => {
 
   return (
     <MemberLayout>
-      <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-[60px] py-6">
-        {/* Back */}
-        <button
-          onClick={() => navigate(`/modulo/${lesson.module_id}`)}
-          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6"
-        >
-          <ArrowLeft size={20} />
-          <span className="text-sm font-medium">Voltar ao módulo</span>
-        </button>
-
-        {/* Video Player */}
-        {embedUrl && (
-          <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-card mb-8">
-            <iframe
-              src={embedUrl}
-              className="absolute inset-0 w-full h-full"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-              title={lesson.title}
-            />
-          </div>
-        )}
-
-        {/* Title + Complete */}
-        <div className="flex items-start justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-foreground mb-1">{lesson.title}</h1>
-            {lesson.short_description && (
-              <p className="text-muted-foreground text-sm">{lesson.short_description}</p>
-            )}
-          </div>
-
-          <button
-            onClick={handleComplete}
-            disabled={isCompleted || completing}
-            className={`flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all ${
-              isCompleted
-                ? "bg-primary/20 text-primary cursor-default"
-                : "bg-primary text-primary-foreground hover:neon-glow"
-            }`}
-          >
-            <CheckCircle size={18} />
-            {isCompleted ? "Concluída" : completing ? "..." : "Marcar como concluída"}
-          </button>
-        </div>
-
-        {/* Content HTML */}
-        {lesson.content_html && (
-          <div
-            className="prose prose-invert prose-sm max-w-none mb-10"
-            dangerouslySetInnerHTML={{ __html: lesson.content_html }}
-          />
-        )}
-
-        {/* Materials */}
-        {materials.length > 0 && (
-          <div className="mb-10">
-            <h2 className="text-xl font-extrabold text-foreground mb-4">Materiais de apoio</h2>
-            <div className="space-y-2">
-              {materials.map((mat) => (
-                <a
-                  key={mat.id}
-                  href={mat.file_url || mat.external_link || "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-4 rounded-xl bg-card hover:bg-secondary/50 transition-colors group"
+      <div className="flex max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8">
+        {/* Main Column */}
+        <div className="flex-1 min-w-0 py-6">
+          {/* Breadcrumb */}
+          <div className="mb-4">
+            <h2 className="text-lg md:text-xl font-bold text-foreground">
+              {module?.title || "Módulo"}
+            </h2>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+              {prevLesson && (
+                <button
+                  onClick={() => navigate(`/aula/${prevLesson.id}`)}
+                  className="hover:text-foreground transition-colors truncate max-w-[200px]"
                 >
-                  <FileText size={20} className="text-primary flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-foreground truncate">{mat.title}</p>
-                    {mat.description && (
-                      <p className="text-xs text-muted-foreground truncate">{mat.description}</p>
-                    )}
-                  </div>
-                  {mat.file_url ? (
-                    <Download size={18} className="text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
-                  ) : (
-                    <ExternalLink size={18} className="text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
-                  )}
-                </a>
-              ))}
+                  {prevLesson.title}
+                </button>
+              )}
+              {prevLesson && nextLesson && <span className="text-muted-foreground/50">|</span>}
+              {nextLesson && (
+                <button
+                  onClick={() => navigate(`/aula/${nextLesson.id}`)}
+                  className="hover:text-foreground transition-colors truncate max-w-[200px]"
+                >
+                  {nextLesson.title}
+                </button>
+              )}
             </div>
           </div>
-        )}
 
-        {/* Prev / Next navigation */}
-        <div className="flex items-center justify-between pt-6 border-t border-border">
-          {prevLesson ? (
-            <button
-              onClick={() => navigate(`/aula/${prevLesson.id}`)}
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <ChevronLeft size={20} />
-              <span className="hidden md:inline">{prevLesson.title}</span>
-              <span className="md:hidden">Anterior</span>
-            </button>
-          ) : <div />}
+          {/* Video Player */}
+          {embedUrl && (
+            <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-card mb-6">
+              <iframe
+                src={embedUrl}
+                className="absolute inset-0 w-full h-full"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowFullScreen
+                title={lesson.title}
+              />
+            </div>
+          )}
 
-          {nextLesson ? (
-            <button
-              onClick={() => navigate(`/aula/${nextLesson.id}`)}
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <span className="hidden md:inline">{nextLesson.title}</span>
-              <span className="md:hidden">Próxima</span>
-              <ChevronRight size={20} />
-            </button>
-          ) : <div />}
+          {/* Info Block */}
+          <div className="flex flex-col md:flex-row gap-6 mb-8">
+            {/* Left: instructor + title + description */}
+            <div className="flex-1 min-w-0">
+              {lesson.tags && lesson.tags.length > 0 && (
+                <p className="text-xs text-muted-foreground mb-2">
+                  {lesson.tags.join(" · ")}
+                </p>
+              )}
+              <div className="flex items-center gap-3 mb-3">
+                {/* Instructor avatar */}
+                <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">
+                  {course?.instructor_name?.charAt(0)?.toUpperCase() || "T"}
+                </div>
+                <h1 className="text-xl md:text-2xl font-extrabold text-foreground leading-tight">
+                  {lesson.title}
+                </h1>
+              </div>
+              {lesson.short_description && (
+                <p className="text-sm text-foreground/80 leading-relaxed">
+                  {lesson.short_description}
+                </p>
+              )}
+              {lesson.content_html && (
+                <div
+                  className="prose prose-invert prose-sm max-w-none mt-4"
+                  dangerouslySetInnerHTML={{ __html: lesson.content_html }}
+                />
+              )}
+            </div>
+
+            {/* Right: stars + complete button */}
+            <div className="flex flex-col items-end gap-4 flex-shrink-0">
+              {/* Stars (visual only) */}
+              <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <Star key={i} size={20} className="text-primary fill-primary" />
+                ))}
+              </div>
+
+              <button
+                onClick={handleComplete}
+                disabled={isCompleted || completing}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-all ${
+                  isCompleted
+                    ? "border border-primary/40 text-primary cursor-default"
+                    : "border border-foreground/30 text-foreground hover:border-primary hover:text-primary"
+                }`}
+              >
+                <CheckCircle size={18} />
+                {isCompleted ? "Concluída" : completing ? "..." : "Marcar como concluído"}
+              </button>
+            </div>
+          </div>
+
+          {/* Materials */}
+          {materials.length > 0 && (
+            <div className="mb-8">
+              <h3 className="text-lg font-bold text-foreground mb-4">Material da aula</h3>
+              <div className="space-y-3">
+                {materials.map((mat) => (
+                  <a
+                    key={mat.id}
+                    href={mat.file_url || mat.external_link || "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 group"
+                  >
+                    <div className="w-10 h-10 bg-destructive rounded flex items-center justify-center text-destructive-foreground text-xs font-bold flex-shrink-0">
+                      PDF
+                    </div>
+                    <span className="text-sm text-foreground group-hover:text-primary transition-colors">
+                      {mat.title}
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Questions Section */}
+          <div className="mb-8">
+            <h3 className="text-lg font-bold text-foreground mb-4">Tire suas dúvidas aqui</h3>
+            <div className="flex items-center gap-3">
+              <input
+                type="text"
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                placeholder="Escreva seu texto aqui..."
+                className="flex-1 bg-transparent border-b border-muted-foreground/30 text-foreground text-sm py-2 focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground/50"
+              />
+              <button className="border border-foreground/30 text-foreground text-sm font-bold uppercase tracking-wider px-5 py-2 rounded hover:border-primary hover:text-primary transition-colors">
+                Enviar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Sidebar - Timeline */}
+        <div className="hidden md:flex w-16 lg:w-20 flex-shrink-0 ml-4">
+          <LessonSidebar
+            lessons={siblings}
+            currentLessonId={lessonId || ""}
+            completedLessonIds={completedIds}
+          />
         </div>
       </div>
     </MemberLayout>
