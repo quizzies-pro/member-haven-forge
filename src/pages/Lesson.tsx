@@ -235,7 +235,7 @@ const Lesson = () => {
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 group"
                   >
-                    <div className="w-10 h-10 bg-red-600 rounded flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                    <div className="w-10 h-10 bg-destructive rounded flex items-center justify-center text-destructive-foreground text-xs font-bold flex-shrink-0">
                       PDF
                     </div>
                     <span className="text-sm text-foreground group-hover:text-primary transition-colors">
