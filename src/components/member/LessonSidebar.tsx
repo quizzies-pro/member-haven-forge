@@ -79,12 +79,12 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
 
                 <button
                   onClick={() => navigate(`/aula/${lesson.id}`)}
-                  className={`rounded-full transition-all duration-200 ${
+                  className={`rounded-full transition-all duration-200 w-[18px] h-[18px] ${
                     isActive
-                      ? "w-[18px] h-[18px] bg-primary shadow-[0_0_12px_hsl(var(--primary)/0.5)]"
+                      ? "bg-primary shadow-[0_0_12px_hsl(var(--primary)/0.5)]"
                       : isCompleted
-                      ? "w-[11px] h-[11px] bg-[#5a6623]"
-                      : "w-[11px] h-[11px] border-[1.5px] border-primary/70 bg-transparent hover:bg-primary/20"
+                      ? "bg-[#5a6623]"
+                      : "border-[1.5px] border-primary/70 bg-transparent hover:bg-primary/20"
                   }`}
                 />
 
