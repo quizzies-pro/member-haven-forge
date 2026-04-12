@@ -92,8 +92,8 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
             >
               {isActive && (
                 <div
-                  className="absolute border-t-2 border-dashed border-primary/60 z-0"
-                  style={{ right: "50%", width: "100vw", top: "50%" }}
+                  className="absolute border-t-2 border-dashed border-primary/60"
+                  style={{ right: "50%", width: 80, top: "50%", zIndex: -1 }}
                 />
               )}
 
