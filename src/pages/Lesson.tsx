@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import MemberLayout from "@/components/member/MemberLayout";
 import LessonSidebar from "@/components/member/LessonSidebar";
+import type { SidebarLesson } from "@/components/member/LessonSidebar";
 import { Star, FileText, Send, CheckCircle } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import { useToast } from "@/hooks/use-toast";
@@ -19,6 +20,7 @@ const Lesson = () => {
   const [course, setCourse] = useState<Tables<"courses"> | null>(null);
   const [materials, setMaterials] = useState<Tables<"lesson_materials">[]>([]);
   const [siblings, setSiblings] = useState<Tables<"lessons">[]>([]);
+  const [allSidebarLessons, setAllSidebarLessons] = useState<SidebarLesson[]>([]);
   const [completedIds, setCompletedIds] = useState<string[]>([]);
   const [isCompleted, setIsCompleted] = useState(false);
   const [enrollmentId, setEnrollmentId] = useState<string | null>(null);
@@ -42,18 +44,46 @@ const Lesson = () => {
       if (!lessonData) { setLoading(false); return; }
 
       // Fetch module, course, materials, siblings in parallel
-      const [moduleRes, courseRes, matsRes, sibsRes, enrollmentRes] = await Promise.all([
+      const [moduleRes, courseRes, matsRes, sibsRes, enrollmentRes, allModulesRes] = await Promise.all([
         supabase.from("course_modules").select("*").eq("id", lessonData.module_id).single(),
         supabase.from("courses").select("*").eq("id", lessonData.course_id).single(),
         supabase.from("lesson_materials").select("*").eq("lesson_id", lessonId).eq("is_visible", true).order("sort_order"),
         supabase.from("lessons").select("*").eq("module_id", lessonData.module_id).eq("status", "published").order("sort_order"),
         supabase.from("enrollments").select("id").eq("student_id", user.id).eq("course_id", lessonData.course_id).eq("status", "active").single(),
+        supabase.from("course_modules").select("*").eq("course_id", lessonData.course_id).eq("status", "published").order("sort_order"),
       ]);
 
       setModule(moduleRes.data);
       setCourse(courseRes.data);
       setMaterials(matsRes.data || []);
       setSiblings(sibsRes.data || []);
+
+      // Fetch ALL lessons across all modules for sidebar timeline
+      if (allModulesRes.data && allModulesRes.data.length > 0) {
+        const { data: allLessonsData } = await supabase
+          .from("lessons")
+          .select("id, title, module_id, sort_order")
+          .eq("course_id", lessonData.course_id)
+          .eq("status", "published")
+          .order("sort_order");
+
+        const moduleMap = new Map(allModulesRes.data.map((m) => [m.id, m]));
+        const sorted = (allLessonsData || []).sort((a, b) => {
+          const modA = moduleMap.get(a.module_id);
+          const modB = moduleMap.get(b.module_id);
+          const modOrder = (modA?.sort_order || 0) - (modB?.sort_order || 0);
+          return modOrder !== 0 ? modOrder : a.sort_order - b.sort_order;
+        });
+
+        setAllSidebarLessons(
+          sorted.map((l) => ({
+            id: l.id,
+            title: l.title,
+            moduleTitle: moduleMap.get(l.module_id)?.title || "",
+            moduleId: l.module_id,
+          }))
+        );
+      }
 
       if (enrollmentRes.data) {
         setEnrollmentId(enrollmentRes.data.id);
@@ -268,7 +298,7 @@ const Lesson = () => {
         {/* Right Sidebar - Timeline */}
         <div className="hidden md:flex w-16 lg:w-20 flex-shrink-0 ml-4">
           <LessonSidebar
-            lessons={siblings}
+            lessons={allSidebarLessons}
             currentLessonId={lessonId || ""}
             completedLessonIds={completedIds}
           />
