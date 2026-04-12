@@ -296,7 +296,7 @@ const Lesson = () => {
         </div>
 
         {/* Right Sidebar - Timeline */}
-        <div className="hidden md:flex w-12 flex-shrink-0 ml-6 pt-6">
+        <div className="hidden md:flex w-10 flex-shrink-0 ml-8 py-6">
           <LessonSidebar
             lessons={allSidebarLessons}
             currentLessonId={lessonId || ""}
