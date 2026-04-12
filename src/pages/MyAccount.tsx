@@ -58,7 +58,7 @@ const MyAccount = () => {
               {initials}
             </AvatarFallback>
           </Avatar>
-          <div>
+          <div className="text-center">
             <p className="text-lg font-semibold text-foreground">{student?.name}</p>
             <p className="text-sm text-muted-foreground">{student?.email}</p>
           </div>
