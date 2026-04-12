@@ -65,7 +65,7 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
 
   return (
     <div className="flex flex-col items-center h-full relative">
-      <div ref={containerRef} className="flex-1 relative flex flex-col items-center justify-center overflow-hidden" style={{ minHeight: 0 }}>
+      <div ref={containerRef} className="flex-1 relative flex flex-col items-center justify-center overflow-x-visible overflow-y-clip" style={{ minHeight: 0 }}>
         {/* Gradient mask - top */}
         <div 
           className="absolute top-0 left-0 right-0 h-16 pointer-events-none z-20"
