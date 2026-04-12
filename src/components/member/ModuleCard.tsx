@@ -41,7 +41,7 @@ const ModuleCard = ({ id, title, coverUrl, lessonCount, isFirst }: ModuleCardPro
 
         {/* Title bottom-left */}
         <div className="absolute bottom-8 left-5 right-14">
-          <h3 className="text-xl font-extrabold text-white uppercase leading-tight line-clamp-2">
+          <h3 className="text-xl font-extrabold text-white uppercase leading-tight">
             {title}
           </h3>
         </div>
