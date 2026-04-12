@@ -13,7 +13,7 @@
     --popover: 0 0% 5%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 72 100% 47%;
+    --primary: 61 100% 50%;
     --primary-foreground: 0 0% 0%;
 
     --secondary: 0 0% 10%;
@@ -22,7 +22,7 @@
     --muted: 0 0% 12%;
     --muted-foreground: 0 0% 55%;
 
-    --accent: 72 100% 47%;
+    --accent: 61 100% 50%;
     --accent-foreground: 0 0% 0%;
 
     --destructive: 0 84% 60%;
@@ -30,18 +30,18 @@
 
     --border: 0 0% 12%;
     --input: 0 0% 10%;
-    --ring: 72 100% 47%;
+    --ring: 61 100% 50%;
 
     --radius: 0.75rem;
 
     --sidebar-background: 0 0% 3%;
     --sidebar-foreground: 0 0% 85%;
-    --sidebar-primary: 72 100% 47%;
+    --sidebar-primary: 61 100% 50%;
     --sidebar-primary-foreground: 0 0% 0%;
     --sidebar-accent: 0 0% 10%;
     --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 0 0% 12%;
-    --sidebar-ring: 72 100% 47%;
+    --sidebar-ring: 61 100% 50%;
   }
 }
 
@@ -62,15 +62,15 @@
 
 /* Neon glow utilities */
 .neon-glow {
-  box-shadow: 0 0 20px hsl(72 100% 47% / 0.3), 0 0 40px hsl(72 100% 47% / 0.1);
+  box-shadow: 0 0 20px hsl(61 100% 50% / 0.3), 0 0 40px hsl(61 100% 50% / 0.1);
 }
 
 .neon-glow-sm {
-  box-shadow: 0 0 10px hsl(72 100% 47% / 0.25);
+  box-shadow: 0 0 10px hsl(61 100% 50% / 0.25);
 }
 
 .neon-text-glow {
-  text-shadow: 0 0 20px hsl(72 100% 47% / 0.5), 0 0 40px hsl(72 100% 47% / 0.2);
+  text-shadow: 0 0 20px hsl(61 100% 50% / 0.5), 0 0 40px hsl(61 100% 50% / 0.2);
 }
 
 /* Custom scrollbar */
