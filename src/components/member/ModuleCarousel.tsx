@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ModuleCard from "./ModuleCard";
 
@@ -15,6 +15,15 @@ interface ModuleCarouselProps {
 
 const ModuleCarousel = ({ modules }: ModuleCarouselProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
+
+  const checkScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setAtStart(el.scrollLeft <= 5);
+    setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 5);
+  }, []);
 
   const scroll = (direction: "left" | "right") => {
     if (!scrollRef.current) return;
@@ -48,12 +57,19 @@ const ModuleCarousel = ({ modules }: ModuleCarouselProps) => {
       </div>
 
       <div className="relative">
-        {/* Fade edges */}
-        <div className="absolute left-0 top-0 bottom-4 w-12 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-4 w-12 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+        {/* Fade left */}
+        {!atStart && (
+          <div className="absolute left-0 top-0 bottom-4 w-12 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none transition-opacity" />
+        )}
+        {/* Fade right */}
+        {!atEnd && (
+          <div className="absolute right-0 top-0 bottom-4 w-12 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none transition-opacity" />
+        )}
 
         <div
           ref={scrollRef}
+          onScroll={checkScroll}
+          onLoad={checkScroll}
           className="flex gap-4 overflow-x-auto scrollbar-hide pb-4"
         >
           {modules.map((mod, i) => (
