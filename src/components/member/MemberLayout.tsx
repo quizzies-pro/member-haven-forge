@@ -14,7 +14,7 @@ const MemberLayout = ({ children, logoUrl }: MemberLayoutProps) => {
     <div className="min-h-screen bg-background">
       <MemberHeader logoUrl={logoUrl} onToggleSidebar={() => setSidebarOpen(true)} />
       <MemberSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <main>{children}</main>
+      <main className="pt-[60px]">{children}</main>
     </div>
   );
 };
