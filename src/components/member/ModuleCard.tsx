@@ -48,9 +48,7 @@ const ModuleCard = ({ id, title, coverUrl, lessonCount, isFirst }: ModuleCardPro
 
         {/* Play button - hover only */}
         <div className="absolute bottom-4 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-          <div className="h-10 w-10 rounded-md border-2 border-primary flex items-center justify-center">
-            <Play size={16} className="text-primary ml-0.5" fill="currentColor" />
-          </div>
+          <img src={playIcon} alt="Play" className="h-8 w-8" />
         </div>
       </div>
     </div>
