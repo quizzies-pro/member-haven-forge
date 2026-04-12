@@ -24,11 +24,10 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
   const [offset, setOffset] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const [visibleCount, setVisibleCount] = useState(8);
-  const [animate, setAnimate] = useState(false);
 
-  const count = lessons.length;
   const currentIndex = lessons.findIndex((l) => l.id === currentLessonId);
 
+  // Calculate how many dots fit
   useEffect(() => {
     if (containerRef.current) {
       const h = containerRef.current.clientHeight;
@@ -36,70 +35,48 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
     }
   }, []);
 
+  // Center active dot on mount
   useEffect(() => {
     if (currentIndex >= 0) {
       setOffset(currentIndex);
     }
-  }, [currentIndex, count]);
+  }, [currentIndex, lessons.length]);
 
   const getWrappedIndex = (i: number) => {
-    if (count === 0) return 0;
-    return ((i % count) + count) % count;
+    const len = lessons.length;
+    return ((i % len) + len) % len;
   };
 
   const scrollUp = useCallback(() => {
-    setAnimate(true);
     setOffset((prev) => prev - 1);
   }, []);
 
   const scrollDown = useCallback(() => {
-    setAnimate(true);
     setOffset((prev) => prev + 1);
   }, []);
 
-  // We render visibleCount + 2 extra items (1 above, 1 below) for smooth entry/exit
-  const totalRender = visibleCount + 2;
-  const startOffset = offset - Math.floor(totalRender / 2);
-
-  const visibleLessons: { lesson: SidebarLesson; realIndex: number; key: string }[] = [];
-  for (let i = 0; i < totalRender; i++) {
+  // Build visible list centered around offset
+  const visibleLessons: { lesson: SidebarLesson; realIndex: number }[] = [];
+  const startOffset = offset - Math.floor(visibleCount / 2);
+  for (let i = 0; i < visibleCount; i++) {
     const realIdx = getWrappedIndex(startOffset + i);
-    if (count > 0) {
-      visibleLessons.push({
-        lesson: lessons[realIdx],
-        realIndex: realIdx,
-        key: `${realIdx}-${startOffset + i}`,
-      });
-    }
+    visibleLessons.push({ lesson: lessons[realIdx], realIndex: realIdx });
   }
-
-  // Reset animate flag after transition
-  useEffect(() => {
-    if (animate) {
-      const timer = setTimeout(() => setAnimate(false), 500);
-      return () => clearTimeout(timer);
-    }
-  }, [animate, offset]);
 
   return (
     <div className="flex flex-col items-center h-full relative">
-      <div
-        ref={containerRef}
-        className="flex-1 relative flex flex-col items-center justify-center overflow-x-visible overflow-y-clip"
-        style={{ minHeight: 0 }}
-      >
+      <div ref={containerRef} className="flex-1 relative flex flex-col items-center justify-center overflow-x-visible overflow-y-clip" style={{ minHeight: 0 }}>
         {/* Gradient mask - top */}
-        <div
+        <div 
           className="absolute top-0 left-0 right-0 h-16 pointer-events-none z-20"
           style={{ background: 'linear-gradient(to bottom, hsl(var(--background)) 0%, transparent 100%)' }}
         />
-
+        
         {/* Gradient mask - bottom */}
-        <div
+        <div 
           className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none z-20"
           style={{ background: 'linear-gradient(to top, hsl(var(--background)) 0%, transparent 100%)' }}
         />
-
         {/* Vertical solid line */}
         <div
           className="absolute bg-primary/40"
@@ -111,20 +88,17 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
           }}
         />
 
-        {visibleLessons.map(({ lesson, realIndex, key }, idx) => {
+        {visibleLessons.map(({ lesson, realIndex }, idx) => {
           const isActive = lesson.id === currentLessonId;
           const isCompleted = completedLessonIds.includes(lesson.id);
-          const isHovered = hoveredId === key;
+          const isHovered = hoveredId === lesson.id;
 
           return (
             <div
-              key={key}
-              className="relative flex items-center justify-center transition-all duration-500 ease-in-out"
-              style={{
-                height: DOT_GAP,
-                zIndex: isHovered ? 9999 : isActive ? 1 : 10,
-              }}
-              onMouseEnter={() => setHoveredId(key)}
+              key={`${lesson.id}-${idx}`}
+              className="relative flex items-center justify-center"
+              style={{ height: DOT_GAP, zIndex: isHovered ? 9999 : isActive ? 1 : 10 }}
+              onMouseEnter={() => setHoveredId(lesson.id)}
               onMouseLeave={() => setHoveredId(null)}
             >
               {isActive && (
@@ -136,7 +110,7 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
 
               <button
                 onClick={() => navigate(`/aula/${lesson.id}`)}
-                className={`rounded-full transition-all duration-200 ${
+                className={`rounded-full transition-all duration-200 w-[${DOT_SIZE}px] h-[${DOT_SIZE}px] ${
                   isActive
                     ? "bg-primary shadow-[0_0_12px_hsl(var(--primary)/0.5)]"
                     : isCompleted
@@ -147,10 +121,7 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
               />
 
               {isHovered && (
-                <div
-                  className="absolute right-full top-1/2 -translate-y-1/2 mr-5 bg-card border border-border rounded-lg px-3 py-2 shadow-lg whitespace-nowrap pointer-events-none"
-                  style={{ zIndex: 9999 }}
-                >
+                <div className="absolute right-full top-1/2 -translate-y-1/2 mr-5 bg-card border border-border rounded-lg px-3 py-2 shadow-lg whitespace-nowrap pointer-events-none" style={{ zIndex: 9999 }}>
                   <p className="text-[11px] font-semibold text-foreground">{lesson.title}</p>
                   <p className="text-[9px] text-muted-foreground">{lesson.moduleTitle}</p>
                 </div>
