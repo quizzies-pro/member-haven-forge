@@ -103,7 +103,7 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
                   isActive
                     ? "bg-primary shadow-[0_0_12px_hsl(var(--primary)/0.5)]"
                     : isCompleted
-                    ? "bg-[#5a6623]"
+                    : "bg-primary"
                     : "border-[1.5px] border-primary/70 bg-background hover:bg-primary/20"
                 }`}
                 style={{ width: DOT_SIZE, height: DOT_SIZE }}
