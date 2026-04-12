@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import MemberLayout from "@/components/member/MemberLayout";
@@ -15,14 +15,58 @@ const MyAccount = () => {
   const [phone, setPhone] = useState("");
   const [cpf, setCpf] = useState("");
   const [saving, setSaving] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (student) {
       setName(student.name || "");
       setPhone(student.phone || "");
       setCpf(student.cpf || "");
+      setAvatarUrl(student.avatar_url || null);
     }
   }, [student]);
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast({ title: "Formato inválido", description: "Selecione uma imagem.", variant: "destructive" });
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: "Arquivo muito grande", description: "Máximo 2MB.", variant: "destructive" });
+      return;
+    }
+
+    setUploadingAvatar(true);
+    const ext = file.name.split(".").pop();
+    const filePath = `${user.id}/avatar.${ext}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("student-avatars")
+      .upload(filePath, file, { upsert: true });
+
+    if (uploadError) {
+      toast({ title: "Erro no upload", description: uploadError.message, variant: "destructive" });
+      setUploadingAvatar(false);
+      return;
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from("student-avatars")
+      .getPublicUrl(filePath);
+
+    const newUrl = `${publicUrlData.publicUrl}?t=${Date.now()}`;
+
+    await supabase.from("students").update({ avatar_url: newUrl }).eq("id", user.id);
+
+    setAvatarUrl(newUrl);
+    setUploadingAvatar(false);
+    toast({ title: "Foto atualizada!" });
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,19 +97,34 @@ const MyAccount = () => {
           {/* Profile card */}
           <div className="relative rounded-2xl bg-card/50 border border-border/30 p-8 mb-8">
             <div className="flex flex-col items-center">
-              <div className="relative group cursor-pointer mb-4">
+              <div
+                className="relative group cursor-pointer mb-4"
+                onClick={() => fileInputRef.current?.click()}
+              >
                 <Avatar className="h-24 w-24 ring-4 ring-primary/20">
-                  <AvatarImage src={student?.avatar_url || undefined} />
+                  <AvatarImage src={avatarUrl || undefined} />
                   <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-bold">
                     {initials}
                   </AvatarFallback>
                 </Avatar>
                 <div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Camera size={20} className="text-white" />
+                  {uploadingAvatar ? (
+                    <Loader2 size={20} className="text-white animate-spin" />
+                  ) : (
+                    <Camera size={20} className="text-white" />
+                  )}
                 </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleAvatarUpload}
+                />
               </div>
               <h2 className="text-xl font-bold text-foreground">{student?.name}</h2>
               <p className="text-sm text-muted-foreground mt-1">{student?.email}</p>
+              <p className="text-xs text-muted-foreground/60 mt-2">Clique na foto para alterar</p>
             </div>
           </div>
 
