@@ -40,14 +40,14 @@ const ModuleCard = ({ id, title, coverUrl, lessonCount, isFirst }: ModuleCardPro
         </div>
 
         {/* Title bottom-left */}
-        <div className="absolute bottom-4 left-4 right-14">
-          <h3 className="text-lg font-extrabold text-white uppercase leading-tight line-clamp-2">
+        <div className="absolute bottom-8 left-5 right-14">
+          <h3 className="text-xl font-extrabold text-white uppercase leading-tight line-clamp-2">
             {title}
           </h3>
         </div>
 
         {/* Play button - hover only */}
-        <div className="absolute bottom-4 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="absolute bottom-8 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
           <img src={playIcon} alt="Play" className="h-8 w-8" />
         </div>
       </div>
