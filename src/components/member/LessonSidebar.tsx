@@ -85,15 +85,15 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
           return (
             <div
               key={`${lesson.id}-${idx}`}
-              className="relative z-10 flex items-center justify-center"
-              style={{ height: DOT_GAP }}
+              className="relative flex items-center justify-center"
+              style={{ height: DOT_GAP, zIndex: isActive ? 1 : 10 }}
               onMouseEnter={() => setHoveredId(lesson.id)}
               onMouseLeave={() => setHoveredId(null)}
             >
               {isActive && (
                 <div
                   className="absolute border-t-2 border-dashed border-primary/60"
-                  style={{ right: "50%", width: 80, top: "50%", zIndex: -1 }}
+                  style={{ right: "50%", width: 80, top: "50%", zIndex: 0 }}
                 />
               )}
 
