@@ -89,45 +89,38 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
         />
 
         {visibleLessons.map(({ lesson, realIndex }, idx) => {
-          const isActive = lesson.id === currentLessonId;
-          const isCompleted = completedLessonIds.includes(lesson.id);
-          const isHovered = hoveredId === lesson.id;
+              const isActive = lesson.id === currentLessonId;
+              const isCompleted = completedLessonIds.includes(lesson.id);
+              const isHovered = hoveredId === lesson.id;
 
-          return (
-            <div
-              key={`${lesson.id}-${idx}`}
-              className="relative flex items-center justify-center"
-              style={{ height: DOT_GAP, zIndex: isHovered ? 9999 : isActive ? 1 : 10 }}
-              onMouseEnter={() => setHoveredId(lesson.id)}
-              onMouseLeave={() => setHoveredId(null)}
-            >
-              {isActive && (
+              return (
                 <div
-                  className="absolute border-t-2 border-dashed border-primary/60"
-                  style={{ right: "50%", width: 80, top: "50%", zIndex: 0 }}
-                />
-              )}
+                  key={`${lesson.id}-${idx}`}
+                  className="relative flex items-center justify-center"
+                  style={{ height: DOT_GAP, zIndex: isHovered ? 9999 : isActive ? 1 : 10 }}
+                  onMouseEnter={() => setHoveredId(lesson.id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                >
+                  <button
+                    onClick={() => navigate(`/aula/${lesson.id}`)}
+                    className={`rounded-full transition-all duration-200 flex items-center justify-center ${
+                      isActive
+                        ? "bg-primary shadow-[0_0_12px_hsl(var(--primary)/0.5)] ring-2 ring-primary ring-offset-2 ring-offset-background"
+                        : isCompleted
+                        ? "bg-primary"
+                        : "border-[1.5px] border-primary/70 bg-background hover:bg-primary/20"
+                    }`}
+                    style={{ width: DOT_SIZE, height: DOT_SIZE }}
+                  />
 
-              <button
-                onClick={() => navigate(`/aula/${lesson.id}`)}
-                className={`rounded-full transition-all duration-200 w-[${DOT_SIZE}px] h-[${DOT_SIZE}px] ${
-                  isActive
-                    ? "bg-primary shadow-[0_0_12px_hsl(var(--primary)/0.5)]"
-                    : isCompleted
-                    ? "bg-primary"
-                    : "border-[1.5px] border-primary/70 bg-background hover:bg-primary/20"
-                }`}
-                style={{ width: DOT_SIZE, height: DOT_SIZE }}
-              />
-
-              {isHovered && (
-                <div className="absolute right-full top-1/2 -translate-y-1/2 mr-5 bg-card border border-border rounded-lg px-3 py-2 shadow-lg whitespace-nowrap pointer-events-none" style={{ zIndex: 9999 }}>
-                  <p className="text-[11px] font-semibold text-foreground">{lesson.title}</p>
-                  <p className="text-[9px] text-muted-foreground">{lesson.moduleTitle}</p>
+                  {isHovered && (
+                    <div className="absolute right-full top-1/2 -translate-y-1/2 mr-5 bg-card border border-border rounded-lg px-3 py-2 shadow-lg whitespace-nowrap pointer-events-none" style={{ zIndex: 9999 }}>
+                      <p className="text-[11px] font-semibold text-foreground">{lesson.title}</p>
+                      <p className="text-[9px] text-muted-foreground">{lesson.moduleTitle}</p>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          );
+              );
         })}
       </div>
 
