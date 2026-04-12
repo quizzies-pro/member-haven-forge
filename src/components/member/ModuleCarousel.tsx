@@ -47,20 +47,26 @@ const ModuleCarousel = ({ modules }: ModuleCarouselProps) => {
         </div>
       </div>
 
-      <div
-        ref={scrollRef}
-        className="flex gap-4 overflow-x-auto scrollbar-hide pb-4"
-      >
-        {modules.map((mod, i) => (
-          <ModuleCard
-            key={mod.id}
-            id={mod.id}
-            title={mod.title}
-            coverUrl={mod.cover_url}
-            lessonCount={mod.lessonCount}
-            isFirst={i === 0}
-          />
-        ))}
+      <div className="relative">
+        {/* Fade edges */}
+        <div className="absolute left-0 top-0 bottom-4 w-12 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-4 w-12 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+
+        <div
+          ref={scrollRef}
+          className="flex gap-4 overflow-x-auto scrollbar-hide pb-4"
+        >
+          {modules.map((mod, i) => (
+            <ModuleCard
+              key={mod.id}
+              id={mod.id}
+              title={mod.title}
+              coverUrl={mod.cover_url}
+              lessonCount={mod.lessonCount}
+              isFirst={i === 0}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
