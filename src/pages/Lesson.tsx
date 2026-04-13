@@ -344,7 +344,7 @@ const Lesson = () => {
               </div>
             )}
           </div>
-
+        </div>
       </div>
     </MemberLayout>
   );
