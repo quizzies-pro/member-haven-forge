@@ -284,7 +284,7 @@ const Lesson = () => {
           )}
 
           {/* Questions Section */}
-          <div className="mb-8">
+          <div className="mb-8" style={{ marginRight: 'calc(40px + 1.5rem)' }}>
             <h3 className="text-lg font-bold text-foreground mb-4">Tire suas dúvidas aqui</h3>
             <div className="flex items-center gap-3">
               <input
