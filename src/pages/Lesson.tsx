@@ -263,30 +263,30 @@ const Lesson = () => {
             </div>
           </div>
 
-          {/* Two-column layout: Info left + Accordion right */}
-          <div className="flex gap-6 items-start" style={{ marginRight: 'calc(40px + 1.5rem)' }}>
-            {/* Left column: lesson info, materials, questions */}
-            <div className="flex-1 min-w-0">
-              {/* Info Block */}
-              <div className="mb-8">
-                {lesson.tags && lesson.tags.length > 0 && (
-                  <p className="text-xs text-muted-foreground mb-2">
-                    {lesson.tags.join(" · ")}
-                  </p>
-                )}
-                {lesson.short_description && (
-                  <p className="text-sm text-foreground/80 leading-relaxed">
-                    {lesson.short_description}
-                  </p>
-                )}
-                {lesson.content_html && (
-                  <div
-                    className="prose prose-invert prose-sm max-w-none mt-4"
-                    dangerouslySetInnerHTML={{ __html: lesson.content_html }}
-                  />
-                )}
-              </div>
+          {/* Info Block - above columns */}
+          <div className="mb-6" style={{ marginRight: 'calc(40px + 1.5rem)' }}>
+            {lesson.tags && lesson.tags.length > 0 && (
+              <p className="text-xs text-muted-foreground mb-2">
+                {lesson.tags.join(" · ")}
+              </p>
+            )}
+            {lesson.short_description && (
+              <p className="text-sm text-foreground/80 leading-relaxed">
+                {lesson.short_description}
+              </p>
+            )}
+            {lesson.content_html && (
+              <div
+                className="prose prose-invert prose-sm max-w-none mt-4"
+                dangerouslySetInnerHTML={{ __html: lesson.content_html }}
+              />
+            )}
+          </div>
 
+          {/* Two-column layout: Materials left + Accordion right */}
+          <div className="flex gap-6 items-start" style={{ marginRight: 'calc(40px + 1.5rem)' }}>
+            {/* Left column: materials, questions */}
+            <div className="flex-1 min-w-0">
               {/* Materials */}
               {materials.length > 0 && (
                 <div className="mb-8">
