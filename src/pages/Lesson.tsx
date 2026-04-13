@@ -264,7 +264,7 @@ const Lesson = () => {
           </div>
 
           {/* Two-column layout: Info left + Accordion right */}
-          <div className="flex gap-6" style={{ marginRight: 'calc(40px + 1.5rem)' }}>
+          <div className="flex gap-6 items-start" style={{ marginRight: 'calc(40px + 1.5rem)' }}>
             {/* Left column: lesson info, materials, questions */}
             <div className="flex-1 min-w-0">
               {/* Info Block */}
