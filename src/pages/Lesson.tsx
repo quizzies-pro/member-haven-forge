@@ -200,7 +200,7 @@ const Lesson = () => {
             )}
 
             {/* Sidebar aligned to video height */}
-            <div className="hidden md:flex w-10 flex-shrink-0">
+            <div className="hidden md:flex w-10 flex-shrink-0 relative z-30">
               <LessonSidebar
                 lessons={allSidebarLessons}
                 currentLessonId={lessonId || ""}
