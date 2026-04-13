@@ -41,7 +41,7 @@ const ModuleAccordion = ({
         const isOpen = openModuleId === mod.id;
         const lessons = lessonsByModule[mod.id] || [];
         const completedCount = lessons.filter((l) => completedLessonIds.includes(l.id)).length;
-
+        const allCompleted = lessons.length > 0 && completedCount === lessons.length;
         return (
           <div
             key={mod.id}
