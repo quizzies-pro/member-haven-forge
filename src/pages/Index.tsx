@@ -95,7 +95,7 @@ const Index = () => {
   }
 
   return (
-    <MemberLayout logoUrl={course.logo_url}>
+    <MemberLayout logoUrl={course.logo_url} fullBleed>
       <CourseBanner bannerUrl={course.banner_url} title={course.title} logoUrl={course.logo_url} />
       <ModuleCarousel modules={modules} />
     </MemberLayout>
