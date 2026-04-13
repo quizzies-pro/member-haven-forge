@@ -340,25 +340,25 @@ const Lesson = () => {
                 return (
                   <div className="mb-8">
                     <h3 className="text-lg font-bold text-foreground mb-4">Próximas aulas</h3>
-                    <div className="space-y-2">
+                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
                       {nextLessons.map((nl) => {
                         const mod = moduleMap.get(nl.module_id);
                         return (
                           <button
                             key={nl.id}
                             onClick={() => navigate(`/aula/${nl.id}`)}
-                            className="w-full flex items-center gap-3 p-3 rounded-lg border border-border/30 hover:border-primary/40 hover:bg-card/30 transition-all text-left"
+                            className="flex-shrink-0 w-[180px] flex flex-col items-center gap-2 p-3 rounded-lg border border-border/30 hover:border-primary/40 hover:bg-card/30 transition-all text-center"
                           >
                             {mod?.cover_url ? (
-                              <img src={mod.cover_url} alt="" className="w-10 h-10 rounded-sm object-cover flex-shrink-0" />
+                              <img src={mod.cover_url} alt="" className="w-16 h-16 rounded-sm object-cover" />
                             ) : (
-                              <div className="w-10 h-10 rounded-sm bg-secondary flex items-center justify-center flex-shrink-0">
-                                <Play size={14} className="text-foreground" />
+                              <div className="w-16 h-16 rounded-sm bg-secondary flex items-center justify-center">
+                                <Play size={20} className="text-foreground" />
                               </div>
                             )}
-                            <div className="min-w-0 flex-1">
-                              <p className="text-sm font-semibold text-foreground truncate">{nl.title}</p>
-                              <p className="text-xs text-muted-foreground truncate">{mod?.title}</p>
+                            <div className="min-w-0 w-full">
+                              <p className="text-xs font-semibold text-foreground truncate">{nl.title}</p>
+                              <p className="text-[10px] text-muted-foreground truncate">{mod?.title}</p>
                             </div>
                           </button>
                         );
