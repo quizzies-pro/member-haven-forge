@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronDown, CheckCircle, Play } from "lucide-react";
+import { ChevronDown, CheckCircle, CheckCircle2, Play } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 
 interface LessonItem {
