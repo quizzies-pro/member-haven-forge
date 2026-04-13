@@ -207,8 +207,8 @@ const Lesson = () => {
             </div>
           </div>
 
-          {/* Stars + Complete button aligned with video */}
-          <div className="flex items-center gap-4 mb-6">
+          {/* Stars + Complete button right-aligned with video */}
+          <div className="flex items-center justify-end gap-4 mb-6" style={{ marginRight: 'calc(40px + 1.5rem)' }}>
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((i) => (
                 <Star key={i} size={20} className="text-primary fill-primary" />
