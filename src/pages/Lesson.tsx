@@ -207,9 +207,29 @@ const Lesson = () => {
             </div>
           </div>
 
+          {/* Stars + Complete button aligned with video */}
+          <div className="flex items-center gap-4 mb-6">
+            <div className="flex gap-1">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Star key={i} size={20} className="text-primary fill-primary" />
+              ))}
+            </div>
+            <button
+              onClick={handleComplete}
+              disabled={isCompleted || completing}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-all ${
+                isCompleted
+                  ? "border border-primary/40 text-primary cursor-default"
+                  : "border border-foreground/30 text-foreground hover:border-primary hover:text-primary"
+              }`}
+            >
+              <CheckCircle size={18} />
+              {isCompleted ? "Concluída" : completing ? "..." : "Marcar como concluído"}
+            </button>
+          </div>
+
           {/* Info Block */}
-          <div className="flex flex-col md:flex-row gap-6 mb-8">
-            {/* Left: instructor + title + description */}
+          <div className="mb-8">
             <div className="flex-1 min-w-0">
               {lesson.tags && lesson.tags.length > 0 && (
                 <p className="text-xs text-muted-foreground mb-2">
@@ -217,7 +237,6 @@ const Lesson = () => {
                 </p>
               )}
               <div className="flex items-center gap-3 mb-3">
-                {/* Instructor avatar */}
                 <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">
                   {course?.instructor_name?.charAt(0)?.toUpperCase() || "T"}
                 </div>
@@ -236,29 +255,6 @@ const Lesson = () => {
                   dangerouslySetInnerHTML={{ __html: lesson.content_html }}
                 />
               )}
-            </div>
-
-            {/* Right: stars + complete button */}
-            <div className="flex flex-col items-end gap-4 flex-shrink-0">
-              {/* Stars (visual only) */}
-              <div className="flex gap-1">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Star key={i} size={20} className="text-primary fill-primary" />
-                ))}
-              </div>
-
-              <button
-                onClick={handleComplete}
-                disabled={isCompleted || completing}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-all ${
-                  isCompleted
-                    ? "border border-primary/40 text-primary cursor-default"
-                    : "border border-foreground/30 text-foreground hover:border-primary hover:text-primary"
-                }`}
-              >
-                <CheckCircle size={18} />
-                {isCompleted ? "Concluída" : completing ? "..." : "Marcar como concluído"}
-              </button>
             </div>
           </div>
 
