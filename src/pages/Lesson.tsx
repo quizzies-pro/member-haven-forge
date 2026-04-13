@@ -329,7 +329,7 @@ const Lesson = () => {
             {allModules.length > 0 && (
               <div className="hidden md:block w-[340px] flex-shrink-0">
                 <h3 className="text-lg font-bold text-foreground mb-4">Conteúdo do curso</h3>
-                <div className="max-h-[480px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+                <div className="max-h-[320px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
                   <ModuleAccordion
                     modules={allModules}
                     lessonsByModule={allLessonsList.reduce<Record<string, { id: string; title: string; module_id: string; sort_order: number }[]>>((acc, l) => {
