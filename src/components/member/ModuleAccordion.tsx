@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronDown, CheckCircle, Play } from "lucide-react";
+import { ChevronDown, CheckCircle, CheckCircle2, Play } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 
 interface LessonItem {
@@ -41,7 +41,7 @@ const ModuleAccordion = ({
         const isOpen = openModuleId === mod.id;
         const lessons = lessonsByModule[mod.id] || [];
         const completedCount = lessons.filter((l) => completedLessonIds.includes(l.id)).length;
-
+        const allCompleted = lessons.length > 0 && completedCount === lessons.length;
         return (
           <div
             key={mod.id}
@@ -73,6 +73,10 @@ const ModuleAccordion = ({
                   {completedCount > 0 && ` · ${completedCount} concluída${completedCount > 1 ? "s" : ""}`}
                 </p>
               </div>
+
+              {allCompleted && (
+                <CheckCircle2 size={18} className="text-primary fill-primary/20 flex-shrink-0" />
+              )}
 
               <ChevronDown
                 size={18}
