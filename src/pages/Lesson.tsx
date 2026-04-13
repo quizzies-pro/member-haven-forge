@@ -6,7 +6,7 @@ import MemberLayout from "@/components/member/MemberLayout";
 import LessonSidebar from "@/components/member/LessonSidebar";
 import ModuleAccordion from "@/components/member/ModuleAccordion";
 import type { SidebarLesson } from "@/components/member/LessonSidebar";
-import { Star, FileText, Send, CheckCircle } from "lucide-react";
+import { Star, FileText, Send, CheckCircle, Play, Trophy } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import { useToast } from "@/hooks/use-toast";
 
