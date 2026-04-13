@@ -1,0 +1,1 @@
+DROP POLICY "Students can delete own messages" ON public.lesson_messages;
