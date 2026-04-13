@@ -74,12 +74,12 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
         style={{ minHeight: 0 }}
       >
         <div
-          className="absolute top-0 left-0 right-0 h-16 pointer-events-none z-20"
+          className="absolute top-0 left-0 right-0 h-24 pointer-events-none z-20"
           style={{ background: "linear-gradient(to bottom, hsl(var(--background)) 0%, transparent 100%)" }}
         />
 
         <div
-          className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none z-20"
+          className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none z-20"
           style={{ background: "linear-gradient(to top, hsl(var(--background)) 0%, transparent 100%)" }}
         />
 
