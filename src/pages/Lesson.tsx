@@ -353,7 +353,7 @@ const Lesson = () => {
 
           {/* Course Progress - full width below */}
           {allLessonsList.length > 0 && (
-            <div className="mt-6 p-4 rounded-lg border border-border/30 bg-card/20" style={{ marginRight: 'calc(40px + 1.5rem)' }}>
+            <div className="mt-6 p-4 rounded-lg border border-primary/30 bg-card/20" style={{ marginRight: 'calc(40px + 1.5rem)' }}>
               <div className="flex items-center gap-2 mb-3">
                 <Trophy size={18} className="text-primary" />
                 <span className="text-sm font-bold text-foreground">Seu progresso</span>
