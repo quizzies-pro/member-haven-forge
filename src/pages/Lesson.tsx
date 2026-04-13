@@ -329,48 +329,9 @@ const Lesson = () => {
                 </div>
               </div>
 
-              {/* Next Lessons */}
-              {(() => {
-                const currentIdx = allLessonsList.findIndex((l) => l.id === lessonId);
-                const nextLessons = allLessonsList
-                  .filter((l, idx) => idx > currentIdx && !completedIds.includes(l.id))
-                  .slice(0, 3);
-                if (nextLessons.length === 0) return null;
-                const moduleMap = new Map(allModules.map((m) => [m.id, m]));
-                return (
-                  <div className="mb-8">
-                    <h3 className="text-lg font-bold text-foreground mb-4">Próximas aulas</h3>
-                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
-                      {nextLessons.map((nl) => {
-                        const mod = moduleMap.get(nl.module_id);
-                        return (
-                          <button
-                            key={nl.id}
-                            onClick={() => navigate(`/aula/${nl.id}`)}
-                            className="flex-shrink-0 min-w-[240px] flex items-center gap-3 bg-card/30 border border-border/30 rounded-lg px-4 py-3 hover:border-primary/40 transition-all text-left group"
-                          >
-                            {mod?.cover_url ? (
-                              <img src={mod.cover_url} alt="" className="w-12 h-12 rounded object-cover flex-shrink-0" />
-                            ) : (
-                              <div className="w-12 h-12 rounded bg-secondary flex items-center justify-center flex-shrink-0">
-                                <Play size={16} className="text-foreground" />
-                              </div>
-                            )}
-                            <div className="min-w-0 flex-1">
-                              <p className="text-sm font-semibold text-foreground truncate">{nl.title}</p>
-                              <p className="text-xs text-muted-foreground truncate">{mod?.title}</p>
-                            </div>
-                            <ChevronRight size={16} className="text-muted-foreground group-hover:text-primary flex-shrink-0 transition-colors" />
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })()}
             </div>
 
-            {/* Right column: Module accordion + Progress */}
+            {/* Right column: Module accordion */}
             {allModules.length > 0 && (
               <div className="hidden md:block w-[340px] flex-shrink-0 pt-3">
                 <h3 className="text-lg font-bold text-foreground mb-4">Conteúdo do curso</h3>
@@ -386,27 +347,28 @@ const Lesson = () => {
                     completedLessonIds={completedIds}
                   />
                 </div>
-
-                {/* Course Progress */}
-                {allLessonsList.length > 0 && (
-                  <div className="mt-6 p-4 rounded-lg border border-border/30 bg-card/20">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Trophy size={18} className="text-primary" />
-                      <span className="text-sm font-bold text-foreground">Seu progresso</span>
-                    </div>
-                    <div className="w-full h-2 bg-secondary rounded-full overflow-hidden mb-2">
-                      <div
-                        className="h-full bg-primary rounded-full transition-all duration-500"
-                        style={{ width: `${Math.round((completedIds.length / allLessonsList.length) * 100)}%` }}
-                      />
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {completedIds.length} de {allLessonsList.length} aulas concluídas ({Math.round((completedIds.length / allLessonsList.length) * 100)}%)
-                    </p>
-                  </div>
-                )}
               </div>
             )}
+          </div>
+
+          {/* Course Progress - full width below */}
+          {allLessonsList.length > 0 && (
+            <div className="mt-6 p-4 rounded-lg border border-border/30 bg-card/20" style={{ marginRight: 'calc(40px + 1.5rem)' }}>
+              <div className="flex items-center gap-2 mb-3">
+                <Trophy size={18} className="text-primary" />
+                <span className="text-sm font-bold text-foreground">Seu progresso</span>
+              </div>
+              <div className="w-full h-2 bg-secondary rounded-full overflow-hidden mb-2">
+                <div
+                  className="h-full bg-primary rounded-full transition-all duration-500"
+                  style={{ width: `${Math.round((completedIds.length / allLessonsList.length) * 100)}%` }}
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {completedIds.length} de {allLessonsList.length} aulas concluídas ({Math.round((completedIds.length / allLessonsList.length) * 100)}%)
+              </p>
+            </div>
+          )}
           </div>
         </div>
       </div>
