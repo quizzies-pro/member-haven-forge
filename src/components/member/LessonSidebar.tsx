@@ -88,8 +88,8 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
           style={{
             left: "calc(50% - 0.5px)",
             width: 1,
-            top: DOT_GAP / 2,
-            bottom: DOT_GAP / 2,
+            top: DOT_GAP,
+            bottom: DOT_GAP,
           }}
         />
 
