@@ -332,7 +332,7 @@ const Lesson = () => {
 
             {/* Right column: Module accordion - scrollable */}
             {allModules.length > 0 && (
-              <div className="hidden md:block w-[340px] flex-shrink-0">
+              <div className="hidden md:block w-[340px] flex-shrink-0 pt-3">
                 <h3 className="text-lg font-bold text-foreground mb-4">Conteúdo do curso</h3>
                 <div className="max-h-[240px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
                   <ModuleAccordion
