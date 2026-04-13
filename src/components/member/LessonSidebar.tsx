@@ -8,6 +8,7 @@ export interface SidebarLesson {
   moduleTitle: string;
   moduleId: string;
   thumbnailUrl?: string | null;
+  moduleCoverUrl?: string | null;
 }
 
 interface LessonSidebarProps {
@@ -115,12 +116,12 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
                   />
 
               {isHovered && (
-                <div className="absolute right-full top-1/2 -translate-y-1/2 mr-5 bg-black rounded-lg overflow-hidden shadow-lg whitespace-nowrap pointer-events-none flex items-center gap-2.5" style={{ zIndex: 9999 }}>
-                  {lesson.thumbnailUrl && (
+                <div className="absolute right-full top-1/2 -translate-y-1/2 mr-5 bg-black rounded-lg overflow-hidden shadow-lg whitespace-nowrap pointer-events-none flex items-center gap-0" style={{ zIndex: 9999 }}>
+                  {(lesson.thumbnailUrl || lesson.moduleCoverUrl) && (
                     <img
-                      src={lesson.thumbnailUrl}
+                      src={lesson.thumbnailUrl || lesson.moduleCoverUrl || ""}
                       alt={lesson.title}
-                      className="w-16 h-10 object-cover flex-shrink-0"
+                      className="w-16 h-12 object-cover flex-shrink-0"
                     />
                   )}
                   <div className="px-3 py-2">

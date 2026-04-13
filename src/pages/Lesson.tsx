@@ -82,6 +82,7 @@ const Lesson = () => {
             moduleTitle: moduleMap.get(l.module_id)?.title || "",
             moduleId: l.module_id,
             thumbnailUrl: l.thumbnail_url || null,
+            moduleCoverUrl: moduleMap.get(l.module_id)?.cover_url || null,
           }))
         );
       }
