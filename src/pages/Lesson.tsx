@@ -369,7 +369,6 @@ const Lesson = () => {
               </p>
             </div>
           )}
-          </div>
         </div>
       </div>
     </MemberLayout>
