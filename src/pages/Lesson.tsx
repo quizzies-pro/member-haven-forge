@@ -62,7 +62,7 @@ const Lesson = () => {
       if (allModulesRes.data && allModulesRes.data.length > 0) {
         const { data: allLessonsData } = await supabase
           .from("lessons")
-          .select("id, title, module_id, sort_order")
+          .select("id, title, module_id, sort_order, thumbnail_url")
           .eq("course_id", lessonData.course_id)
           .eq("status", "published")
           .order("sort_order");
@@ -81,6 +81,7 @@ const Lesson = () => {
             title: l.title,
             moduleTitle: moduleMap.get(l.module_id)?.title || "",
             moduleId: l.module_id,
+            thumbnailUrl: l.thumbnail_url || null,
           }))
         );
       }
