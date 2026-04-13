@@ -221,25 +221,46 @@ const Lesson = () => {
             </div>
           </div>
 
-          {/* Stars + Complete button right-aligned with video */}
-          <div className="flex items-center justify-end gap-4 mb-6" style={{ marginRight: 'calc(40px + 1.5rem)' }}>
-            <div className="flex gap-1">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <Star key={i} size={20} className="text-primary fill-primary" />
-              ))}
+          {/* Lesson info + Stars + Complete - single row aligned with video */}
+          <div className="flex items-center justify-between mb-6" style={{ marginRight: 'calc(40px + 1.5rem)' }}>
+            {/* Left: module cover + lesson title */}
+            <div className="flex items-center gap-3 min-w-0">
+              {module?.cover_url ? (
+                <img
+                  src={module.cover_url}
+                  alt={module.title || "Módulo"}
+                  className="w-12 h-12 rounded-sm object-cover flex-shrink-0"
+                />
+              ) : (
+                <div className="w-12 h-12 rounded-sm bg-secondary flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">
+                  {module?.title?.charAt(0)?.toUpperCase() || "M"}
+                </div>
+              )}
+              <h1 className="text-xl md:text-2xl font-extrabold text-foreground leading-tight truncate">
+                {lesson.title}
+              </h1>
             </div>
-            <button
-              onClick={handleComplete}
-              disabled={isCompleted || completing}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-all ${
-                isCompleted
-                  ? "border border-primary/40 text-primary cursor-default"
-                  : "border border-foreground/30 text-foreground hover:border-primary hover:text-primary"
-              }`}
-            >
-              <CheckCircle size={18} />
-              {isCompleted ? "Concluída" : completing ? "..." : "Marcar como concluído"}
-            </button>
+
+            {/* Right: stars + complete button */}
+            <div className="flex items-center gap-4 flex-shrink-0">
+              <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <Star key={i} size={20} className="text-primary fill-primary" />
+                ))}
+              </div>
+              <button
+                onClick={handleComplete}
+                disabled={isCompleted || completing}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-all ${
+                  isCompleted
+                    ? "border border-primary/40 text-primary cursor-default"
+                    : "border border-foreground/30 text-foreground hover:border-primary hover:text-primary"
+                }`}
+              >
+                <CheckCircle size={18} />
+                {isCompleted ? "Concluída" : completing ? "..." : "Marcar como concluído"}
+              </button>
+            </div>
           </div>
 
           {/* Two-column layout: Info left + Accordion right */}
@@ -253,22 +274,6 @@ const Lesson = () => {
                     {lesson.tags.join(" · ")}
                   </p>
                 )}
-                <div className="flex items-center gap-3 mb-3">
-                  {module?.cover_url ? (
-                    <img
-                      src={module.cover_url}
-                      alt={module.title || "Módulo"}
-                      className="w-12 h-12 rounded-sm object-cover flex-shrink-0"
-                    />
-                  ) : (
-                    <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">
-                      {module?.title?.charAt(0)?.toUpperCase() || "M"}
-                    </div>
-                  )}
-                  <h1 className="text-xl md:text-2xl font-extrabold text-foreground leading-tight">
-                    {lesson.title}
-                  </h1>
-                </div>
                 {lesson.short_description && (
                   <p className="text-sm text-foreground/80 leading-relaxed">
                     {lesson.short_description}
