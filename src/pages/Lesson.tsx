@@ -321,6 +321,23 @@ const Lesson = () => {
               </button>
             </div>
           </div>
+
+          {/* Module Accordion */}
+          {allModules.length > 0 && (
+            <div className="mb-8" style={{ marginRight: 'calc(40px + 1.5rem)' }}>
+              <h3 className="text-lg font-bold text-foreground mb-4">Conteúdo do curso</h3>
+              <ModuleAccordion
+                modules={allModules}
+                lessonsByModule={allLessonsList.reduce<Record<string, { id: string; title: string; module_id: string; sort_order: number }[]>>((acc, l) => {
+                  if (!acc[l.module_id]) acc[l.module_id] = [];
+                  acc[l.module_id].push(l);
+                  return acc;
+                }, {})}
+                currentLessonId={lessonId || ""}
+                completedLessonIds={completedIds}
+              />
+            </div>
+          )}
         </div>
 
       </div>
