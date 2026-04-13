@@ -419,8 +419,7 @@ const Lesson = () => {
                             </p>
                             <p>{msg.message}</p>
                           </div>
-                          {msg.sender_type === "student" && (
-                            <button
+                          <button
                               onClick={async () => {
                                 const { error } = await supabase
                                   .from("lesson_messages")
@@ -438,7 +437,6 @@ const Lesson = () => {
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </button>
-                          )}
                         </div>
                       </div>
                     ))}
