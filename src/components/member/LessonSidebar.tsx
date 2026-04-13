@@ -127,7 +127,7 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
                       className="w-28 h-20 object-cover flex-shrink-0"
                     />
                   )}
-                  <div className="px-4 py-3 min-w-[160px]">
+                  <div className="px-4 py-4 min-w-[160px]">
                     <p className="text-sm font-semibold text-white leading-tight">{lesson.title}</p>
                     <p className="text-xs text-gray-400 mt-1 leading-tight">{lesson.moduleTitle}</p>
                   </div>
