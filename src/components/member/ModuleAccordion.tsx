@@ -45,7 +45,7 @@ const ModuleAccordion = ({
         return (
           <div
             key={mod.id}
-            className="border border-border/40 rounded-lg overflow-hidden"
+            className="border border-border/80 rounded-lg overflow-hidden"
           >
             {/* Module Header */}
             <button
