@@ -406,16 +406,40 @@ const Lesson = () => {
                     {messages.map((msg) => (
                       <div
                         key={msg.id}
-                        className={`text-sm p-3 rounded-lg ${
+                        className={`text-sm p-3 rounded-lg group relative ${
                           msg.sender_type === "student"
                             ? "bg-secondary/50 text-foreground ml-4"
                             : "bg-primary/10 text-foreground mr-4 border border-primary/20"
                         }`}
                       >
-                        <p className="text-xs text-muted-foreground mb-1">
-                          {msg.sender_type === "student" ? "Você" : "Professor"} · {new Date(msg.created_at).toLocaleDateString("pt-BR")}
-                        </p>
-                        <p>{msg.message}</p>
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex-1">
+                            <p className="text-xs text-muted-foreground mb-1">
+                              {msg.sender_type === "student" ? "Você" : "Professor"} · {new Date(msg.created_at).toLocaleDateString("pt-BR")}
+                            </p>
+                            <p>{msg.message}</p>
+                          </div>
+                          {msg.sender_type === "student" && (
+                            <button
+                              onClick={async () => {
+                                const { error } = await supabase
+                                  .from("lesson_messages")
+                                  .delete()
+                                  .eq("id", msg.id);
+                                if (!error) {
+                                  setMessages((prev) => prev.filter((m) => m.id !== msg.id));
+                                  toast({ title: "Mensagem excluída" });
+                                } else {
+                                  toast({ title: "Erro ao excluir", variant: "destructive" });
+                                }
+                              }}
+                              className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive shrink-0 mt-0.5"
+                              title="Excluir mensagem"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>
