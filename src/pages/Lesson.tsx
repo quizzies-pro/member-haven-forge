@@ -402,7 +402,7 @@ const Lesson = () => {
 
                 {/* Previous messages */}
                 {messages.length > 0 && (
-                  <div className="space-y-3 mb-4 max-h-[200px] overflow-y-auto pr-1">
+                  <div className="space-y-4 mb-6 max-h-[400px] overflow-y-auto pr-1">
                     {messages.map((msg) => (
                       <div
                         key={msg.id}
