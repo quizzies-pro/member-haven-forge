@@ -88,6 +88,15 @@ const Lesson = () => {
             moduleCoverUrl: moduleMap.get(l.module_id)?.cover_url || null,
           }))
         );
+
+        setAllLessonsList(
+          sorted.map((l) => ({
+            id: l.id,
+            title: l.title,
+            module_id: l.module_id,
+            sort_order: l.sort_order,
+          }))
+        );
       }
 
       if (enrollmentRes.data) {
