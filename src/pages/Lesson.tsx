@@ -184,7 +184,7 @@ const Lesson = () => {
           </div>
 
           {/* Video Player + Sidebar row */}
-          <div className="flex items-stretch gap-2 mb-6 relative overflow-visible">
+          <div className="flex items-stretch gap-6 mb-6 relative overflow-visible">
             {embedUrl && (
               <div className="relative flex-1 aspect-video rounded-xl overflow-hidden bg-card z-10">
                 <iframe
