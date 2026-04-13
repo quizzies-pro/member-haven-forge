@@ -116,7 +116,25 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
                   />
 
               {isHovered && (
-                <div className="absolute right-full top-1/2 -translate-y-1/2 mr-5 bg-black rounded-xl overflow-hidden shadow-xl whitespace-nowrap pointer-events-none flex items-center gap-0" style={{ zIndex: 9999 }}>
+                <div 
+                  className="fixed bg-black rounded-xl overflow-hidden shadow-xl whitespace-nowrap pointer-events-none flex items-center gap-0"
+                  style={{ 
+                    zIndex: 99999,
+                    transform: 'translate(-100%, -50%)',
+                    top: 'var(--tooltip-top)',
+                    left: 'var(--tooltip-left)',
+                  }}
+                  ref={(el) => {
+                    if (el) {
+                      const parent = el.parentElement;
+                      if (parent) {
+                        const rect = parent.getBoundingClientRect();
+                        el.style.top = `${rect.top + rect.height / 2}px`;
+                        el.style.left = `${rect.left - 12}px`;
+                      }
+                    }
+                  }}
+                >
                   {(lesson.thumbnailUrl || lesson.moduleCoverUrl) && (
                     <img
                       src={lesson.thumbnailUrl || lesson.moduleCoverUrl || ""}
