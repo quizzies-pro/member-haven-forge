@@ -428,7 +428,7 @@ const Lesson = () => {
                     onChange={(e) => setQuestion(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleSendQuestion()}
                     placeholder="Escreva seu texto aqui..."
-                    className="flex-1 bg-transparent border-b border-muted-foreground/30 text-foreground text-sm py-2 focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground/50"
+                    className="flex-1 bg-transparent border-b border-muted-foreground/30 text-foreground text-sm py-2 focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground/50 mx-0 my-[40px]"
                   />
                   <button
                     onClick={handleSendQuestion}
