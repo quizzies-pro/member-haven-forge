@@ -17,6 +17,7 @@ const MemberLayout = ({ children, logoUrl, fullBleed }: MemberLayoutProps) => {
       <MemberHeader logoUrl={logoUrl} onToggleSidebar={() => setSidebarOpen(true)} />
       <MemberSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <main className={fullBleed ? "" : "pt-[60px]"}>{children}</main>
+      <SupportChatBubble />
     </div>
   );
 };
