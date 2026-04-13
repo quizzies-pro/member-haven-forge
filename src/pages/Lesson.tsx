@@ -28,6 +28,11 @@ const Lesson = () => {
   const [loading, setLoading] = useState(true);
   const [completing, setCompleting] = useState(false);
   const [question, setQuestion] = useState("");
+  const [sendingQuestion, setSendingQuestion] = useState(false);
+  const [messages, setMessages] = useState<Tables<"lesson_messages">[]>([]);
+  const [userRating, setUserRating] = useState<number>(0);
+  const [hoverRating, setHoverRating] = useState<number>(0);
+  const [savingRating, setSavingRating] = useState(false);
   const [allModules, setAllModules] = useState<Tables<"course_modules">[]>([]);
   const [allLessonsList, setAllLessonsList] = useState<{ id: string; title: string; module_id: string; sort_order: number }[]>([]);
   useEffect(() => {
@@ -111,6 +116,24 @@ const Lesson = () => {
         setIsCompleted(ids.includes(lessonId));
       }
 
+      // Fetch user's existing rating
+      const { data: ratingData } = await supabase
+        .from("lesson_ratings")
+        .select("*")
+        .eq("lesson_id", lessonId)
+        .eq("student_id", user.id)
+        .maybeSingle();
+      if (ratingData) setUserRating(ratingData.rating);
+
+      // Fetch messages for this lesson
+      const { data: messagesData } = await supabase
+        .from("lesson_messages")
+        .select("*")
+        .eq("lesson_id", lessonId)
+        .eq("student_id", user.id)
+        .order("created_at", { ascending: true });
+      setMessages(messagesData || []);
+
       setLoading(false);
     };
 
@@ -133,6 +156,51 @@ const Lesson = () => {
       toast({ title: "Aula concluída! ✅" });
     }
     setCompleting(false);
+  };
+
+  const handleSendQuestion = async () => {
+    if (!question.trim() || !user || !lessonId || !lesson) return;
+    setSendingQuestion(true);
+    const { data, error } = await supabase
+      .from("lesson_messages")
+      .insert({
+        student_id: user.id,
+        lesson_id: lessonId,
+        course_id: lesson.course_id,
+        message: question.trim(),
+        sender_type: "student",
+      })
+      .select()
+      .single();
+
+    if (error) {
+      toast({ title: "Erro", description: "Não foi possível enviar sua dúvida.", variant: "destructive" });
+    } else {
+      setQuestion("");
+      if (data) setMessages((prev) => [...prev, data]);
+      toast({ title: "Dúvida enviada! 📩" });
+    }
+    setSendingQuestion(false);
+  };
+
+  const handleRating = async (rating: number) => {
+    if (!user || !lessonId || savingRating) return;
+    setSavingRating(true);
+    const { data: existing } = await supabase
+      .from("lesson_ratings")
+      .select("id")
+      .eq("lesson_id", lessonId)
+      .eq("student_id", user.id)
+      .maybeSingle();
+
+    if (existing) {
+      await supabase.from("lesson_ratings").update({ rating }).eq("id", existing.id);
+    } else {
+      await supabase.from("lesson_ratings").insert({ student_id: user.id, lesson_id: lessonId, rating });
+    }
+    setUserRating(rating);
+    setSavingRating(false);
+    toast({ title: `Avaliação: ${rating} estrela${rating > 1 ? "s" : ""} ⭐` });
   };
 
   const getVimeoEmbedUrl = (url?: string | null) => {
@@ -245,7 +313,23 @@ const Lesson = () => {
             <div className="flex items-center gap-4 flex-shrink-0">
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map((i) => (
-                  <Star key={i} size={20} className="text-primary fill-primary" />
+                  <button
+                    key={i}
+                    onClick={() => handleRating(i)}
+                    onMouseEnter={() => setHoverRating(i)}
+                    onMouseLeave={() => setHoverRating(0)}
+                    disabled={savingRating}
+                    className="transition-transform hover:scale-110 disabled:opacity-50"
+                  >
+                    <Star
+                      size={20}
+                      className={
+                        (hoverRating || userRating) >= i
+                          ? "text-primary fill-primary"
+                          : "text-muted-foreground"
+                      }
+                    />
+                  </button>
                 ))}
               </div>
               <button
@@ -315,16 +399,43 @@ const Lesson = () => {
               {/* Questions Section */}
               <div className="mb-8">
                 <h3 className="text-lg font-bold text-foreground mb-4">Tire suas dúvidas aqui</h3>
+
+                {/* Previous messages */}
+                {messages.length > 0 && (
+                  <div className="space-y-3 mb-4 max-h-[200px] overflow-y-auto pr-1">
+                    {messages.map((msg) => (
+                      <div
+                        key={msg.id}
+                        className={`text-sm p-3 rounded-lg ${
+                          msg.sender_type === "student"
+                            ? "bg-secondary/50 text-foreground ml-4"
+                            : "bg-primary/10 text-foreground mr-4 border border-primary/20"
+                        }`}
+                      >
+                        <p className="text-xs text-muted-foreground mb-1">
+                          {msg.sender_type === "student" ? "Você" : "Professor"} · {new Date(msg.created_at).toLocaleDateString("pt-BR")}
+                        </p>
+                        <p>{msg.message}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 <div className="flex items-center gap-3">
                   <input
                     type="text"
                     value={question}
                     onChange={(e) => setQuestion(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleSendQuestion()}
                     placeholder="Escreva seu texto aqui..."
                     className="flex-1 bg-transparent border-b border-muted-foreground/30 text-foreground text-sm py-2 focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground/50"
                   />
-                  <button className="border border-foreground/30 text-foreground text-sm font-bold uppercase tracking-wider px-5 py-2 rounded hover:border-primary hover:text-primary transition-colors">
-                    Enviar
+                  <button
+                    onClick={handleSendQuestion}
+                    disabled={sendingQuestion || !question.trim()}
+                    className="border border-foreground/30 text-foreground text-sm font-bold uppercase tracking-wider px-5 py-2 rounded hover:border-primary hover:text-primary transition-colors disabled:opacity-50"
+                  >
+                    {sendingQuestion ? "..." : "Enviar"}
                   </button>
                 </div>
               </div>
