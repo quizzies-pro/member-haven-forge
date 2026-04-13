@@ -239,9 +239,17 @@ const Lesson = () => {
                 </p>
               )}
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">
-                  {course?.instructor_name?.charAt(0)?.toUpperCase() || "T"}
-                </div>
+                {module?.cover_url ? (
+                  <img
+                    src={module.cover_url}
+                    alt={module.title || "Módulo"}
+                    className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
+                  />
+                ) : (
+                  <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">
+                    {module?.title?.charAt(0)?.toUpperCase() || "M"}
+                  </div>
+                )}
                 <h1 className="text-xl md:text-2xl font-extrabold text-foreground leading-tight">
                   {lesson.title}
                 </h1>
