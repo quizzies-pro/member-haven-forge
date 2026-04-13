@@ -116,24 +116,9 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
                   />
 
               {isHovered && (
-                <div 
-                  className="fixed bg-black rounded-xl overflow-hidden shadow-xl whitespace-nowrap pointer-events-none flex items-center gap-0"
-                  style={{ 
-                    zIndex: 99999,
-                    transform: 'translate(-100%, -50%)',
-                    top: 'var(--tooltip-top)',
-                    left: 'var(--tooltip-left)',
-                  }}
-                  ref={(el) => {
-                    if (el) {
-                      const parent = el.parentElement;
-                      if (parent) {
-                        const rect = parent.getBoundingClientRect();
-                        el.style.top = `${rect.top + rect.height / 2}px`;
-                        el.style.left = `${rect.left - 12}px`;
-                      }
-                    }
-                  }}
+                <div
+                  className="absolute top-1/2 right-full mr-8 -translate-y-1/2 bg-black rounded-xl overflow-hidden shadow-xl pointer-events-none flex items-center gap-0 min-w-[280px]"
+                  style={{ zIndex: 99999 }}
                 >
                   {(lesson.thumbnailUrl || lesson.moduleCoverUrl) && (
                     <img
@@ -142,9 +127,9 @@ const LessonSidebar = ({ lessons, currentLessonId, completedLessonIds }: LessonS
                       className="w-28 h-20 object-cover flex-shrink-0"
                     />
                   )}
-                  <div className="px-4 py-3">
-                    <p className="text-sm font-semibold text-white">{lesson.title}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">{lesson.moduleTitle}</p>
+                  <div className="px-4 py-3 min-w-[160px]">
+                    <p className="text-sm font-semibold text-white leading-tight">{lesson.title}</p>
+                    <p className="text-xs text-gray-400 mt-1 leading-tight">{lesson.moduleTitle}</p>
                   </div>
                 </div>
               )}
