@@ -243,7 +243,7 @@ const Lesson = () => {
                   <img
                     src={module.cover_url}
                     alt={module.title || "Módulo"}
-                    className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
+                    className="w-12 h-12 rounded-md object-cover flex-shrink-0"
                   />
                 ) : (
                   <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">
