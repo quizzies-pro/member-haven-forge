@@ -1,6 +1,7 @@
 import { useState } from "react";
 import MemberHeader from "./MemberHeader";
 import MemberSidebar from "./MemberSidebar";
+import SupportChatBubble from "./SupportChatBubble";
 
 interface MemberLayoutProps {
   children: React.ReactNode;
