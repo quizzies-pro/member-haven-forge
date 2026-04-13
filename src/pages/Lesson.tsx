@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import MemberLayout from "@/components/member/MemberLayout";
 import LessonSidebar from "@/components/member/LessonSidebar";
+import ModuleAccordion from "@/components/member/ModuleAccordion";
 import type { SidebarLesson } from "@/components/member/LessonSidebar";
 import { Star, FileText, Send, CheckCircle } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
@@ -27,7 +28,8 @@ const Lesson = () => {
   const [loading, setLoading] = useState(true);
   const [completing, setCompleting] = useState(false);
   const [question, setQuestion] = useState("");
-
+  const [allModules, setAllModules] = useState<Tables<"course_modules">[]>([]);
+  const [allLessonsList, setAllLessonsList] = useState<{ id: string; title: string; module_id: string; sort_order: number }[]>([]);
   useEffect(() => {
     if (!user || !lessonId) return;
 
@@ -60,6 +62,7 @@ const Lesson = () => {
 
       // Fetch ALL lessons across all modules for sidebar timeline
       if (allModulesRes.data && allModulesRes.data.length > 0) {
+        setAllModules(allModulesRes.data);
         const { data: allLessonsData } = await supabase
           .from("lessons")
           .select("id, title, module_id, sort_order, thumbnail_url")
