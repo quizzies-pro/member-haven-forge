@@ -170,7 +170,7 @@ const SupportChatBubble = () => {
       >
         {open ? <X size={24} /> : <MessageCircle size={24} />}
         {!open && totalUnread > 0 && (
-          <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+          <span className="absolute -top-1 -right-1 w-5 h-5 bg-destructive text-destructive-foreground text-xs font-bold rounded-full flex items-center justify-center">
             {totalUnread}
           </span>
         )}
