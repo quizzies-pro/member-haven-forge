@@ -74,6 +74,10 @@ const ModuleAccordion = ({
                 </p>
               </div>
 
+              {allCompleted && (
+                <CheckCircle2 size={18} className="text-primary fill-primary/20 flex-shrink-0" />
+              )}
+
               <ChevronDown
                 size={18}
                 className={`text-muted-foreground transition-transform duration-200 flex-shrink-0 ${
