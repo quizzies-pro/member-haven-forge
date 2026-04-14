@@ -21,7 +21,7 @@ const CourseBanner = ({ bannerUrl, title, logoUrl }: CourseBannerProps) => {
           <img
             src={logoUrl}
             alt={title}
-            className="max-h-[30%] max-w-[35%] object-contain drop-shadow-2xl"
+            className="max-h-[20%] max-w-[25%] object-contain drop-shadow-2xl"
           />
         </div>
       )}
