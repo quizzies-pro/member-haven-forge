@@ -187,7 +187,7 @@ const SupportChatBubble = () => {
               </button>
             )}
             <h3 className="text-sm font-bold text-foreground flex-1 truncate">
-              {activeThread ? activeThread.lessonTitle : "Suporte para dúvidas"}
+              {activeThread ? activeThread.lessonTitle : "Suporte"}
             </h3>
             {activeThread && (
               <button
