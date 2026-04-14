@@ -86,8 +86,8 @@ const Login = () => {
       </div>
 
       {/* Right - form */}
-      <div className="flex-1 flex items-center justify-center p-8 bg-background">
-        <div className="w-full max-w-md space-y-6">
+      <div className="flex-1 flex items-center justify-center p-6 bg-background">
+        <div className="w-full max-w-xs space-y-5">
           <div className="text-center space-y-2">
             <img src={COURSE_LOGO} alt={COURSE_TITLE} className="h-28 mx-auto object-contain" />
             <div>
