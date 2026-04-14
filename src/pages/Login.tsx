@@ -106,23 +106,23 @@ const Login = () => {
 
           <form
             onSubmit={mode === "login" ? handleLogin : mode === "register" ? handleRegister : handleForgot}
-            className="space-y-4"
+            className="space-y-3"
           >
             {mode === "register" && (
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-foreground">Nome completo</Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="name" className="text-foreground text-sm">Nome completo</Label>
                 <Input
                   id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Seu nome"
-                  className="bg-secondary border-border text-foreground placeholder:text-muted-foreground h-12"
+                  className="bg-secondary border-border text-foreground placeholder:text-muted-foreground h-9 text-sm"
                 />
               </div>
             )}
 
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-foreground">Email</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-foreground text-sm">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -130,13 +130,13 @@ const Login = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="seu@email.com"
                 required
-                className="bg-secondary border-border text-foreground placeholder:text-muted-foreground h-12"
+                className="bg-secondary border-border text-foreground placeholder:text-muted-foreground h-9 text-sm"
               />
             </div>
 
             {mode !== "forgot" && (
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-foreground">Senha</Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="password" className="text-foreground text-sm">Senha</Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -146,14 +146,14 @@ const Login = () => {
                     placeholder="••••••••"
                     required
                     minLength={6}
-                    className="bg-secondary border-border text-foreground placeholder:text-muted-foreground h-12 pr-12"
+                    className="bg-secondary border-border text-foreground placeholder:text-muted-foreground h-9 text-sm pr-10"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
               </div>
@@ -163,14 +163,14 @@ const Login = () => {
               <button
                 type="button"
                 onClick={() => setMode("forgot")}
-                className="text-sm text-primary hover:underline"
+                className="text-xs text-primary hover:underline"
               >
                 Esqueceu sua senha?
               </button>
             )}
 
-            <Button type="submit" disabled={loading} className="w-full h-12 text-base font-semibold">
-              {loading && <Loader2 className="animate-spin mr-2" size={18} />}
+            <Button type="submit" disabled={loading} className="w-full h-9 text-sm font-semibold mt-2">
+              {loading && <Loader2 className="animate-spin mr-2" size={16} />}
               {mode === "login" && "Entrar"}
               {mode === "register" && "Criar conta"}
               {mode === "forgot" && "Enviar link"}
