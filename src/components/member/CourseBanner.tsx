@@ -8,11 +8,11 @@ const CourseBanner = ({ bannerUrl, title, logoUrl }: CourseBannerProps) => {
   if (!bannerUrl) return null;
 
   return (
-    <div className="relative w-full h-[80vh] max-h-[900px] overflow-hidden">
+    <div className="relative w-full h-[50vh] max-h-[500px] overflow-hidden">
       <img
         src={bannerUrl}
         alt={title}
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover object-top"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
       
