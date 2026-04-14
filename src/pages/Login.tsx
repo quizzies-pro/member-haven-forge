@@ -170,7 +170,7 @@ const Login = () => {
 
             <Button type="submit" disabled={loading} className="w-full h-9 text-sm font-semibold mt-2">
               {loading && <Loader2 className="animate-spin mr-2" size={16} />}
-              {mode === "login" && "Entrar"}
+              {mode === "login" && "Login"}
               {mode === "register" && "Criar conta"}
               {mode === "forgot" && "Enviar link"}
             </Button>
@@ -188,7 +188,7 @@ const Login = () => {
               <>
                 Já tem conta?{" "}
                 <button onClick={() => setMode("login")} className="text-primary hover:underline font-medium">
-                  Entrar
+                  Login
                 </button>
               </>
             )}
