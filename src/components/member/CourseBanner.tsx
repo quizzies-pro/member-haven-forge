@@ -17,11 +17,11 @@ const CourseBanner = ({ bannerUrl, title, logoUrl }: CourseBannerProps) => {
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
       
       {logoUrl && (
-        <div className="absolute inset-0 flex items-end justify-center pb-[15%]">
+        <div className="absolute inset-0 flex items-center justify-center">
           <img
             src={logoUrl}
             alt={title}
-            className="max-h-[22%] max-w-[28%] object-contain drop-shadow-2xl"
+            className="max-h-[20%] max-w-[25%] object-contain drop-shadow-2xl"
           />
         </div>
       )}
