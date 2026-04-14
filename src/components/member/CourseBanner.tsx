@@ -12,7 +12,7 @@ const CourseBanner = ({ bannerUrl, title, logoUrl }: CourseBannerProps) => {
       <img
         src={bannerUrl}
         alt={title}
-        className="w-full h-full object-cover object-top"
+        className="w-full h-full object-cover object-[center_30%]"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
       
