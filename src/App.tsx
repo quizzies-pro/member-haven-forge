@@ -11,8 +11,6 @@ import ResetPassword from "./pages/ResetPassword";
 import MyAccount from "./pages/MyAccount";
 import Module from "./pages/Module";
 import Lesson from "./pages/Lesson";
-import Ranking from "./pages/Ranking";
-import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -48,22 +46,6 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Lesson />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/ranking"
-              element={
-                <ProtectedRoute>
-                  <Ranking />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/contato"
-              element={
-                <ProtectedRoute>
-                  <Contact />
                 </ProtectedRoute>
               }
             />
