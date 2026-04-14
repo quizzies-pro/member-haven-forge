@@ -380,6 +380,7 @@ const Lesson = () => {
                       <a
                         key={mat.id}
                         href={mat.file_url || mat.external_link || "#"}
+                        download
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-3 group"
