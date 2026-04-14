@@ -88,18 +88,24 @@ const Login = () => {
       {/* Right - form */}
       <div className="flex-1 flex items-center justify-center p-6 bg-background">
         <div className="w-full max-w-xs space-y-5">
-          <div className="text-center space-y-2">
+          <div className="text-center space-y-4">
+            <img 
+              src="https://res.cloudinary.com/dqsuj0pjy/image/upload/v1776188570/TTS_4_drshty.png" 
+              alt="Logo" 
+              className="h-12 mx-auto object-contain"
+            />
             <div>
               <h1 className="text-2xl font-bold text-foreground">
-                {mode === "login" && "Login"}
+                {mode === "login" && "Entrar"}
                 {mode === "register" && "Criar conta"}
                 {mode === "forgot" && "Recuperar senha"}
               </h1>
-              <p className="mt-2 text-muted-foreground text-sm">
-                {mode === "login" && "Dive Clube"}
-                {mode === "register" && "Preencha seus dados para começar"}
-                {mode === "forgot" && "Enviaremos um link para redefinir sua senha"}
-              </p>
+              {mode !== "login" && (
+                <p className="mt-2 text-muted-foreground text-sm">
+                  {mode === "register" && "Preencha seus dados para começar"}
+                  {mode === "forgot" && "Enviaremos um link para redefinir sua senha"}
+                </p>
+              )}
             </div>
           </div>
 
