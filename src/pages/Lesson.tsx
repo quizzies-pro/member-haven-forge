@@ -377,13 +377,28 @@ const Lesson = () => {
                   <h3 className="text-lg font-bold text-foreground mb-4">Material da aula</h3>
                   <div className="space-y-3">
                     {materials.map((mat) => (
-                      <a
+                      <button
                         key={mat.id}
-                        href={mat.file_url || mat.external_link || "#"}
-                        download
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-3 group"
+                        onClick={async () => {
+                          const url = mat.file_url || mat.external_link;
+                          if (!url) return;
+                          try {
+                            const res = await fetch(url);
+                            if (!res.ok) throw new Error("Download failed");
+                            const blob = await res.blob();
+                            const blobUrl = URL.createObjectURL(blob);
+                            const a = document.createElement("a");
+                            a.href = blobUrl;
+                            a.download = mat.title || "material";
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(blobUrl);
+                          } catch {
+                            window.open(url, "_blank");
+                          }
+                        }}
+                        className="flex items-center gap-3 group cursor-pointer"
                       >
                         <div className="w-10 h-10 bg-destructive rounded flex items-center justify-center text-destructive-foreground text-xs font-bold flex-shrink-0">
                           PDF
@@ -391,7 +406,7 @@ const Lesson = () => {
                         <span className="text-sm text-foreground group-hover:text-primary transition-colors">
                           {mat.title}
                         </span>
-                      </a>
+                      </button>
                     ))}
                   </div>
                 </div>
