@@ -96,7 +96,7 @@ const Index = () => {
 
   return (
     <MemberLayout logoUrl={course.logo_url} fullBleed>
-      <CourseBanner bannerUrl={course.banner_url} title={course.title} logoUrl={course.logo_url} />
+      <CourseBanner bannerUrl={course.banner_url || "https://res.cloudinary.com/dqsuj0pjy/image/upload/v1776185643/freepik_recise-image_2783892524_npiqwj.png"} title={course.title} logoUrl={course.logo_url} />
       <ModuleCarousel modules={modules} />
     </MemberLayout>
   );
