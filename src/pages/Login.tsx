@@ -96,7 +96,7 @@ const Login = () => {
                 {mode === "forgot" && "Recuperar senha"}
               </h1>
               <p className="mt-2 text-muted-foreground text-sm">
-                {mode === "login" && `Acesse a ${COURSE_TITLE}`}
+                {mode === "login" && "Dive Clube"}
                 {mode === "register" && "Preencha seus dados para começar"}
                 {mode === "forgot" && "Enviaremos um link para redefinir sua senha"}
               </p>
