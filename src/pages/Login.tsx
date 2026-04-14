@@ -91,7 +91,7 @@ const Login = () => {
           <div className="text-center space-y-2">
             <div>
               <h1 className="text-2xl font-bold text-foreground">
-                {mode === "login" && "Entrar"}
+                {mode === "login" && "Login"}
                 {mode === "register" && "Criar conta"}
                 {mode === "forgot" && "Recuperar senha"}
               </h1>
