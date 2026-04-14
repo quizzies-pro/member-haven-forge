@@ -89,14 +89,13 @@ const Login = () => {
       <div className="flex-1 flex items-center justify-center p-6 bg-background">
         <div className="w-full max-w-xs space-y-5">
           <div className="text-center space-y-2">
-            <img src={COURSE_LOGO} alt={COURSE_TITLE} className="h-28 mx-auto object-contain" />
             <div>
               <h1 className="text-2xl font-bold text-foreground">
                 {mode === "login" && "Entrar"}
                 {mode === "register" && "Criar conta"}
                 {mode === "forgot" && "Recuperar senha"}
               </h1>
-              <p className="mt-2 text-muted-foreground">
+              <p className="mt-2 text-muted-foreground text-sm">
                 {mode === "login" && `Acesse a ${COURSE_TITLE}`}
                 {mode === "register" && "Preencha seus dados para começar"}
                 {mode === "forgot" && "Enviaremos um link para redefinir sua senha"}
