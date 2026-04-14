@@ -379,26 +379,67 @@ const Lesson = () => {
                     {materials.map((mat) => (
                       <button
                         key={mat.id}
+                        type="button"
                         onClick={async () => {
-                          const url = mat.file_url || mat.external_link;
-                          if (!url) return;
+                          const rawUrl = mat.file_url || mat.external_link;
+                          if (!rawUrl) return;
+
+                          const fileName = /\.[a-z0-9]{2,5}$/i.test(mat.title || "")
+                            ? (mat.title || "material")
+                            : `${mat.title || "material"}.pdf`;
+
+                          let storagePath: string | null = null;
+
                           try {
-                            const res = await fetch(url);
-                            if (!res.ok) throw new Error("Download failed");
-                            const blob = await res.blob();
+                            const parsedUrl = new URL(rawUrl);
+                            const markers = [
+                              "/storage/v1/object/public/materials/",
+                              "/storage/v1/object/authenticated/materials/",
+                              "/storage/v1/object/sign/materials/",
+                            ];
+                            const matchedMarker = markers.find((marker) => parsedUrl.pathname.includes(marker));
+                            if (matchedMarker) {
+                              storagePath = decodeURIComponent(parsedUrl.pathname.split(matchedMarker)[1] || "");
+                            }
+                          } catch {
+                            storagePath = null;
+                          }
+
+                          try {
+                            let blob: Blob;
+
+                            if (storagePath) {
+                              const { data, error } = await supabase.storage.from("materials").download(storagePath);
+                              if (error || !data) throw error || new Error("Download failed");
+                              blob = data;
+                            } else {
+                              const response = await fetch(rawUrl);
+                              if (!response.ok) throw new Error("Download failed");
+                              blob = await response.blob();
+                            }
+
                             const blobUrl = URL.createObjectURL(blob);
-                            const a = document.createElement("a");
-                            a.href = blobUrl;
-                            a.download = mat.title || "material";
-                            document.body.appendChild(a);
-                            a.click();
-                            document.body.removeChild(a);
+                            const link = document.createElement("a");
+                            link.href = blobUrl;
+                            link.download = fileName;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
                             URL.revokeObjectURL(blobUrl);
                           } catch {
-                            window.open(url, "_blank");
+                            if (!storagePath && rawUrl) {
+                              window.open(rawUrl, "_blank", "noopener,noreferrer");
+                              return;
+                            }
+
+                            toast({
+                              title: "Não foi possível baixar o material",
+                              description: "Esse arquivo precisa estar acessível no bucket materials.",
+                              variant: "destructive",
+                            });
                           }
                         }}
-                        className="flex items-center gap-3 group cursor-pointer"
+                        className="flex items-center gap-3 group cursor-pointer text-left"
                       >
                         <div className="w-10 h-10 bg-destructive rounded flex items-center justify-center text-destructive-foreground text-xs font-bold flex-shrink-0">
                           PDF
