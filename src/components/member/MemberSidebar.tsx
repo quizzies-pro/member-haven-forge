@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Home, BookOpen, Trophy, User, MessageCircle, X } from "lucide-react";
+import { Home, User, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface MemberSidebarProps {
@@ -9,10 +9,7 @@ interface MemberSidebarProps {
 
 const navItems = [
   { label: "Início", icon: Home, to: "/" },
-  { label: "Conteúdo", icon: BookOpen, to: "/conteudo" },
-  { label: "Ranking", icon: Trophy, to: "/ranking" },
   { label: "Minha Conta", icon: User, to: "/minha-conta" },
-  { label: "Contato", icon: MessageCircle, to: "/contato" },
 ];
 
 const MemberSidebar = ({ open, onClose }: MemberSidebarProps) => {
