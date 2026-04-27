@@ -970,15 +970,7 @@ export type Database = {
       }
     }
     Functions: {
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
-      is_admin: { Args: { _user_id: string }; Returns: boolean }
-      masked_secret_token: { Args: { token: string }; Returns: string }
+      [_ in never]: never
     }
     Enums: {
       access_type: "lifetime" | "limited"
