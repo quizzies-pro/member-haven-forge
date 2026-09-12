@@ -1,78 +1,54 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import MemberLayout from "@/components/member/MemberLayout";
-import CourseBanner from "@/components/member/CourseBanner";
-import ModuleCarousel from "@/components/member/ModuleCarousel";
+import ProductCard from "@/components/member/ProductCard";
 import type { Tables } from "@/integrations/supabase/types";
 
-interface ModuleWithCount extends Tables<"course_modules"> {
-  lessonCount: number;
-}
-
 const Index = () => {
-  const { user } = useAuth();
-  const [course, setCourse] = useState<Tables<"courses"> | null>(null);
-  const [modules, setModules] = useState<ModuleWithCount[]>([]);
+  const { user, student } = useAuth();
+  const navigate = useNavigate();
+  const [courses, setCourses] = useState<Tables<"courses">[]>([]);
+  const [enrolledCourseIds, setEnrolledCourseIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    if (!user) return;
+    const studentId = student?.id || user?.id;
+    if (!studentId) return;
 
     const fetchData = async () => {
-      const { data: enrollment } = await supabase
-        .from("enrollments")
-        .select("course_id")
-        .eq("student_id", user.id)
-        .eq("status", "active")
-        .limit(1)
-        .single();
+      setLoading(true);
+      setFailed(false);
+      const [coursesResponse, enrollmentsResponse] = await Promise.all([
+        supabase.from("courses").select("*").eq("status", "published").order("display_order"),
+        supabase.from("enrollments").select("course_id").eq("student_id", studentId).eq("status", "active"),
+      ]);
 
-      if (!enrollment) {
-        setLoading(false);
-        return;
+      if (coursesResponse.error || enrollmentsResponse.error) {
+        setFailed(true);
+      } else {
+        setCourses(coursesResponse.data || []);
+        setEnrolledCourseIds(enrollmentsResponse.data?.map((item) => item.course_id) || []);
       }
-
-      const { data: courseData } = await supabase
-        .from("courses")
-        .select("*")
-        .eq("id", enrollment.course_id)
-        .single();
-
-      setCourse(courseData);
-
-      const { data: modulesData } = await supabase
-        .from("course_modules")
-        .select("*")
-        .eq("course_id", enrollment.course_id)
-        .eq("status", "published")
-        .order("sort_order");
-
-      if (modulesData) {
-        const { data: lessons } = await supabase
-          .from("lessons")
-          .select("id, module_id")
-          .eq("course_id", enrollment.course_id)
-          .eq("status", "published");
-
-        const lessonCounts: Record<string, number> = {};
-        lessons?.forEach((l) => {
-          lessonCounts[l.module_id] = (lessonCounts[l.module_id] || 0) + 1;
-        });
-
-        setModules(
-          modulesData.map((m) => ({
-            ...m,
-            lessonCount: lessonCounts[m.id] || 0,
-          }))
-        );
-      }
-
       setLoading(false);
     };
 
     fetchData();
-  }, [user]);
+  }, [student?.id, user?.id]);
+
+  const enrollmentSet = useMemo(() => new Set(enrolledCourseIds), [enrolledCourseIds]);
+
+  const openCourse = (course: Tables<"courses">) => {
+    if (enrollmentSet.has(course.id)) {
+      navigate(`/produto/${course.id}`);
+      return;
+    }
+    if (course.checkout_url) {
+      window.open(course.checkout_url, "_blank", "noopener,noreferrer");
+    }
+  };
 
   if (loading) {
     return (
@@ -84,20 +60,53 @@ const Index = () => {
     );
   }
 
-  if (!course) {
-    return (
-      <MemberLayout>
-        <div className="flex items-center justify-center h-[60vh]">
-          <p className="text-muted-foreground text-lg">Nenhum curso encontrado.</p>
-        </div>
-      </MemberLayout>
-    );
-  }
-
   return (
-    <MemberLayout logoUrl={course.logo_url} fullBleed>
-      <CourseBanner bannerUrl={course.banner_url || "https://res.cloudinary.com/dqsuj0pjy/image/upload/v1776185643/freepik_recise-image_2783892524_npiqwj.png"} title={course.title} logoUrl={course.logo_url} />
-      <ModuleCarousel modules={modules} />
+    <MemberLayout>
+      <section className="border-b border-border bg-card/40 pt-16">
+        <div className="mx-auto max-w-[1280px] px-4 py-12 md:px-6 lg:px-[60px] lg:py-16">
+          <p className="mb-3 text-xs font-bold uppercase text-primary">Dive Club</p>
+          <h1 className="max-w-3xl text-3xl font-extrabold leading-tight text-foreground md:text-5xl">
+            Seus produtos em um só lugar.
+          </h1>
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base">
+            Acesse seus conteúdos ou descubra novas experiências disponíveis no clube.
+          </p>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-[1280px] px-4 py-10 md:px-6 lg:px-[60px] lg:py-14">
+        <div className="mb-7 flex items-end justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase text-muted-foreground">Catálogo</p>
+            <h2 className="mt-1 text-2xl font-extrabold text-foreground">Produtos Dive Club</h2>
+          </div>
+          <span className="text-sm text-muted-foreground">
+            {courses.length} {courses.length === 1 ? "produto" : "produtos"}
+          </span>
+        </div>
+
+        {failed ? (
+          <div className="border-y border-border py-16 text-center">
+            <p className="text-foreground">Não foi possível carregar os produtos.</p>
+            <p className="mt-2 text-sm text-muted-foreground">Atualize a página para tentar novamente.</p>
+          </div>
+        ) : courses.length === 0 ? (
+          <div className="border-y border-border py-16 text-center">
+            <p className="text-muted-foreground">Nenhum produto disponível no momento.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {courses.map((course) => (
+              <ProductCard
+                key={course.id}
+                course={course}
+                hasAccess={enrollmentSet.has(course.id)}
+                onOpen={() => openCourse(course)}
+              />
+            ))}
+          </div>
+        )}
+      </section>
     </MemberLayout>
   );
 };
