@@ -84,7 +84,7 @@ const Course = () => {
   if (!course) return <Navigate to="/" replace />;
 
   return (
-    <MemberLayout logoUrl={course.logo_url} fullBleed>
+    <MemberLayout logoUrl={course.logo_url} fullBleed={Boolean(course.banner_url)}>
       <CourseBanner bannerUrl={course.banner_url} title={course.title} logoUrl={course.logo_url} />
       <ModuleCarousel modules={modules} />
     </MemberLayout>

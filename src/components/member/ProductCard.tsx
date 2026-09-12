@@ -13,7 +13,13 @@ const ProductCard = ({ course, hasAccess, onOpen }: ProductCardProps) => {
 
   return (
     <article className="group overflow-hidden rounded-lg border border-border bg-card transition-colors hover:border-primary/50">
-      <div className="relative aspect-[16/9] overflow-hidden bg-secondary">
+      <button
+        type="button"
+        onClick={onOpen}
+        disabled={!hasAccess && !canBuy}
+        aria-label={`${hasAccess ? "Acessar" : canBuy ? "Conhecer" : "Produto indisponível"}: ${course.title}`}
+        className="relative block aspect-[16/9] w-full overflow-hidden bg-secondary text-left disabled:cursor-not-allowed"
+      >
         {course.cover_url || course.banner_url ? (
           <img
             src={course.cover_url || course.banner_url || ""}
@@ -40,7 +46,7 @@ const ProductCard = ({ course, hasAccess, onOpen }: ProductCardProps) => {
             </>
           )}
         </div>
-      </div>
+      </button>
 
       <div className="p-5">
         <h2 className="text-xl font-extrabold text-foreground">{course.title}</h2>

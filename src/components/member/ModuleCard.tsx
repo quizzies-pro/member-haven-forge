@@ -14,10 +14,11 @@ interface ModuleCardProps {
 
 const ModuleCard = ({ id, title, coverUrl, lessonCount, isFirst }: ModuleCardProps) => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, student } = useAuth();
 
   const handleClick = async () => {
     if (!user) { navigate(`/modulo/${id}`); return; }
+    const studentId = student?.id || user.id;
 
     // Fetch lessons for this module
     const { data: lessons } = await supabase
@@ -33,7 +34,7 @@ const ModuleCard = ({ id, title, coverUrl, lessonCount, isFirst }: ModuleCardPro
     const { data: enrollment } = await supabase
       .from("enrollments")
       .select("id")
-      .eq("student_id", user.id)
+      .eq("student_id", studentId)
       .eq("course_id", lessons[0].course_id)
       .eq("status", "active")
       .maybeSingle();
