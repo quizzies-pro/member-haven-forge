@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { Navigate, useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import MemberLayout from "@/components/member/MemberLayout";
 import LessonSidebar from "@/components/member/LessonSidebar";
 import ModuleAccordion from "@/components/member/ModuleAccordion";
 import type { SidebarLesson } from "@/components/member/LessonSidebar";
-import { Star, FileText, Send, CheckCircle, Play, Trophy, ChevronRight } from "lucide-react";
+import { ArrowLeft, Star, FileText, Send, CheckCircle, Play, Trophy, ChevronRight } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import { useToast } from "@/hooks/use-toast";
 
@@ -35,6 +35,7 @@ const Lesson = () => {
   const [savingRating, setSavingRating] = useState(false);
   const [allModules, setAllModules] = useState<Tables<"course_modules">[]>([]);
   const [allLessonsList, setAllLessonsList] = useState<{ id: string; title: string; module_id: string; sort_order: number }[]>([]);
+  const [denied, setDenied] = useState(false);
   useEffect(() => {
     if (!user || !lessonId) return;
 
@@ -114,6 +115,8 @@ const Lesson = () => {
         const ids = completedLessons?.map((c) => c.lesson_id) || [];
         setCompletedIds(ids);
         setIsCompleted(ids.includes(lessonId));
+      } else {
+        setDenied(true);
       }
 
       // Fetch user's existing rating
@@ -139,6 +142,8 @@ const Lesson = () => {
 
     fetchData();
   }, [user, lessonId]);
+
+  if (denied) return <Navigate to="/" replace />;
 
   const handleComplete = async () => {
     if (!enrollmentId || !lessonId || isCompleted) return;
@@ -241,6 +246,16 @@ const Lesson = () => {
         <div className="py-6">
           {/* Breadcrumb */}
           <div className="mb-4">
+            {course && (
+              <button
+                type="button"
+                onClick={() => navigate(`/produto/${course.id}`)}
+                className="mb-3 flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+              >
+                <ArrowLeft size={17} />
+                Voltar para {course.title}
+              </button>
+            )}
             <h2 className="text-lg md:text-xl font-bold text-foreground">
               {module?.title || "Módulo"}
             </h2>
