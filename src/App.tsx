@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
+import Course from "./pages/Course";
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
 import MyAccount from "./pages/MyAccount";
@@ -30,6 +31,14 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Index />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/produto/:courseId"
+              element={
+                <ProtectedRoute>
+                  <Course />
                 </ProtectedRoute>
               }
             />

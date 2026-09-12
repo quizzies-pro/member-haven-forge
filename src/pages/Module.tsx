@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { Navigate, useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import MemberLayout from "@/components/member/MemberLayout";
@@ -14,6 +14,7 @@ const Module = () => {
   const [lessons, setLessons] = useState<Tables<"lessons">[]>([]);
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
+  const [denied, setDenied] = useState(false);
 
   useEffect(() => {
     if (!user || !moduleId) return;
@@ -47,7 +48,7 @@ const Module = () => {
         .eq("student_id", user.id)
         .eq("course_id", mod.course_id)
         .eq("status", "active")
-        .single();
+        .maybeSingle();
 
       if (enrollment) {
         const { data: completed } = await supabase
@@ -58,6 +59,8 @@ const Module = () => {
         if (completed) {
           setCompletedLessons(new Set(completed.map((c) => c.lesson_id)));
         }
+      } else {
+        setDenied(true);
       }
 
       setLoading(false);
@@ -65,6 +68,8 @@ const Module = () => {
 
     fetchData();
   }, [user, moduleId]);
+
+  if (denied) return <Navigate to="/" replace />;
 
   const formatDuration = (seconds?: number | null) => {
     if (!seconds) return null;
@@ -98,7 +103,7 @@ const Module = () => {
       <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-[60px] py-8">
         {/* Header */}
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate(`/produto/${module.course_id}`)}
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"
         >
           <ArrowLeft size={20} />
