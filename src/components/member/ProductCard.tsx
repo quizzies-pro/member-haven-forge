@@ -20,9 +20,9 @@ const ProductCard = ({ course, hasAccess, onOpen }: ProductCardProps) => {
         aria-label={`${hasAccess ? "Acessar" : canBuy ? "Conhecer" : "Produto indisponível"}: ${course.title}`}
         className="relative block aspect-[16/9] w-full overflow-hidden bg-secondary text-left disabled:cursor-not-allowed"
       >
-        {course.cover_url || course.banner_url ? (
+        {course.banner_url || course.cover_url ? (
           <img
-            src={course.cover_url || course.banner_url || ""}
+            src={course.banner_url || course.cover_url || ""}
             alt={course.title}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
             loading="lazy"
