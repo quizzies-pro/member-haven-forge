@@ -22,7 +22,7 @@ const ModuleCard = ({ id, title, coverUrl, lessonCount, isFirst }: ModuleCardPro
     // Fetch lessons for this module
     const { data: lessons } = await supabase
       .from("lessons")
-      .select("id")
+      .select("id, course_id")
       .eq("module_id", id)
       .eq("status", "published")
       .order("sort_order");
@@ -34,12 +34,12 @@ const ModuleCard = ({ id, title, coverUrl, lessonCount, isFirst }: ModuleCardPro
       .from("enrollments")
       .select("id")
       .eq("student_id", user.id)
+      .eq("course_id", lessons[0].course_id)
       .eq("status", "active")
-      .limit(1)
-      .single();
+      .maybeSingle();
 
     if (!enrollment) {
-      navigate(`/aula/${lessons[0].id}`);
+      navigate("/");
       return;
     }
 

@@ -30,13 +30,15 @@ const MemberHeader = ({ logoUrl, onToggleSidebar }: MemberHeaderProps) => {
       <div className="flex items-center gap-4">
         <button 
           onClick={() => navigate("/")}
-          className="hover:opacity-80 transition-opacity"
+          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          aria-label="Ir para o início do Dive Club"
         >
           <img 
             src={logoByb} 
             alt="By'b" 
             className="h-10 object-contain rounded-lg hover:hue-rotate-[320deg] hover:saturate-150 transition-all" 
           />
+          <span className="hidden text-sm font-extrabold uppercase text-foreground sm:inline">Dive Club</span>
         </button>
         <button onClick={onToggleSidebar} className="text-foreground hover:text-primary transition-colors">
           <Menu size={24} />

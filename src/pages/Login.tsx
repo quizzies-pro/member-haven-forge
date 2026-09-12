@@ -6,12 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import logoByb from "@/assets/logo-byb.png";
 
 type Mode = "login" | "register" | "forgot";
 
-const COURSE_LOGO = "https://res.cloudinary.com/dqsuj0pjy/image/upload/v1775933233/By_b_ktyfmv.png";
 const COURSE_BANNER = "https://res.cloudinary.com/dqsuj0pjy/image/upload/v1775882373/freepik_coloca-duas-influencers-d_2761737175_n2faxh.png";
-const COURSE_TITLE = "TTS Academy";
+const COURSE_TITLE = "Dive Club";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -90,10 +90,11 @@ const Login = () => {
         <div className="w-full max-w-xs space-y-5">
           <div className="text-center space-y-4">
             <img 
-              src="https://res.cloudinary.com/dqsuj0pjy/image/upload/v1776188570/TTS_4_drshty.png" 
-              alt="Logo" 
-              className="h-12 mx-auto object-contain"
+              src={logoByb}
+              alt="Dive Club"
+              className="h-14 w-14 mx-auto rounded-lg object-contain"
             />
+            <p className="text-sm font-bold uppercase text-primary">Dive Club</p>
             <div>
               <h1 className="text-2xl font-bold text-foreground">
                 {mode === "login" && "Entrar"}
