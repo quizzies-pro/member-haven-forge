@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import logoByb from "@/assets/logo-byb.png";
+import diveClubLogo from "@/assets/dive-club-logo.png.asset.json";
+import diveClubIcon from "@/assets/dive-club-icon.png.asset.json";
 
 type Mode = "login" | "register" | "forgot";
 
@@ -89,12 +90,19 @@ const Login = () => {
       <div className="flex-1 flex items-center justify-center p-6 bg-background">
         <div className="w-full max-w-xs space-y-5">
           <div className="text-center space-y-4">
-            <img 
-              src={logoByb}
-              alt="Dive Club"
-              className="h-14 w-14 mx-auto rounded-lg object-contain"
-            />
-            <p className="text-sm font-bold uppercase text-primary">Dive Club</p>
+            <div className="mx-auto flex items-center justify-center gap-3">
+              <img
+                src={diveClubIcon.url}
+                alt=""
+                aria-hidden="true"
+                className="h-10 w-10 object-contain"
+              />
+              <img 
+                src={diveClubLogo.url}
+                alt="Dive Club"
+                className="h-auto w-40 rounded-sm bg-foreground px-3 py-2 object-contain sm:w-44"
+              />
+            </div>
             <div>
               <h1 className="text-2xl font-bold text-foreground">
                 {mode === "login" && "Entrar"}

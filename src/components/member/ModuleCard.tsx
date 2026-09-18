@@ -1,8 +1,7 @@
-import { BookOpen } from "lucide-react";
+import { BookOpen, Play } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import playIcon from "@/assets/play-button.png";
 
 interface ModuleCardProps {
   id: string;
@@ -74,20 +73,20 @@ const ModuleCard = ({ id, title, coverUrl, lessonCount, isFirst }: ModuleCardPro
           </div>
         )}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
 
-        <div className="absolute top-3 left-3 text-white/90 text-xs font-medium tracking-wide">
+        <div className="absolute top-3 left-3 text-foreground/90 text-xs font-medium tracking-wide">
           {lessonCount} {lessonCount === 1 ? "Aula" : "Aulas"}
         </div>
 
         <div className="absolute bottom-8 left-5 right-14">
-          <h3 className="text-xl font-extrabold text-white uppercase leading-tight">
+          <h3 className="text-xl font-extrabold text-foreground uppercase leading-tight">
             {title}
           </h3>
         </div>
 
-        <div className="absolute bottom-8 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-          <img src={playIcon} alt="Play" className="h-8 w-8" />
+        <div className="absolute bottom-8 right-4 flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground opacity-0 transition-opacity group-hover:opacity-100">
+          <Play size={17} fill="currentColor" aria-hidden="true" />
         </div>
       </div>
     </div>
