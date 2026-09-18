@@ -111,9 +111,9 @@ const Login = () => {
         <div className="hidden max-w-xl md:block">
           <img src={diveClubLogo.url} alt="Dive Club" className="h-auto w-48 object-contain lg:w-56" />
           <h1 className="mt-14 flex flex-col text-6xl font-medium leading-[0.94] text-foreground lg:text-7xl">
-            <span>Acesse.</span>
-            <span className="text-muted-foreground">Aprenda.</span>
-            <span className="text-primary">Evolua.</span>
+            <span>O seu acervo</span>
+            <span className="text-muted-foreground">de ativos digitais</span>
+            <span className="text-primary">com IA.</span>
           </h1>
         </div>
 
