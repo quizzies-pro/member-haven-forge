@@ -1166,6 +1166,7 @@ export type Database = {
       }
     }
     Functions: {
+      student_email_exists: { Args: { _email: string }; Returns: boolean }
       verify_webhook_secret: {
         Args: { _endpoint_id: string; _provided_secret: string }
         Returns: boolean
