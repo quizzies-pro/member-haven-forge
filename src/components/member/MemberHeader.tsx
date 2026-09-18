@@ -26,25 +26,21 @@ const MemberHeader = ({ logoUrl, onToggleSidebar }: MemberHeaderProps) => {
     : "?";
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 flex h-16 items-center justify-between border-b border-border/50 bg-background/70 px-4 backdrop-blur-md md:px-6">
-      <div className="flex h-10 items-center gap-3">
+    <header className="fixed top-0 left-0 right-0 z-40 flex h-[60px] items-center justify-between bg-black/20 backdrop-blur-sm px-4 md:px-6">
+      <div className="flex items-center gap-4">
         <button 
           onClick={() => navigate("/")}
-          className="flex h-10 items-center transition-opacity hover:opacity-80"
+          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
           aria-label="Ir para o início do Dive Club"
         >
           <img 
             src={diveClubLogo.url} 
             alt="Dive Club" 
-            className="h-7 w-auto object-contain" 
+            className="h-8 w-auto object-contain transition-opacity" 
           />
         </button>
-        <button
-          onClick={onToggleSidebar}
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-secondary hover:text-primary"
-          aria-label="Abrir menu"
-        >
-          <Menu size={22} strokeWidth={2} />
+        <button onClick={onToggleSidebar} className="text-foreground hover:text-primary transition-colors">
+          <Menu size={24} />
         </button>
       </div>
 
