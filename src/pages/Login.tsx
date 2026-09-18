@@ -98,32 +98,42 @@ const Login = () => {
   };
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-5 py-10 sm:px-8">
+    <main className="relative flex min-h-screen items-center overflow-hidden bg-background px-6 py-10 md:px-16 lg:px-24">
       <img
         src={loginBackground.url}
         alt=""
         aria-hidden="true"
         className="absolute inset-0 h-full w-full object-cover"
       />
-      <div className="absolute inset-0 bg-background/35" />
+      <div className="absolute inset-0 bg-background/20" />
 
-      <section className="relative z-10 w-full max-w-sm rounded-lg border border-border/80 bg-background/80 px-6 py-8 shadow-2xl backdrop-blur-md sm:px-8 sm:py-10">
-        <div className="mb-8 text-center">
-          <img src={diveClubLogo.url} alt="Dive Club" className="mx-auto h-auto w-40 object-contain sm:w-48" />
-          <div className="mt-7 flex items-center justify-center gap-2" aria-label={`Etapa ${step === "email" ? 1 : 2} de 2`}>
+      <div className="relative z-10 mx-auto grid w-full max-w-7xl items-center gap-16 md:grid-cols-[minmax(0,1fr)_minmax(320px,400px)] lg:gap-24">
+        <div className="hidden max-w-xl md:block">
+          <img src={diveClubLogo.url} alt="Dive Club" className="h-auto w-48 object-contain lg:w-56" />
+          <h1 className="mt-14 flex flex-col text-6xl font-medium leading-[0.94] text-foreground lg:text-7xl">
+            <span>Acesse.</span>
+            <span className="text-muted-foreground">Aprenda.</span>
+            <span className="text-primary">Evolua.</span>
+          </h1>
+        </div>
+
+        <section className="w-full max-w-sm justify-self-center md:max-w-none">
+          <div className="mb-8 text-center md:text-left">
+            <img src={diveClubLogo.url} alt="Dive Club" className="mx-auto h-auto w-40 object-contain md:hidden" />
+            <div className="mt-7 flex items-center justify-center gap-2 md:mt-0 md:justify-start" aria-label={`Etapa ${step === "email" ? 1 : 2} de 2`}>
             <span className="h-1.5 w-10 rounded-full bg-primary" />
             <span className={`h-1.5 w-10 rounded-full transition-colors ${step === "email" ? "bg-muted" : "bg-primary"}`} />
           </div>
-        </div>
+          </div>
 
-        <div key={step} className="motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-right-2 motion-safe:duration-300">
+          <div key={step} className="motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-right-2 motion-safe:duration-300">
           {step === "email" && (
             <>
-              <div className="mb-6 text-center">
-                <h1 className="text-2xl text-foreground">Acesse sua conta</h1>
+              <div className="mb-8 text-center md:text-left">
+                <h2 className="text-3xl text-foreground">Acesse sua conta</h2>
                 <p className="mt-2 text-sm text-muted-foreground">Digite seu e-mail para continuar.</p>
               </div>
-              <form onSubmit={handleEmailCheck} className="space-y-4" noValidate>
+              <form onSubmit={handleEmailCheck} className="space-y-5" noValidate>
                 <div className="space-y-2">
                   <Label htmlFor="email">E-mail</Label>
                   <Input
@@ -142,11 +152,11 @@ const Login = () => {
                     autoFocus
                     aria-invalid={Boolean(errorMessage)}
                     aria-describedby={errorMessage ? "login-error" : undefined}
-                    className="h-12 bg-secondary/90 px-4"
+                    className="h-12 border-border/80 bg-secondary/70 px-4 backdrop-blur-sm"
                   />
                 </div>
                 {errorMessage && <p id="login-error" role="alert" className="text-sm text-destructive">{errorMessage}</p>}
-                <Button type="submit" disabled={loading} className="h-12 w-full">
+                <Button type="submit" disabled={loading} className="h-12 w-full shadow-lg shadow-primary/15">
                   {loading ? <Loader2 className="animate-spin" aria-hidden="true" /> : null}
                   Continuar
                 </Button>
@@ -156,9 +166,9 @@ const Login = () => {
 
           {step === "password" && (
             <>
-              <div className="mb-6 text-center">
-                <h1 className="text-2xl text-foreground">Digite sua senha</h1>
-                <div className="mt-3 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              <div className="mb-8 text-center md:text-left">
+                <h2 className="text-3xl text-foreground">Digite sua senha</h2>
+                <div className="mt-3 flex items-center justify-center gap-2 text-sm text-muted-foreground md:justify-start">
                   <Mail size={15} aria-hidden="true" />
                   <span className="max-w-[240px] truncate">{normalizedEmail}</span>
                 </div>
@@ -183,7 +193,7 @@ const Login = () => {
                       autoFocus
                       aria-invalid={Boolean(errorMessage)}
                       aria-describedby={errorMessage ? "login-error" : undefined}
-                      className="h-12 bg-secondary/90 px-4 pr-12"
+                      className="h-12 border-border/80 bg-secondary/70 px-4 pr-12 backdrop-blur-sm"
                     />
                     <Button
                       type="button"
@@ -203,7 +213,7 @@ const Login = () => {
                     Esqueceu sua senha?
                   </Button>
                 </div>
-                <Button type="submit" disabled={loading} className="h-12 w-full">
+                <Button type="submit" disabled={loading} className="h-12 w-full shadow-lg shadow-primary/15">
                   {loading ? <Loader2 className="animate-spin" aria-hidden="true" /> : null}
                   Entrar
                 </Button>
@@ -216,13 +226,13 @@ const Login = () => {
 
           {step === "forgot" && (
             <>
-              <div className="mb-6 text-center">
-                <h1 className="text-2xl text-foreground">Recuperar senha</h1>
+              <div className="mb-8 text-center md:text-left">
+                <h2 className="text-3xl text-foreground">Recuperar senha</h2>
                 <p className="mt-2 text-sm text-muted-foreground">Enviaremos um link de redefinição para {normalizedEmail}.</p>
               </div>
               <form onSubmit={handleForgot} className="space-y-4">
                 {errorMessage && <p role="alert" className="text-sm text-destructive">{errorMessage}</p>}
-                <Button type="submit" disabled={loading} className="h-12 w-full">
+                <Button type="submit" disabled={loading} className="h-12 w-full shadow-lg shadow-primary/15">
                   {loading ? <Loader2 className="animate-spin" aria-hidden="true" /> : null}
                   Enviar link
                 </Button>
@@ -238,15 +248,16 @@ const Login = () => {
               <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-foreground">
                 <Check aria-hidden="true" />
               </div>
-              <h1 className="mt-5 text-2xl text-foreground">Confira seu e-mail</h1>
+              <h2 className="mt-5 text-3xl text-foreground">Confira seu e-mail</h2>
               <p className="mt-2 text-sm text-muted-foreground">Enviamos as instruções para {normalizedEmail}.</p>
               <Button type="button" variant="ghost" onClick={() => setStep("password")} className="mt-6 w-full text-muted-foreground">
                 <ArrowLeft aria-hidden="true" /> Voltar para entrar
               </Button>
             </div>
           )}
-        </div>
-      </section>
+          </div>
+        </section>
+      </div>
     </main>
   );
 };
