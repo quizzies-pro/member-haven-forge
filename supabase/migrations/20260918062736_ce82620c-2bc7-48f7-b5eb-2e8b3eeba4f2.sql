@@ -1,0 +1,1 @@
+DROP FUNCTION IF EXISTS public.student_email_exists(text);
