@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import diveClubLogo from "@/assets/dive-club-logo.png.asset.json";
+import diveClubLogo from "@/assets/dive-club-logo-white.png.asset.json";
 
 interface MemberHeaderProps {
   logoUrl?: string | null;
@@ -36,7 +36,7 @@ const MemberHeader = ({ logoUrl, onToggleSidebar }: MemberHeaderProps) => {
           <img 
             src={diveClubLogo.url} 
             alt="Dive Club" 
-            className="h-8 w-auto rounded-sm bg-foreground px-2 py-1 object-contain transition-opacity" 
+            className="h-8 w-auto object-contain transition-opacity" 
           />
         </button>
         <button onClick={onToggleSidebar} className="text-foreground hover:text-primary transition-colors">
