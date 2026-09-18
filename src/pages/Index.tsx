@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import MemberLayout from "@/components/member/MemberLayout";
 import ProductCard from "@/components/member/ProductCard";
 import type { Tables } from "@/integrations/supabase/types";
+import diveClubLogo from "@/assets/dive-club-logo.png.asset.json";
 
 const Index = () => {
   const { user, student } = useAuth();
@@ -64,7 +65,11 @@ const Index = () => {
     <MemberLayout>
       <section className="border-b border-border bg-card/40 pt-16">
         <div className="mx-auto max-w-[1280px] px-4 py-12 md:px-6 lg:px-[60px] lg:py-16">
-          <p className="mb-3 text-xs font-bold uppercase text-primary">Dive Club</p>
+          <img
+            src={diveClubLogo.url}
+            alt="Dive Club"
+            className="mb-6 h-auto w-44 rounded-sm bg-foreground px-3 py-2 object-contain md:w-52"
+          />
           <h1 className="max-w-3xl text-3xl font-extrabold leading-tight text-foreground md:text-5xl">
             Seus produtos em um só lugar.
           </h1>

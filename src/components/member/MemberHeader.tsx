@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import logoByb from "@/assets/logo-byb.png";
+import diveClubLogo from "@/assets/dive-club-logo.png.asset.json";
 
 interface MemberHeaderProps {
   logoUrl?: string | null;
@@ -34,11 +34,10 @@ const MemberHeader = ({ logoUrl, onToggleSidebar }: MemberHeaderProps) => {
           aria-label="Ir para o início do Dive Club"
         >
           <img 
-            src={logoByb} 
-            alt="By'b" 
-            className="h-10 object-contain rounded-lg hover:hue-rotate-[320deg] hover:saturate-150 transition-all" 
+            src={diveClubLogo.url} 
+            alt="Dive Club" 
+            className="h-8 w-auto rounded-sm bg-foreground px-2 py-1 object-contain transition-opacity" 
           />
-          <span className="hidden text-sm font-extrabold uppercase text-foreground sm:inline">Dive Club</span>
         </button>
         <button onClick={onToggleSidebar} className="text-foreground hover:text-primary transition-colors">
           <Menu size={24} />
@@ -64,7 +63,7 @@ const MemberHeader = ({ logoUrl, onToggleSidebar }: MemberHeaderProps) => {
 
         <button className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors relative">
           <Bell size={20} />
-          <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-orange-500" />
+          <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-primary" />
         </button>
 
         <DropdownMenu>
