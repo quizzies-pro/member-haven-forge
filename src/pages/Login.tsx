@@ -98,7 +98,7 @@ const Login = () => {
   };
 
   return (
-    <main className="relative flex min-h-screen items-center overflow-hidden bg-background px-6 py-10 md:px-16 lg:px-24">
+    <main className="relative flex min-h-screen items-center overflow-hidden bg-background px-6 py-10">
       <img
         src={loginBackground.url}
         alt=""
@@ -107,20 +107,17 @@ const Login = () => {
       />
       <div className="absolute inset-0 bg-background/20" />
 
-      <div className="relative z-10 mx-auto grid w-full max-w-7xl items-center gap-16 md:grid-cols-[minmax(0,1fr)_minmax(320px,400px)] lg:gap-24">
-        <div className="hidden max-w-xl md:block">
-          <img src={diveClubLogo.url} alt="Dive Club" className="h-auto w-48 object-contain lg:w-56" />
-          <h1 className="mt-14 flex flex-col text-6xl font-medium leading-[0.94] text-foreground lg:text-7xl">
-            <span>Acesse.</span>
-            <span className="text-muted-foreground">Aprenda.</span>
-            <span className="text-primary">Evolua.</span>
+      <div className="relative z-10 mx-auto flex w-full max-w-sm -translate-y-8 flex-col items-center md:-translate-y-12">
+        <div className="mb-10 text-center">
+          <img src={diveClubLogo.url} alt="Dive Club" className="mx-auto h-auto w-48 object-contain md:w-56" />
+          <h1 className="mt-5 text-xl font-medium text-foreground md:text-2xl">
+            O seu acervo de soluções digitais com IA.
           </h1>
         </div>
 
-        <section className="w-full max-w-sm justify-self-center md:max-w-none">
-          <div className="mb-8 text-center md:text-left">
-            <img src={diveClubLogo.url} alt="Dive Club" className="mx-auto h-auto w-40 object-contain md:hidden" />
-            <div className="mt-7 flex items-center justify-center gap-2 md:mt-0 md:justify-start" aria-label={`Etapa ${step === "email" ? 1 : 2} de 2`}>
+        <section className="w-full">
+          <div className="mb-8 text-center">
+            <div className="flex items-center justify-center gap-2" aria-label={`Etapa ${step === "email" ? 1 : 2} de 2`}>
             <span className="h-1.5 w-10 rounded-full bg-primary" />
             <span className={`h-1.5 w-10 rounded-full transition-colors ${step === "email" ? "bg-muted" : "bg-primary"}`} />
           </div>
@@ -129,7 +126,7 @@ const Login = () => {
           <div key={step} className="motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-right-2 motion-safe:duration-300">
           {step === "email" && (
             <>
-              <div className="mb-8 text-center md:text-left">
+              <div className="mb-8 text-center">
                 <h2 className="text-3xl text-foreground">Acesse sua conta</h2>
                 <p className="mt-2 text-sm text-muted-foreground">Digite seu e-mail para continuar.</p>
               </div>
@@ -166,9 +163,9 @@ const Login = () => {
 
           {step === "password" && (
             <>
-              <div className="mb-8 text-center md:text-left">
+              <div className="mb-8 text-center">
                 <h2 className="text-3xl text-foreground">Digite sua senha</h2>
-                <div className="mt-3 flex items-center justify-center gap-2 text-sm text-muted-foreground md:justify-start">
+                <div className="mt-3 flex items-center justify-center gap-2 text-sm text-muted-foreground">
                   <Mail size={15} aria-hidden="true" />
                   <span className="max-w-[240px] truncate">{normalizedEmail}</span>
                 </div>
@@ -226,7 +223,7 @@ const Login = () => {
 
           {step === "forgot" && (
             <>
-              <div className="mb-8 text-center md:text-left">
+              <div className="mb-8 text-center">
                 <h2 className="text-3xl text-foreground">Recuperar senha</h2>
                 <p className="mt-2 text-sm text-muted-foreground">Enviaremos um link de redefinição para {normalizedEmail}.</p>
               </div>
