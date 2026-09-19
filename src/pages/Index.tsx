@@ -86,7 +86,7 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/65 to-background/10" />
         <div className="absolute inset-0 bg-gradient-to-t from-background/55 via-transparent to-background/15" />
 
-        <div className="relative z-10 mx-auto flex min-h-[460px] max-w-[1450px] flex-col justify-center px-6 py-12 md:min-h-[370px] md:px-12 lg:px-[60px]">
+        <div className="relative z-10 mx-auto flex min-h-[460px] max-w-[1280px] flex-col justify-center px-4 py-12 md:min-h-[370px] md:px-6 lg:px-[60px]">
           <div className="max-w-3xl">
             <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.36em] text-muted-foreground md:text-xs">
               MAIS QUE CONTEÚD0 | UMA COMUNIDADE
@@ -109,7 +109,7 @@ const Index = () => {
             </Button>
           </div>
 
-          <div className="absolute bottom-7 right-6 flex items-center gap-3 text-xs text-foreground/70 md:right-12 lg:right-[60px]">
+          <div className="absolute bottom-7 right-4 flex items-center gap-3 text-xs text-foreground/70 md:right-6 lg:right-[60px]">
             <span className="h-px w-14 bg-primary" />
             <span>01 / 01</span>
           </div>
