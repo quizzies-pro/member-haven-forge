@@ -79,11 +79,11 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-background/55 via-transparent to-background/15" />
 
         <div className="relative z-10 mx-auto flex min-h-[460px] max-w-[1450px] flex-col justify-center px-6 py-12 md:min-h-[370px] md:px-12 lg:px-[60px]">
-          <div className="max-w-xl">
+          <div className="max-w-3xl">
             <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.36em] text-muted-foreground md:text-xs">
               Mais que conteúdo
             </p>
-            <h1 className="max-w-lg text-4xl font-medium leading-[1.02] text-foreground md:text-5xl lg:text-6xl">
+            <h1 className="max-w-3xl text-4xl font-medium leading-[1.02] text-foreground md:text-5xl lg:text-6xl">
               Seu acervo, <span className="text-primary">do seu jeito.</span>
             </h1>
             <p className="mt-5 max-w-md text-sm leading-relaxed text-foreground/70 md:text-base">
