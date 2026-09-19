@@ -2,6 +2,7 @@ import { useState } from "react";
 import MemberHeader from "./MemberHeader";
 import MemberSidebar from "./MemberSidebar";
 import SupportChatBubble from "./SupportChatBubble";
+import MemberFooter from "./MemberFooter";
 
 interface MemberLayoutProps {
   children: React.ReactNode;
@@ -17,6 +18,7 @@ const MemberLayout = ({ children, logoUrl, fullBleed }: MemberLayoutProps) => {
       <MemberHeader logoUrl={logoUrl} onToggleSidebar={() => setSidebarOpen(true)} />
       <MemberSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <main className={fullBleed ? "" : "pt-[60px]"}>{children}</main>
+       <MemberFooter />
       <SupportChatBubble />
     </div>
   );
