@@ -8,6 +8,26 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import homeHero from "@/assets/dive-home-hero-01.png.asset.json";
+import homeHeroTwo from "@/assets/dive-home-hero-02.png.asset.json";
+
+const heroSlides = [
+  {
+    image: homeHero.url,
+    imageAlt: "Paisagem digital azul sob um céu estrelado",
+    eyebrow: "MAIS QUE CONTEÚD0 | UMA COMUNIDADE",
+    title: "Dive Clube, crie ativos digitais",
+    highlight: "do seu jeito com IA.",
+    description: "Aulas ao vivo todas as sextas as 20:00 ",
+  },
+  {
+    image: homeHeroTwo.url,
+    imageAlt: "Mulher em um cenário digital iluminado",
+    eyebrow: "CRIATIVIDADE | TECNOLOGIA | RESULTADO",
+    title: "Transforme suas ideias em",
+    highlight: "ativos digitais extraordinários.",
+    description: "Aprenda, crie e evolua com inteligência artificial.",
+  },
+];
 
 const Index = () => {
   const { user, student } = useAuth();
@@ -16,6 +36,15 @@ const Index = () => {
   const [enrolledCourseIds, setEnrolledCourseIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
+  const [activeHeroSlide, setActiveHeroSlide] = useState(0);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setActiveHeroSlide((current) => (current + 1) % heroSlides.length);
+    }, 7000);
+
+    return () => window.clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const studentId = student?.id || user?.id;
@@ -70,24 +99,31 @@ const Index = () => {
   return (
     <MemberLayout fullBleed>
       <section className="relative min-h-[520px] overflow-hidden border-b border-border pt-[60px] md:min-h-[430px]">
-        <img
-          src={homeHero.url}
-          alt="Paisagem digital azul sob um céu estrelado"
-          className="absolute inset-0 h-full w-full object-cover object-[58%_center] md:object-center"
-        />
+        {heroSlides.map((slide, index) => (
+          <img
+            key={slide.image}
+            src={slide.image}
+            alt={slide.imageAlt}
+            aria-hidden={index !== activeHeroSlide}
+            className={`absolute inset-0 h-full w-full object-cover object-[58%_center] transition-all duration-[1400ms] ease-in-out motion-reduce:transition-none md:object-center ${
+              index === activeHeroSlide ? "scale-100 opacity-100" : "scale-[1.025] opacity-0"
+            }`}
+          />
+        ))}
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/65 to-background/10" />
         <div className="absolute inset-0 bg-gradient-to-t from-background/55 via-transparent to-background/15" />
 
         <div className="relative z-10 mx-auto flex min-h-[460px] max-w-[1450px] flex-col justify-center px-6 py-12 md:min-h-[370px] md:px-12 lg:px-[60px]">
-          <div className="max-w-3xl">
+          <div key={activeHeroSlide} className="max-w-5xl animate-fade-in motion-reduce:animate-none">
             <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.36em] text-muted-foreground md:text-xs">
-              MAIS QUE CONTEÚD0 | UMA COMUNIDADE
+              {heroSlides[activeHeroSlide].eyebrow}
             </p>
-            <h1 className="max-w-3xl text-4xl font-medium leading-[1.02] text-foreground md:text-5xl lg:text-6xl">
-              Dive Clube, crie ativos digitais&nbsp;<span className="text-primary">do seu jeito com IA.</span>
+            <h1 className="max-w-5xl text-4xl font-medium leading-[1.02] text-foreground md:text-5xl lg:text-6xl">
+              {heroSlides[activeHeroSlide].title}&nbsp;
+              <span className="text-primary">{heroSlides[activeHeroSlide].highlight}</span>
             </h1>
             <p className="mt-5 max-w-md text-sm leading-relaxed text-foreground/70 md:text-base">
-              Aulas ao vivo todas as sextas as 20:00&nbsp;
+              {heroSlides[activeHeroSlide].description}
             </p>
             <Button
               type="button"
@@ -103,7 +139,7 @@ const Index = () => {
 
           <div className="absolute bottom-7 right-6 flex items-center gap-3 text-xs text-foreground/70 md:right-12 lg:right-[60px]">
             <span className="h-px w-14 bg-primary" />
-            <span>01 / 01</span>
+            <span>{String(activeHeroSlide + 1).padStart(2, "0")} / {String(heroSlides.length).padStart(2, "0")}</span>
           </div>
         </div>
       </section>
