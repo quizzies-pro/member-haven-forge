@@ -105,8 +105,8 @@ const Index = () => {
             src={slide.image}
             alt={slide.imageAlt}
             aria-hidden={index !== activeHeroSlide}
-            className={`absolute inset-0 h-full w-full object-cover object-[58%_center] transition-all duration-[1400ms] ease-in-out motion-reduce:transition-none md:object-center ${
-              index === activeHeroSlide ? "scale-100 opacity-100" : "scale-[1.025] opacity-0"
+            className={`absolute inset-0 h-full w-full object-cover object-[58%_center] transition-opacity duration-[1400ms] ease-in-out motion-reduce:transition-none md:object-center ${
+              index === activeHeroSlide ? "opacity-100" : "opacity-0"
             }`}
           />
         ))}
