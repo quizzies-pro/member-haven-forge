@@ -42,6 +42,14 @@ const Index = () => {
   }, [student?.id, user?.id]);
 
   const enrollmentSet = useMemo(() => new Set(enrolledCourseIds), [enrolledCourseIds]);
+  const ownedCourses = useMemo(
+    () => courses.filter((course) => enrollmentSet.has(course.id)),
+    [courses, enrollmentSet],
+  );
+  const availableCourses = useMemo(
+    () => courses.filter((course) => !enrollmentSet.has(course.id)),
+    [courses, enrollmentSet],
+  );
 
   const openCourse = (course: Tables<"courses">) => {
     if (enrollmentSet.has(course.id)) {
@@ -111,11 +119,11 @@ const Index = () => {
       <section id="catalogo" className="mx-auto max-w-[1280px] scroll-mt-[60px] px-4 py-10 md:px-6 lg:px-[60px] lg:py-14">
         <div className="mb-7 flex items-end justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase text-muted-foreground">Catálogo</p>
-            <h2 className="mt-1 text-2xl font-extrabold text-foreground">Produtos Dive Club</h2>
+            <p className="text-xs font-semibold uppercase text-muted-foreground">Sua biblioteca</p>
+            <h2 className="mt-1 text-2xl font-medium text-foreground">Seus produtos</h2>
           </div>
           <span className="text-sm text-muted-foreground">
-            {courses.length} {courses.length === 1 ? "produto" : "produtos"}
+            {ownedCourses.length} {ownedCourses.length === 1 ? "produto" : "produtos"}
           </span>
         </div>
 
@@ -124,20 +132,45 @@ const Index = () => {
             <p className="text-foreground">Não foi possível carregar os produtos.</p>
             <p className="mt-2 text-sm text-muted-foreground">Atualize a página para tentar novamente.</p>
           </div>
-        ) : courses.length === 0 ? (
+        ) : ownedCourses.length === 0 ? (
           <div className="border-y border-border py-16 text-center">
-            <p className="text-muted-foreground">Nenhum produto disponível no momento.</p>
+            <p className="text-muted-foreground">Você ainda não possui produtos.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {courses.map((course) => (
+            {ownedCourses.map((course) => (
               <ProductCard
                 key={course.id}
                 course={course}
-                hasAccess={enrollmentSet.has(course.id)}
+                hasAccess
                 onOpen={() => openCourse(course)}
               />
             ))}
+          </div>
+        )}
+
+        {!failed && availableCourses.length > 0 && (
+          <div className="mt-14 border-t border-border pt-10">
+            <div className="mb-7 flex items-end justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Descubra</p>
+                <h2 className="mt-1 text-2xl font-medium text-foreground">Outros produtos</h2>
+              </div>
+              <span className="text-sm text-muted-foreground">
+                {availableCourses.length} {availableCourses.length === 1 ? "produto" : "produtos"}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {availableCourses.map((course) => (
+                <ProductCard
+                  key={course.id}
+                  course={course}
+                  hasAccess={false}
+                  onOpen={() => openCourse(course)}
+                />
+              ))}
+            </div>
           </div>
         )}
       </section>
