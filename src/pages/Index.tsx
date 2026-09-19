@@ -96,7 +96,7 @@ const Index = () => {
               onClick={scrollToCatalog}
               className="mt-7 border-primary/80 bg-primary/10 text-foreground backdrop-blur-sm hover:bg-primary hover:text-primary-foreground"
             >
-              Explorar agora
+              LISTA DE ESPERA
               <ArrowRight aria-hidden="true" />
             </Button>
           </div>
