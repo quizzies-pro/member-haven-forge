@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import homeHero from "@/assets/dive-home-hero-01.png.asset.json";
-import homeHeroTwo from "@/assets/dive-home-hero-02.png.asset.json";
+import homeHeroTwo from "@/assets/dive-home-hero-02-refined.png";
 
 const heroSlides = [
   {
@@ -20,7 +20,7 @@ const heroSlides = [
     description: "Aulas ao vivo todas as sextas as 20:00 ",
   },
   {
-    image: homeHeroTwo.url,
+    image: homeHeroTwo,
     imageAlt: "Mulher em um cenário digital iluminado",
     eyebrow: "CRIATIVIDADE | TECNOLOGIA | RESULTADO",
     title: "Transforme suas ideias em",
