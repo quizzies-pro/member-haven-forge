@@ -22,10 +22,10 @@ const heroSlides = [
   {
     image: homeHeroTwo,
     imageAlt: "Mulher em um cenário digital iluminado",
-    eyebrow: "CRIATIVIDADE | TECNOLOGIA | RESULTADO",
-    title: "Transforme suas ideias em",
-    highlight: "ativos digitais extraordinários.",
-    description: "Aprenda, crie e evolua com inteligência artificial.",
+    eyebrow: "Influencer | UGC Content | Vendas Secretas",
+    title: "Influencer.IA, venda todos os dias",
+    highlight: "sem aparecer.",
+    description: "Crie influenciadores para seus produtos com inteligência artificial",
   },
 ];
 
