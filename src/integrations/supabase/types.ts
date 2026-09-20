@@ -124,6 +124,8 @@ export type Database = {
           language: string
           login_cover_url: string | null
           logo_url: string | null
+          pack_format: Database["public"]["Enums"]["pack_format"] | null
+          product_type: Database["public"]["Enums"]["product_type"]
           seo_description: string | null
           seo_title: string | null
           short_description: string | null
@@ -156,6 +158,8 @@ export type Database = {
           language?: string
           login_cover_url?: string | null
           logo_url?: string | null
+          pack_format?: Database["public"]["Enums"]["pack_format"] | null
+          product_type?: Database["public"]["Enums"]["product_type"]
           seo_description?: string | null
           seo_title?: string | null
           short_description?: string | null
@@ -188,6 +192,8 @@ export type Database = {
           language?: string
           login_cover_url?: string | null
           logo_url?: string | null
+          pack_format?: Database["public"]["Enums"]["pack_format"] | null
+          product_type?: Database["public"]["Enums"]["product_type"]
           seo_description?: string | null
           seo_title?: string | null
           short_description?: string | null
@@ -605,6 +611,187 @@ export type Database = {
         }
         Relationships: []
       }
+      pack_collections: {
+        Row: {
+          course_id: string
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_visible: boolean
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          course_id: string
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_visible?: boolean
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          course_id?: string
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_visible?: boolean
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pack_collections_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pack_items: {
+        Row: {
+          canva_template_url: string | null
+          collection_id: string | null
+          course_id: string
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          drive_available: boolean
+          drive_file_id: string | null
+          drive_file_name: string | null
+          drive_file_size: number | null
+          drive_mime_type: string | null
+          drive_modified_at: string | null
+          drive_synced_at: string | null
+          drive_thumbnail_url: string | null
+          format: Database["public"]["Enums"]["pack_format"]
+          id: string
+          sort_order: number
+          status: Database["public"]["Enums"]["pack_item_status"]
+          tags: string[]
+          textual_content: string | null
+          textual_example: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          canva_template_url?: string | null
+          collection_id?: string | null
+          course_id: string
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          drive_available?: boolean
+          drive_file_id?: string | null
+          drive_file_name?: string | null
+          drive_file_size?: number | null
+          drive_mime_type?: string | null
+          drive_modified_at?: string | null
+          drive_synced_at?: string | null
+          drive_thumbnail_url?: string | null
+          format: Database["public"]["Enums"]["pack_format"]
+          id?: string
+          sort_order?: number
+          status?: Database["public"]["Enums"]["pack_item_status"]
+          tags?: string[]
+          textual_content?: string | null
+          textual_example?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          canva_template_url?: string | null
+          collection_id?: string | null
+          course_id?: string
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          drive_available?: boolean
+          drive_file_id?: string | null
+          drive_file_name?: string | null
+          drive_file_size?: number | null
+          drive_mime_type?: string | null
+          drive_modified_at?: string | null
+          drive_synced_at?: string | null
+          drive_thumbnail_url?: string | null
+          format?: Database["public"]["Enums"]["pack_format"]
+          id?: string
+          sort_order?: number
+          status?: Database["public"]["Enums"]["pack_item_status"]
+          tags?: string[]
+          textual_content?: string | null
+          textual_example?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pack_items_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "pack_collections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pack_items_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pack_videos: {
+        Row: {
+          course_id: string
+          created_at: string
+          description: string | null
+          id: string
+          sort_order: number
+          status: Database["public"]["Enums"]["pack_item_status"]
+          title: string
+          updated_at: string
+          video_url: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          sort_order?: number
+          status?: Database["public"]["Enums"]["pack_item_status"]
+          title: string
+          updated_at?: string
+          video_url: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          sort_order?: number
+          status?: Database["public"]["Enums"]["pack_item_status"]
+          title?: string
+          updated_at?: string
+          video_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pack_videos_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payments: {
         Row: {
           affiliate_name: string | null
@@ -755,6 +942,134 @@ export type Database = {
           value?: string | null
         }
         Relationships: []
+      }
+      product_waitlist_members: {
+        Row: {
+          consent_text_snapshot: string
+          consent_version: string
+          consented_at: string
+          created_at: string
+          email_snapshot: string
+          id: string
+          marketing_email: boolean
+          marketing_whatsapp: boolean
+          name_snapshot: string
+          phone_snapshot: string
+          privacy_policy_url_snapshot: string
+          source: string
+          status: string
+          student_id: string
+          updated_at: string
+          waitlist_id: string
+          withdrawn_at: string | null
+        }
+        Insert: {
+          consent_text_snapshot: string
+          consent_version: string
+          consented_at?: string
+          created_at?: string
+          email_snapshot: string
+          id?: string
+          marketing_email?: boolean
+          marketing_whatsapp?: boolean
+          name_snapshot: string
+          phone_snapshot: string
+          privacy_policy_url_snapshot: string
+          source?: string
+          status?: string
+          student_id: string
+          updated_at?: string
+          waitlist_id: string
+          withdrawn_at?: string | null
+        }
+        Update: {
+          consent_text_snapshot?: string
+          consent_version?: string
+          consented_at?: string
+          created_at?: string
+          email_snapshot?: string
+          id?: string
+          marketing_email?: boolean
+          marketing_whatsapp?: boolean
+          name_snapshot?: string
+          phone_snapshot?: string
+          privacy_policy_url_snapshot?: string
+          source?: string
+          status?: string
+          student_id?: string
+          updated_at?: string
+          waitlist_id?: string
+          withdrawn_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_waitlist_members_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_waitlist_members_waitlist_id_fkey"
+            columns: ["waitlist_id"]
+            isOneToOne: false
+            referencedRelation: "product_waitlists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_waitlists: {
+        Row: {
+          closed_at: string | null
+          consent_text: string
+          consent_version: string
+          course_id: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          name: string
+          privacy_policy_url: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          closed_at?: string | null
+          consent_text: string
+          consent_version?: string
+          course_id: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          privacy_policy_url: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          closed_at?: string | null
+          consent_text?: string
+          consent_version?: string
+          course_id?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          privacy_policy_url?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_waitlists_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       storefront_categories: {
         Row: {
@@ -1241,6 +1556,34 @@ export type Database = {
       }
     }
     Functions: {
+      get_product_waitlist_state: {
+        Args: { _waitlist_id: string }
+        Returns: {
+          consent_text: string
+          consent_version: string
+          course_id: string
+          has_active_enrollment: boolean
+          membership_status: string
+          phone_missing: boolean
+          privacy_policy_url: string
+          product_available_for_sale: boolean
+          waitlist_description: string
+          waitlist_id: string
+          waitlist_name: string
+          waitlist_status: string
+        }[]
+      }
+      join_product_waitlist: {
+        Args: { _consent: boolean; _source?: string; _waitlist_id: string }
+        Returns: {
+          member_id: string
+          membership_status: string
+        }[]
+      }
+      leave_product_waitlist: {
+        Args: { _waitlist_id: string }
+        Returns: boolean
+      }
       verify_webhook_secret: {
         Args: { _endpoint_id: string; _provided_secret: string }
         Returns: boolean
@@ -1262,6 +1605,8 @@ export type Database = {
         | "link"
         | "other"
       module_status: "draft" | "published" | "hidden"
+      pack_format: "canva" | "textual" | "drive"
+      pack_item_status: "draft" | "published" | "hidden"
       payment_status:
         | "pending"
         | "approved"
@@ -1270,6 +1615,7 @@ export type Database = {
         | "chargeback"
         | "expired"
         | "failed"
+      product_type: "course" | "pack"
       release_type: "immediate" | "manual" | "drip"
       student_status: "active" | "blocked" | "pending" | "canceled"
       thread_status: "unresolved" | "resolved" | "awaiting_response"
@@ -1416,6 +1762,8 @@ export const Constants = {
         "other",
       ],
       module_status: ["draft", "published", "hidden"],
+      pack_format: ["canva", "textual", "drive"],
+      pack_item_status: ["draft", "published", "hidden"],
       payment_status: [
         "pending",
         "approved",
@@ -1425,6 +1773,7 @@ export const Constants = {
         "expired",
         "failed",
       ],
+      product_type: ["course", "pack"],
       release_type: ["immediate", "manual", "drip"],
       student_status: ["active", "blocked", "pending", "canceled"],
       thread_status: ["unresolved", "resolved", "awaiting_response"],
