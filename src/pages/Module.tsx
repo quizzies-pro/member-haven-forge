@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 
 const Module = () => {
   const { moduleId } = useParams<{ moduleId: string }>();
-  const { user } = useAuth();
+  const { user, student } = useAuth();
   const navigate = useNavigate();
   const [module, setModule] = useState<Tables<"course_modules"> | null>(null);
   const [lessons, setLessons] = useState<Tables<"lessons">[]>([]);
@@ -32,7 +32,7 @@ const Module = () => {
       if (!mod) { setLoading(false); return; }
 
       const { data: enrollments } = await supabase.from("enrollments")
-        .select("id, status, expires_at").eq("student_id", user.id)
+        .select("id, status, expires_at").eq("student_id", student?.id || user.id)
         .eq("course_id", mod.course_id).eq("status", "active");
       const enrollment = enrollments?.find((item) => validEnrollment(item));
       if (!enrollment) { setDenied(true); setLoading(false); return; }
@@ -64,7 +64,7 @@ const Module = () => {
     };
 
     fetchData();
-  }, [user, moduleId]);
+  }, [user, student?.id, moduleId]);
 
   if (denied) return <Navigate to="/" replace />;
 

@@ -52,7 +52,7 @@ const Lesson = () => {
       if (!lessonData) { setLoading(false); return; }
 
       const { data: activeEnrollments } = await supabase.from("enrollments")
-        .select("id, status, expires_at").eq("student_id", user.id)
+        .select("id, status, expires_at").eq("student_id", student?.id || user.id)
         .eq("course_id", lessonData.course_id).eq("status", "active");
       const currentEnrollment = activeEnrollments?.find((item) => validEnrollment(item));
       if (!currentEnrollment || lessonData.status !== "published") {
