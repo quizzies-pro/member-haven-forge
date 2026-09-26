@@ -35,7 +35,7 @@ const PackPresentation = ({ course, hasAccess, videos }: Props) => {
       </div>
       <div className="mx-auto max-w-[1280px] px-4 pb-10 pt-8 md:px-6 md:pb-12 lg:px-[60px] lg:pt-12">
         <Button asChild variant="ghost" className="-ml-4 mb-5 text-muted-foreground"><Link to="/"><ArrowLeft aria-hidden="true" /> Início</Link></Button>
-        <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.3fr)_minmax(0,0.65fr)] lg:gap-6">
+        <div className={`grid items-start gap-8 lg:gap-6 ${hasAccess && videos.length > 1 ? "lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.3fr)_minmax(0,0.65fr)]" : "lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]"}`}>
           <div className="min-w-0 lg:pt-2">
             <span className="inline-flex border border-primary/60 px-3 py-1 text-xs font-medium uppercase text-primary">Pack</span>
             <h1 className="mt-5 break-words text-4xl text-foreground md:text-5xl">{course.title}</h1>
