@@ -7,6 +7,8 @@ import MemberLayout from "@/components/member/MemberLayout";
 import CourseBanner from "@/components/member/CourseBanner";
 import ModuleCarousel from "@/components/member/ModuleCarousel";
 import PackContent from "@/components/member/PackContent";
+import PackPresentation from "@/components/member/PackPresentation";
+import PackDiscovery from "@/components/member/PackDiscovery";
 import WaitlistAction from "@/components/member/WaitlistAction";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -35,7 +37,7 @@ const Course = () => {
     if (!courseId || !user) return;
     let cancelled = false;
     const fetchData = async () => {
-      setLoading(true); setError(false); setHasAccess(false); setCourse(null);
+      setLoading(true); setError(false); setHasAccess(false); setCourse(null); setPack({ collections: [], items: [], videos: [] });
       const [courseRes, enrollmentRes] = await Promise.all([
         supabase.from("courses").select("*").eq("id", courseId).eq("status", "published").maybeSingle(),
         supabase.from("enrollments").select("id, status, expires_at").eq("student_id", student?.id || user.id).eq("course_id", courseId).eq("status", "active"),
@@ -81,6 +83,14 @@ const Course = () => {
 
   if (loading) return <MemberLayout><div className="mx-auto max-w-[1280px] space-y-6 px-4 py-20 md:px-6 lg:px-[60px]"><Skeleton className="aspect-[16/5] w-full" /><Skeleton className="h-10 w-72" /><Skeleton className="h-24 w-full" /></div></MemberLayout>;
   if (!course) return <MemberLayout><div className="mx-auto max-w-[1280px] px-4 py-20 md:px-6 lg:px-[60px]"><p className="text-muted-foreground">{error ? "Não foi possível carregar este produto." : "Produto indisponível."}</p><Button asChild variant="outline" className="mt-5"><Link to="/">Voltar ao início</Link></Button></div></MemberLayout>;
+  if (course.product_type === "pack") return <MemberLayout fullBleed>
+    <PackPresentation course={course} hasAccess={hasAccess} videos={error ? [] : pack.videos} />
+    {hasAccess && <section id="conteudo" className="scroll-mt-[72px] border-t border-border">
+      {error ? <p className="mx-auto max-w-[1280px] px-4 py-12 text-muted-foreground md:px-6 lg:px-[60px]">Não foi possível carregar o conteúdo. Atualize a página para tentar novamente.</p>
+        : <PackContent collections={pack.collections} items={pack.items} format={course.pack_format} />}
+    </section>}
+    <PackDiscovery currentId={course.id} />
+  </MemberLayout>;
   const customAction = course.presentation_button_enabled && course.presentation_button_text?.trim() && safeHttps(course.presentation_button_url);
   const checkout = !hasAccess && course.available_for_sale ? safeHttps(course.checkout_url) : null;
   const trailer = course.product_type === "course" && course.trailer_url ? videoEmbed(course.trailer_url) : null;

@@ -3,13 +3,12 @@ import { Copy, Check, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import RatioMedia from "./RatioMedia";
-import { safeHttps, videoEmbed } from "@/lib/productMedia";
+import { safeHttps } from "@/lib/productMedia";
 import type { Tables } from "@/integrations/supabase/types";
 
 type Collection = Tables<"pack_collections">;
 type Item = Pick<Tables<"pack_items">, "id" | "collection_id" | "format" | "title" | "description" | "cover_url" | "cover_ratio" | "tags" | "canva_template_url" | "textual_content" | "textual_example" | "drive_available">;
-type Video = Tables<"pack_videos">;
-interface Props { collections: Collection[]; items: Item[]; videos: Video[]; format: Tables<"courses">["pack_format"]; }
+interface Props { collections: Collection[]; items: Item[]; format: Tables<"courses">["pack_format"]; }
 
 const PackItem = ({ item, format }: { item: Item; format: Props["format"] }) => {
   const [copied, setCopied] = useState(false);
@@ -34,10 +33,10 @@ const PackItem = ({ item, format }: { item: Item; format: Props["format"] }) => 
   </article>;
 };
 
-const PackContent = ({ collections, items, videos, format }: Props) => {
+const PackContent = ({ collections, items, format }: Props) => {
   const topLevel = items.filter((item) => !item.collection_id);
   return <div className="mx-auto max-w-[1280px] space-y-12 px-4 py-12 md:px-6 lg:px-[60px]">
-    {!collections.length && !items.length && !videos.length && <p className="border-y border-border py-12 text-center text-muted-foreground">Conteúdo indisponível no momento.</p>}
+    {!collections.length && !items.length && <p className="border-y border-border py-12 text-center text-muted-foreground">Nenhum item disponível neste pack.</p>}
     {collections.map((collection) => {
       const children = items.filter((item) => item.collection_id === collection.id);
       return <section key={collection.id} className="border-t border-border pt-8">
@@ -50,10 +49,6 @@ const PackContent = ({ collections, items, videos, format }: Props) => {
       </section>;
     })}
     {topLevel.length > 0 && <section className="border-t border-border pt-8"><h2 className="mb-8 text-2xl">Itens avulsos</h2><div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">{topLevel.map((item) => <PackItem key={item.id} item={item} format={format} />)}</div></section>}
-    {videos.length > 0 && <section className="border-t border-border pt-8"><h2 className="mb-8 text-2xl">Vídeos explicativos</h2><div className="grid gap-8 md:grid-cols-2">{videos.map((video) => {
-      const embed = videoEmbed(video.video_url);
-      return <article key={video.id}><div className="aspect-video overflow-hidden bg-secondary">{embed ? <iframe src={embed} title={video.title} loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="h-full w-full" referrerPolicy="strict-origin-when-cross-origin" /> : <div className="flex h-full items-center justify-center text-muted-foreground">Vídeo indisponível</div>}</div><h3 className="mt-4 text-xl">{video.title}</h3>{video.description && <p className="mt-2 text-sm text-muted-foreground">{video.description}</p>}</article>;
-    })}</div></section>}
   </div>;
 };
 export default PackContent;
