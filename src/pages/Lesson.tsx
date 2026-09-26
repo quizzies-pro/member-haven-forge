@@ -13,7 +13,7 @@ import { validEnrollment } from "@/lib/productMedia";
 
 const Lesson = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
-  const { user } = useAuth();
+  const { user, student } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -149,7 +149,7 @@ const Lesson = () => {
     };
 
     fetchData();
-  }, [user, lessonId]);
+  }, [user, student?.id, lessonId]);
 
   if (denied) return <Navigate to="/" replace />;
 
