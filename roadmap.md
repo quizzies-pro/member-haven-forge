@@ -5,5 +5,5 @@
 - [x] Trocar cards de coleções por seletor, manter Todos os itens independente de coleção e exibir itens em carrossel.
 
 # Página de Cursos
-- [ ] Colocar o banner desde o topo sob o cabeçalho translúcido.
-- [ ] Exibir primeiro os módulos e depois título, descrições e ações, antes do rodapé; manter Packs inalterados.
+- [x] Colocar o banner desde o topo sob o cabeçalho translúcido.
+- [x] Exibir primeiro os módulos e depois título, descrições e ações, antes do rodapé; manter Packs inalterados.
