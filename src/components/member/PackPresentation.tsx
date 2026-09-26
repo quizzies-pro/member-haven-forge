@@ -103,7 +103,7 @@ const PackPresentation = ({ course, hasAccess, videos }: Props) => {
       </div>
     </section>
     <Dialog open={playerOpen && hasAccess && Boolean(embed)} onOpenChange={setPlayerOpen}>
-      <DialogContent className="w-[calc(100vw-24px)] max-w-6xl gap-0 overflow-hidden rounded-md border-border bg-background p-0 sm:rounded-md [&>button]:z-10 [&>button]:rounded-full [&>button]:bg-background/80 [&>button]:p-2 [&>button]:text-foreground">
+      <DialogContent aria-describedby={undefined} className="max-h-[90vh] w-[calc(100vw-24px)] max-w-6xl gap-0 overflow-y-auto rounded-md border-border bg-background p-0 sm:rounded-md [&>button]:z-10 [&>button]:rounded-full [&>button]:bg-background/80 [&>button]:p-2 [&>button]:text-foreground">
         <DialogTitle className="sr-only">{selected?.title || "Vídeo do pack"}</DialogTitle>
         {playerOpen && embed && <div className="aspect-video w-full bg-secondary"><iframe src={`${embed}${embed.includes("?") ? "&" : "?"}autoplay=1`} title={selected?.title || "Vídeo do pack"} allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" className="h-full w-full" /></div>}
         {selected && <div className="px-5 py-4 pr-14"><h3 className="text-lg text-foreground">{selected.title}</h3>{selected.description && <p className="mt-1 text-sm text-muted-foreground">{selected.description}</p>}</div>}
