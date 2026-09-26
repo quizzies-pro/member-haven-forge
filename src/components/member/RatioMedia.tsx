@@ -13,7 +13,8 @@ interface Props {
 
 const RatioMedia = ({ candidates, ratio, alt, className, imageClassName }: Props) => {
   const [index, setIndex] = useState(0);
-  useEffect(() => setIndex(0), [candidates.join("|")]);
+  const candidateKey = candidates.join("|");
+  useEffect(() => setIndex(0), [candidateKey]);
   return (
     <div className={cn("relative overflow-hidden bg-secondary", ratioClass[ratio], className)}>
       {candidates[index] ? (

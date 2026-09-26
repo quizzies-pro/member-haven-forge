@@ -77,7 +77,7 @@ const Course = () => {
     };
     fetchData();
     return () => { cancelled = true; };
-  }, [courseId, student?.id, user?.id]);
+  }, [courseId, student?.id, user]);
 
   if (loading) return <MemberLayout><div className="mx-auto max-w-[1280px] space-y-6 px-4 py-20 md:px-6 lg:px-[60px]"><Skeleton className="aspect-[16/5] w-full" /><Skeleton className="h-10 w-72" /><Skeleton className="h-24 w-full" /></div></MemberLayout>;
   if (!course) return <MemberLayout><div className="mx-auto max-w-[1280px] px-4 py-20 md:px-6 lg:px-[60px]"><p className="text-muted-foreground">{error ? "Não foi possível carregar este produto." : "Produto indisponível."}</p><Button asChild variant="outline" className="mt-5"><Link to="/">Voltar ao início</Link></Button></div></MemberLayout>;

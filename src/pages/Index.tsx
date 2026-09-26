@@ -50,7 +50,7 @@ const Index = () => {
     };
     fetchData();
     return () => { cancelled = true; };
-  }, [student?.id, user?.id]);
+  }, [student?.id, user]);
 
   const enrollmentSet = useMemo(() => new Set(enrolledCourseIds), [enrolledCourseIds]);
   const courseMap = useMemo(() => new Map(courses.map((course) => [course.id, course])), [courses]);
