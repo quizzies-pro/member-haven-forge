@@ -63,3 +63,13 @@ export function videoEmbed(url: string): string | null {
     return null;
   } catch { return null; }
 }
+
+export function videoThumbnail(url: string): { image?: string; oembed?: string } | null {
+  const embed = videoEmbed(url);
+  if (!embed) return null;
+  const youtubeId = embed.match(/^https:\/\/www\.youtube-nocookie\.com\/embed\/([\w-]{11})$/)?.[1];
+  if (youtubeId) return { image: `https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg` };
+  const vimeoId = embed.match(/^https:\/\/player\.vimeo\.com\/video\/(\d+)$/)?.[1];
+  if (vimeoId) return { oembed: `https://vimeo.com/api/oembed.json?url=${encodeURIComponent(`https://vimeo.com/${vimeoId}`)}` };
+  return null;
+}

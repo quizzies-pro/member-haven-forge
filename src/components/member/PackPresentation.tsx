@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowUpRight, Play, ImageOff, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import RatioMedia from "./RatioMedia";
 import WaitlistAction from "./WaitlistAction";
-import { coverCandidates, heroCandidates, safeHttps, videoEmbed } from "@/lib/productMedia";
+import { coverCandidates, heroCandidates, safeHttps, videoEmbed, videoThumbnail } from "@/lib/productMedia";
 import type { Tables } from "@/integrations/supabase/types";
 
 interface Props {
@@ -18,8 +19,36 @@ const BackgroundImage = ({ candidates, alt }: { candidates: string[]; alt: strin
   return candidates[index] ? <img src={candidates[index]} alt={alt} onError={() => setIndex((current) => current + 1)} className="h-full w-full object-cover" /> : <div className="flex h-full w-full items-center justify-center bg-secondary text-muted-foreground"><ImageOff aria-hidden="true" /></div>;
 };
 
+const VideoPreview = ({ url, title, fallback, onPlay }: { url: string; title: string; fallback: string[]; onPlay: () => void }) => {
+  const source = videoThumbnail(url);
+  const [image, setImage] = useState(source?.image || "");
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    setImage(source?.image || "");
+    setFailed(false);
+    if (!source?.oembed) return;
+    const controller = new AbortController();
+    fetch(source.oembed, { signal: controller.signal })
+      .then((response) => { if (!response.ok) throw new Error("Thumbnail unavailable"); return response.json(); })
+      .then((data: { thumbnail_url?: string }) => {
+        const thumbnail = safeHttps(data.thumbnail_url);
+        if (thumbnail && new URL(thumbnail).hostname.endsWith(".vimeocdn.com")) setImage(thumbnail);
+      })
+      .catch(() => {});
+    return () => controller.abort();
+  }, [source?.image, source?.oembed]);
+  return <div className="relative h-full w-full">
+    {image && !failed ? <img src={image} alt="" onError={() => setFailed(true)} className="h-full w-full object-cover" />
+      : <RatioMedia candidates={fallback} ratio="16:9" alt="" className="h-full w-full" />}
+    <Button type="button" variant="ghost" onClick={onPlay} aria-label={`Reproduzir ${title} em tela ampliada`} className="absolute inset-0 h-full w-full rounded-none bg-background/20 text-foreground hover:bg-background/35 hover:text-foreground focus-visible:ring-inset">
+      <span className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform motion-safe:hover:scale-105"><Play aria-hidden="true" className="!h-7 !w-7 fill-current" /></span>
+    </Button>
+  </div>;
+};
+
 const PackPresentation = ({ course, hasAccess, videos }: Props) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [playerOpen, setPlayerOpen] = useState(false);
   const selected = videos.find((video) => video.id === selectedId) || videos[0];
   const embed = selected ? videoEmbed(selected.video_url) : null;
   const customAction = course.presentation_button_enabled && course.presentation_button_text?.trim() ? safeHttps(course.presentation_button_url) : null;
@@ -53,7 +82,7 @@ const PackPresentation = ({ course, hasAccess, videos }: Props) => {
 
           <div className="min-w-0">
             <div className="aspect-video overflow-hidden rounded-md border border-border bg-secondary">
-              {hasAccess && embed && selected ? <iframe key={selected.id} src={embed} title={selected.title} loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" className="h-full w-full" />
+              {hasAccess && embed && selected ? <VideoPreview key={selected.id} url={selected.video_url} title={selected.title} fallback={coverCandidates(course, "16:9")} onPlay={() => setPlayerOpen(true)} />
                 : hasAccess && selected ? <div className="flex h-full items-center justify-center text-sm text-muted-foreground">Vídeo indisponível</div>
                   : <RatioMedia candidates={coverCandidates(course, "16:9")} ratio="16:9" alt={course.title} className="h-full w-full" />}
             </div>
@@ -73,6 +102,13 @@ const PackPresentation = ({ course, hasAccess, videos }: Props) => {
         </div>
       </div>
     </section>
+    <Dialog open={playerOpen && hasAccess && Boolean(embed)} onOpenChange={setPlayerOpen}>
+      <DialogContent aria-describedby={undefined} className="max-h-[90vh] w-[calc(100vw-24px)] max-w-6xl gap-0 overflow-y-auto rounded-md border-border bg-background p-0 sm:rounded-md [&>button]:z-10 [&>button]:rounded-full [&>button]:bg-background/80 [&>button]:p-2 [&>button]:text-foreground">
+        <DialogTitle className="sr-only">{selected?.title || "Vídeo do pack"}</DialogTitle>
+        {playerOpen && embed && <div className="aspect-video w-full bg-secondary"><iframe src={`${embed}${embed.includes("?") ? "&" : "?"}autoplay=1`} title={selected?.title || "Vídeo do pack"} allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" className="h-full w-full" /></div>}
+        {selected && <div className="px-5 py-4 pr-14"><h3 className="text-lg text-foreground">{selected.title}</h3>{selected.description && <p className="mt-1 text-sm text-muted-foreground">{selected.description}</p>}</div>}
+      </DialogContent>
+    </Dialog>
   </>;
 };
 

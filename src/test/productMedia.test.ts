@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { coverCandidates, heroCandidates, validEnrollment, videoEmbed, safeHttps, ratioClass } from "@/lib/productMedia";
+import { coverCandidates, heroCandidates, validEnrollment, videoEmbed, videoThumbnail, safeHttps, ratioClass } from "@/lib/productMedia";
 import type { Tables } from "@/integrations/supabase/types";
 
 const product = {
@@ -44,5 +44,7 @@ describe("access and external media", () => {
     expect(videoEmbed("https://youtube.com/watch?v=abcdefghijk")).toBe("https://www.youtube-nocookie.com/embed/abcdefghijk");
     expect(videoEmbed("https://vimeo.com/12345")).toBe("https://player.vimeo.com/video/12345");
     expect(videoEmbed("https://evil.example/watch?v=abcdefghijk")).toBeNull();
+    expect(videoThumbnail("https://youtu.be/abcdefghijk")).toEqual({ image: "https://i.ytimg.com/vi/abcdefghijk/hqdefault.jpg" });
+    expect(videoThumbnail("https://evil.example/watch?v=abcdefghijk")).toBeNull();
   });
 });
