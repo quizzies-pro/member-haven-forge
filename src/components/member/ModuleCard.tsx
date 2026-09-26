@@ -61,34 +61,34 @@ const ModuleCard = ({ id, title, coverUrl, lessonCount, isFirst }: ModuleCardPro
     <Button variant="ghost"
       type="button"
       onClick={handleClick}
-      className="group h-auto w-[240px] flex-shrink-0 cursor-pointer p-0 text-left hover:bg-transparent"
+      className="group h-auto w-[240px] flex-shrink-0 cursor-pointer items-stretch whitespace-normal p-0 text-left hover:bg-transparent"
     >
-      <div className="relative w-[240px] h-[360px] rounded-xl overflow-hidden bg-secondary transition-all duration-300">
+      <div className="relative flex min-h-[360px] w-full flex-col justify-between overflow-hidden rounded-xl bg-secondary transition-all duration-300">
         {coverUrl ? (
           <img
             src={coverUrl}
             alt={title}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.06]"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.06]"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center">
             <BookOpen size={40} className="text-muted-foreground" />
           </div>
         )}
 
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
 
-        <div className="absolute top-3 left-3 text-foreground/90 text-xs font-medium tracking-wide">
+        <div className="relative px-5 pt-3 text-xs font-medium text-foreground/90">
           {lessonCount} {lessonCount === 1 ? "Aula" : "Aulas"}
         </div>
 
-        <div className="absolute bottom-8 left-5 right-14">
-          <h3 className="text-xl font-medium text-foreground uppercase leading-tight">
+        <div className="relative px-5 pb-8 pt-12">
+          <h3 className="break-words text-xl font-medium uppercase leading-tight text-foreground [overflow-wrap:anywhere]">
             {title}
           </h3>
         </div>
 
-        <div className="absolute bottom-8 right-4 flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground opacity-0 transition-opacity group-hover:opacity-100">
+        <div className="absolute right-4 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
           <Play size={17} fill="currentColor" aria-hidden="true" />
         </div>
       </div>
