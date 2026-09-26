@@ -7,7 +7,7 @@ import MemberLayout from "@/components/member/MemberLayout";
 import CourseBanner from "@/components/member/CourseBanner";
 import ModuleCarousel from "@/components/member/ModuleCarousel";
 import PackContent from "@/components/member/PackContent";
-import PackPresentation from "@/components/member/PackPresentation";
+import PackPresentation, { PackAbout } from "@/components/member/PackPresentation";
 import PackDiscovery from "@/components/member/PackDiscovery";
 import WaitlistAction from "@/components/member/WaitlistAction";
 import { Button } from "@/components/ui/button";
@@ -90,6 +90,7 @@ const Course = () => {
         : <PackContent collections={pack.collections} items={pack.items} format={course.pack_format} />}
     </section>}
     <PackDiscovery currentId={course.id} />
+    {course.full_description?.trim() && <PackAbout description={course.full_description} />}
   </MemberLayout>;
   const customAction = course.presentation_button_enabled && course.presentation_button_text?.trim() && safeHttps(course.presentation_button_url);
   const checkout = !hasAccess && course.available_for_sale ? safeHttps(course.checkout_url) : null;
