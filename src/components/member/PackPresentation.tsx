@@ -19,7 +19,7 @@ const BackgroundImage = ({ candidates, alt }: { candidates: string[]; alt: strin
   return candidates[index] ? <img src={candidates[index]} alt={alt} onError={() => setIndex((current) => current + 1)} className="h-full w-full object-cover" /> : <div className="flex h-full w-full items-center justify-center bg-secondary text-muted-foreground"><ImageOff aria-hidden="true" /></div>;
 };
 
-const VideoPreview = ({ url, title, fallback, onPlay }: { url: string; title: string; fallback: string[]; onPlay: () => void }) => {
+const VideoThumbnailImage = ({ url, fallback }: { url: string; fallback: string[] }) => {
   const source = videoThumbnail(url);
   const [image, setImage] = useState(source?.image || "");
   const [failed, setFailed] = useState(false);
@@ -37,9 +37,15 @@ const VideoPreview = ({ url, title, fallback, onPlay }: { url: string; title: st
       .catch(() => {});
     return () => controller.abort();
   }, [source?.image, source?.oembed]);
-  return <div className="relative h-full w-full">
+  return <div className="relative h-full w-full overflow-hidden bg-secondary">
     {image && !failed ? <img src={image} alt="" onError={() => setFailed(true)} className="h-full w-full object-cover" />
       : <RatioMedia candidates={fallback} ratio="16:9" alt="" className="h-full w-full" />}
+  </div>;
+};
+
+const VideoPreview = ({ url, title, fallback, onPlay }: { url: string; title: string; fallback: string[]; onPlay: () => void }) => {
+  return <div className="relative h-full w-full">
+    <VideoThumbnailImage url={url} fallback={fallback} />
     <Button type="button" variant="ghost" onClick={onPlay} aria-label={`Reproduzir ${title} em tela ampliada`} className="absolute inset-0 h-full w-full rounded-none bg-background/20 text-foreground hover:bg-background/35 hover:text-foreground focus-visible:ring-inset">
       <span className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform motion-safe:hover:scale-105"><Play aria-hidden="true" className="!h-7 !w-7 fill-current" /></span>
     </Button>
@@ -94,7 +100,10 @@ const PackPresentation = ({ course, hasAccess, videos }: Props) => {
             <h2 className="border-b border-border pb-3 text-lg text-foreground">Vídeos do pack</h2>
             <div className="scrollbar-hide mt-3 flex gap-3 overflow-x-auto pb-2 lg:max-h-[350px] lg:flex-col lg:overflow-y-auto lg:overflow-x-hidden" aria-label="Selecionar vídeo do pack">
               {videos.map((video, index) => <Button key={video.id} type="button" variant="ghost" onClick={() => setSelectedId(video.id)} aria-current={selected?.id === video.id ? "true" : undefined} aria-label={`Reproduzir ${video.title}`} className={`h-auto min-w-[190px] flex-1 justify-start gap-3 whitespace-normal rounded-sm border p-2 text-left lg:min-w-0 lg:w-full ${selected?.id === video.id ? "border-primary bg-secondary" : "border-border bg-background/50 hover:bg-secondary"}`}>
-                <span className="flex h-12 w-16 shrink-0 items-center justify-center bg-secondary text-primary"><Play size={18} aria-hidden="true" /></span>
+                <span className="relative aspect-video w-20 shrink-0 overflow-hidden rounded-sm bg-secondary">
+                  <VideoThumbnailImage url={video.video_url} fallback={coverCandidates(course, "16:9")} />
+                  <span className="absolute inset-0 flex items-center justify-center bg-background/25"><Play size={16} aria-hidden="true" className="text-foreground drop-shadow-md" /></span>
+                </span>
                 <span className="min-w-0 flex-1"><span className="block text-xs text-muted-foreground">Vídeo {index + 1}</span><span className="mt-1 block break-words text-sm leading-snug text-foreground">{video.title}</span></span>
               </Button>)}
             </div>

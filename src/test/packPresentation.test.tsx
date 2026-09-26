@@ -30,7 +30,7 @@ describe("apresentação dos Packs", () => {
   it("alterna vídeos publicados para o aluno com acesso", () => {
     const { container } = show(true);
     expect(screen.queryByTitle("Primeiro vídeo")).not.toBeInTheDocument();
-    expect(container.querySelector('img[src="https://i.ytimg.com/vi/abcdefghijk/hqdefault.jpg"]')).toBeInTheDocument();
+    expect(container.querySelectorAll('img[src="https://i.ytimg.com/vi/abcdefghijk/hqdefault.jpg"]')).toHaveLength(2);
     fireEvent.click(screen.getByRole("button", { name: "Reproduzir Segundo vídeo" }));
     expect(screen.getByRole("button", { name: "Reproduzir Segundo vídeo" })).toHaveAttribute("aria-current", "true");
     fireEvent.click(screen.getByRole("button", { name: "Reproduzir Segundo vídeo em tela ampliada" }));
