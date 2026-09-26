@@ -1,0 +1,4 @@
+- [ ] Atualizar vitrine por categorias, imagens e estados comerciais.
+- [ ] Separar apresentação, Cursos e Packs com matrícula válida.
+- [ ] Oferecer ações seguras de Pack e lista de espera quando configurada.
+- [ ] Validar fluxos e documentar bloqueios externos.

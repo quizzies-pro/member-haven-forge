@@ -1,0 +1,3 @@
+- A Members somente consome o contrato de produtos do Dive Hub no Supabase compartilhado; não altera o esquema, porque a administração dos produtos pertence ao Hub.
+- Resolver capas, banners, proporções e validade de matrículas em utilitários compartilhados, para evitar decisões divergentes entre a vitrine e as páginas de conteúdo.
+- Manter o conteúdo de Packs na página de produto separado dos módulos de Curso; a distinção é dada por courses.product_type.
