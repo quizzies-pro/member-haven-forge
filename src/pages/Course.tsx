@@ -93,26 +93,27 @@ const Course = () => {
   const checkout = !hasAccess && course.available_for_sale ? safeHttps(course.checkout_url) : null;
   const trailer = course.product_type === "course" && course.trailer_url ? videoEmbed(course.trailer_url) : null;
   return <MemberLayout fullBleed>
-    <div className="pt-[60px]"><CourseBanner course={course} /></div>
-    <div className="mx-auto max-w-[1280px] px-4 pb-8 pt-8 md:px-6 lg:px-[60px]">
-      <Button asChild variant="ghost" className="mb-6 -ml-4 text-muted-foreground"><Link to="/"><ArrowLeft /> Início</Link></Button>
-      <p className="mb-3 text-xs font-medium uppercase text-primary">Curso</p>
-      <h1 className="max-w-3xl text-3xl text-foreground md:text-5xl">{course.title}</h1>
-      {course.short_description && <p className="mt-4 max-w-2xl text-lg text-muted-foreground">{course.short_description}</p>}
-      {course.full_description && <p className="mt-6 max-w-3xl whitespace-pre-wrap break-words text-sm leading-7 text-foreground/80">{course.full_description}</p>}
-      {trailer && <div className="mt-8 aspect-video max-w-3xl overflow-hidden bg-secondary"><iframe src={trailer} title={`Apresentação de ${course.title}`} loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="h-full w-full" /></div>}
-      <div className="mt-8 flex flex-wrap gap-3">
-        {hasAccess && <Button asChild><a href="#conteudo">Ver conteúdo <ArrowUpRight /></a></Button>}
-        {customAction && <Button asChild variant="outline"><a href={customAction} target="_blank" rel="noopener noreferrer">{course.presentation_button_text} <ArrowUpRight /></a></Button>}
-        {checkout && <Button asChild><a href={checkout} target="_blank" rel="noopener noreferrer">Comprar produto <ArrowUpRight /></a></Button>}
-      </div>
-      {!hasAccess && <div className="mt-10 border-t border-border pt-8"><p className="mb-5 text-muted-foreground">Você ainda não possui acesso a este produto.</p>{!course.available_for_sale && courseId && <WaitlistAction courseId={courseId} />}{course.available_for_sale && !checkout && <p className="text-sm text-muted-foreground">Compra indisponível no momento.</p>}</div>}
-    </div>
+    <CourseBanner course={course} />
     {hasAccess && <section id="conteudo" className="scroll-mt-[72px] border-t border-border">
       {error ? <p className="mx-auto max-w-[1280px] px-4 py-12 text-muted-foreground md:px-6 lg:px-[60px]">Não foi possível carregar o conteúdo. Atualize a página para tentar novamente.</p>
         : course.product_type === "course" ? modules.length ? <ModuleCarousel modules={modules} /> : <p className="mx-auto max-w-[1280px] px-4 py-12 text-muted-foreground md:px-6 lg:px-[60px]">Conteúdo indisponível no momento.</p>
             : <p className="mx-auto max-w-[1280px] px-4 py-12 text-muted-foreground md:px-6 lg:px-[60px]">Conteúdo indisponível no momento.</p>}
     </section>}
+    <section className="border-t border-border">
+      <div className="mx-auto max-w-[1280px] px-4 pb-12 pt-10 md:px-6 lg:px-[60px]">
+        <Button asChild variant="ghost" className="mb-6 -ml-4 text-muted-foreground"><Link to="/"><ArrowLeft /> Início</Link></Button>
+        <p className="mb-3 text-xs font-medium uppercase text-primary">Curso</p>
+        <h1 className="max-w-3xl text-3xl text-foreground md:text-5xl">{course.title}</h1>
+        {course.short_description && <p className="mt-4 max-w-2xl text-lg text-muted-foreground">{course.short_description}</p>}
+        {course.full_description && <p className="mt-6 max-w-3xl whitespace-pre-wrap break-words text-sm leading-7 text-foreground/80">{course.full_description}</p>}
+        {trailer && <div className="mt-8 aspect-video max-w-3xl overflow-hidden bg-secondary"><iframe src={trailer} title={`Apresentação de ${course.title}`} loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="h-full w-full" /></div>}
+        {(customAction || checkout) && <div className="mt-8 flex flex-wrap gap-3">
+          {customAction && <Button asChild variant="outline"><a href={customAction} target="_blank" rel="noopener noreferrer">{course.presentation_button_text} <ArrowUpRight /></a></Button>}
+          {checkout && <Button asChild><a href={checkout} target="_blank" rel="noopener noreferrer">Comprar produto <ArrowUpRight /></a></Button>}
+        </div>}
+        {!hasAccess && <div className="mt-10 border-t border-border pt-8"><p className="mb-5 text-muted-foreground">Você ainda não possui acesso a este produto.</p>{!course.available_for_sale && courseId && <WaitlistAction courseId={courseId} />}{course.available_for_sale && !checkout && <p className="text-sm text-muted-foreground">Compra indisponível no momento.</p>}</div>}
+      </div>
+    </section>
   </MemberLayout>;
 };
 export default Course;
