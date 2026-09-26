@@ -14,6 +14,10 @@ const items = [
 ] as Tables<"pack_items">[];
 
 vi.stubGlobal("ResizeObserver", class { observe() {} disconnect() {} });
+HTMLElement.prototype.hasPointerCapture = () => false;
+HTMLElement.prototype.setPointerCapture = () => {};
+HTMLElement.prototype.releasePointerCapture = () => {};
+HTMLElement.prototype.scrollIntoView = () => {};
 
 describe("conteúdo dos Packs", () => {
   it("mostra todos os itens por padrão, sem cards de coleções, e filtra por coleção", () => {
