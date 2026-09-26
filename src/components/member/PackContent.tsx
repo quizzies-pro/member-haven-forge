@@ -8,7 +8,7 @@ import { safeHttps, videoEmbed } from "@/lib/productMedia";
 import type { Tables } from "@/integrations/supabase/types";
 
 type Collection = Tables<"pack_collections">;
-type Item = Tables<"pack_items">;
+type Item = Pick<Tables<"pack_items">, "id" | "collection_id" | "format" | "title" | "description" | "cover_url" | "cover_ratio" | "tags" | "canva_template_url" | "textual_content" | "textual_example" | "drive_available">;
 type Video = Tables<"pack_videos">;
 interface Props { collections: Collection[]; items: Item[]; videos: Video[]; format: Tables<"courses">["pack_format"]; }
 

@@ -50,7 +50,7 @@ const Course = () => {
       if (product.product_type === "pack") {
         const [collections, items, videos] = await Promise.all([
           supabase.from("pack_collections").select("*").eq("course_id", courseId).eq("is_visible", true).order("sort_order"),
-          supabase.from("pack_items").select("id, course_id, collection_id, format, title, description, cover_url, cover_ratio, tags, sort_order, status, canva_template_url, textual_content, textual_example, drive_available, created_at, updated_at, drive_file_id, drive_file_name, drive_file_size, drive_mime_type, drive_thumbnail_url, drive_modified_at, drive_synced_at").eq("course_id", courseId).eq("status", "published").order("sort_order"),
+          supabase.from("pack_items").select("id, collection_id, format, title, description, cover_url, cover_ratio, tags, canva_template_url, textual_content, textual_example, drive_available").eq("course_id", courseId).eq("status", "published").order("sort_order"),
           supabase.from("pack_videos").select("*").eq("course_id", courseId).eq("status", "published").order("sort_order"),
         ]);
         if (cancelled) return;
