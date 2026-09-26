@@ -1,0 +1,34 @@
+# Plano — apresentação de produtos na Members
+
+## Resultado esperado
+A página inicial seguirá a organização criada no Dive Hub, e cada produto terá uma apresentação própria. Cursos continuarão com módulos e aulas; Packs terão coleções, itens e vídeos, sem serem tratados como Cursos. A identidade azul e a tipografia atuais serão mantidas.
+
+## O que existe hoje
+- `/` é o catálogo em `Index.tsx`: busca todos os produtos publicados, separa por matrícula ativa e usa `ProductCard.tsx`. Ainda não lê categorias, `storefront_visible` nem validade da matrícula. O topo atual usa uma imagem fixa do Dive Club.
+- `/produto/:courseId` é `Course.tsx`: somente quem possui matrícula ativa vê o `CourseBanner.tsx` (`banner_url` e `logo_url`) e os módulos. Quem não possui matrícula volta ao início. `Module.tsx`, `Lesson.tsx` e `ModuleCard.tsx` mantêm navegação, aulas e progresso.
+- O login fica em `Login.tsx`, `useAuth.tsx` e `ProtectedRoute.tsx`; pagamentos e matrículas são geridos fora destas telas. Não há interface de Pack nem de lista de espera. O único serviço de função presente neste projeto é `check-student-email`; `pack-drive` precisa ser confirmado no Hub antes da ação de download.
+- O banco já contém as tabelas, proporções, campos e funções de lista de espera descritos. Há uma categoria ativa com um produto vinculado; o outro produto publicado não está vinculado e, pela nova regra, não aparecerá no catálogo enquanto o Hub não o associar. Nenhuma mudança no banco faz parte deste trabalho.
+
+## Contrato dos campos existentes
+| Área | Campos e uso |
+| --- | --- |
+| Tipos | `courses.product_type`: `course` abre módulos/aulas; `pack` abre coleções/itens/vídeos. `pack_format` determina ação `canva`, `textual` ou `drive`; valor não suportado mostra conteúdo indisponível. |
+| Vitrine | `storefront_categories.is_active`, `display_order` ordenam as fileiras; `storefront_category_courses.category_id`, `course_id`, `display_order` definem associação e ordem. Somente `courses.status = published` e `storefront_visible = true` aparecem no catálogo. Categoria não concede acesso. Produtos com matrícula válida aparecem em “Seus produtos” somente se também estiverem numa categoria ativa; se o Hub desejar outra regra para itens sem categoria, ajustar antes da implementação. |
+| Imagens | Cards horizontais usam `cover_16_9_url` (ou `cover_4_3_url` se desenhados em 4:3); quadrados `cover_1_1_url`; verticais `cover_3_4_url`/`cover_9_16_url`. Fallback: proporção solicitada → proporção disponível mais próxima → `cover_16_9_url` → `cover_url` → estado neutro. Banners usam `hero_16_9_url` no desktop e `hero_4_3_url` no espaço compacto; fallback: outro hero → `banner_url` → capa equivalente → `cover_16_9_url` → `cover_url` → estado neutro. Não usar `login_cover_url`; não apagar legados. Imagens ausentes ou com falha de carregamento terão substituto visual. |
+| Apresentação | `title`, `short_description`, `full_description`, `logo_url` compõem a página; `trailer_url` é opcional para Curso. Botão personalizado apenas com `presentation_button_enabled`, texto preenchido e URL HTTPS válida. `featured` pode destacar na própria categoria; `is_free` é indicativo comercial, nunca permissão. Compra somente se `available_for_sale` e `checkout_url` válido. |
+| Acesso | `enrollments.student_id`, `course_id`, `status = active`, `expires_at` nulo ou futuro determinam acesso para Curso e Pack. `storefront_visible` e `available_for_sale` são comerciais, não autorização. Consultas de conteúdo continuam submetidas às políticas do banco. |
+| Packs | `pack_collections.is_visible`, `sort_order`, `cover_url`, `cover_ratio`; `pack_items.status = published`, `sort_order`, `collection_id`, `tags`, `cover_url`, `cover_ratio`, `canva_template_url`, `textual_content`, `textual_example`, `drive_available`; `pack_videos.status = published`, `sort_order`, `video_url`, título e descrição. Coleções ocultas e seus itens não aparecem. Proporção cadastrada (1:1, 16:9, 4:3, 3:4, 9:16) determina a moldura, sem recorte universal. |
+| Ações Pack | Canva abre link oficial em outra aba; Textual mostra texto/exemplo e permite copiar com confirmação; Drive usa apenas `pack-drive` com `{ action: "download", item_id }` e sessão do aluno, sem expor IDs ou links privados. Caso a função não esteja acessível, exibe indisponibilidade, sem fallback inseguro. Vídeos publicados usam incorporação oficial validada de YouTube/Vimeo. |
+| Espera | `product_waitlists`, `get_product_waitlist_state`, `join_product_waitlist` e `leave_product_waitlist` controlam adesão/saída. Consentimento obrigatório e eventual marketing por e-mail/WhatsApp permanecem independentes; não inferir aceite de marketing do aceite da lista. Sem lista ativa, mostrar estado indisponível. |
+
+## Implementação proposta
+1. Criar utilitários reutilizáveis para seleção/fallback de mídia, moldura proporcional e checagem de matrícula válida. Preservar as telas de login, conta, pagamento e progresso.
+2. Adaptar a página inicial para categorias ativas ordenadas, apenas produtos publicados e visíveis associados; manter o primeiro destaque atual, a fila “Seus produtos”, skeletons, estados vazios e falhas. Atualizar cards de Curso/Pack e suas ações para abrir a página de apresentação, não enviar imediatamente ao checkout.
+3. Adaptar `/produto/:courseId` para apresentação acessível ao aluno autenticado: mostrar dados comerciais sem acesso ao conteúdo e, com matrícula válida, escolher entre módulos/aulas de Curso e coleções/itens/vídeos de Pack. Evitar consultas de conteúdo protegido antes da checagem de acesso. Revalidar também nas entradas diretas de módulo e aula.
+4. Acrescentar ações específicas por formato, indicação de compra quando habilitada e lista de espera quando configurada. Drive somente pela função protegida existente e confirmada; nunca pelo navegador direto. Não criar tabelas, colunas nem migrações.
+5. Validar os 16 cenários do documento em testes de utilitários e fluxos disponíveis, além da apresentação desktop/celular. Confirmar compilação automática e erros de execução. Cenários sem dados de exemplo ou sem acesso ao serviço do Hub serão explicitamente apontados, não simulados como validados.
+
+## Pontos de integração a confirmar antes de concluir
+- A função `pack-drive` não consta no código desta Members; conferir se está implantada no Supabase compartilhado e seu formato exato de resposta. Sem isso, deixar a ação de Drive indisponível com segurança.
+- A função pública de lista de espera hoje recebe somente adesão e origem; confirmar se o Hub já oferece meios para registrar separadamente preferências de marketing. Não transformar participação em autorização de marketing.
+- Para que o produto atualmente sem categoria entre na vitrine, o Hub precisará vinculá-lo a uma categoria ativa; a Members não alterará essa associação.

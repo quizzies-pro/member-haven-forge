@@ -112,12 +112,21 @@ export type Database = {
           banner_url: string | null
           category: string | null
           checkout_url: string | null
+          cover_1_1_url: string | null
+          cover_16_9_url: string | null
+          cover_3_4_url: string | null
+          cover_4_3_url: string | null
+          cover_9_16_url: string | null
           cover_url: string | null
           created_at: string
           display_order: number
+          drive_root_folder_id: string | null
+          drive_root_folder_name: string | null
           featured: boolean
           full_description: string | null
           has_certificate: boolean
+          hero_16_9_url: string | null
+          hero_4_3_url: string | null
           id: string
           instructor_name: string | null
           is_free: boolean
@@ -125,6 +134,9 @@ export type Database = {
           login_cover_url: string | null
           logo_url: string | null
           pack_format: Database["public"]["Enums"]["pack_format"] | null
+          presentation_button_enabled: boolean
+          presentation_button_text: string | null
+          presentation_button_url: string | null
           product_type: Database["public"]["Enums"]["product_type"]
           seo_description: string | null
           seo_title: string | null
@@ -146,12 +158,21 @@ export type Database = {
           banner_url?: string | null
           category?: string | null
           checkout_url?: string | null
+          cover_1_1_url?: string | null
+          cover_16_9_url?: string | null
+          cover_3_4_url?: string | null
+          cover_4_3_url?: string | null
+          cover_9_16_url?: string | null
           cover_url?: string | null
           created_at?: string
           display_order?: number
+          drive_root_folder_id?: string | null
+          drive_root_folder_name?: string | null
           featured?: boolean
           full_description?: string | null
           has_certificate?: boolean
+          hero_16_9_url?: string | null
+          hero_4_3_url?: string | null
           id?: string
           instructor_name?: string | null
           is_free?: boolean
@@ -159,6 +180,9 @@ export type Database = {
           login_cover_url?: string | null
           logo_url?: string | null
           pack_format?: Database["public"]["Enums"]["pack_format"] | null
+          presentation_button_enabled?: boolean
+          presentation_button_text?: string | null
+          presentation_button_url?: string | null
           product_type?: Database["public"]["Enums"]["product_type"]
           seo_description?: string | null
           seo_title?: string | null
@@ -180,12 +204,21 @@ export type Database = {
           banner_url?: string | null
           category?: string | null
           checkout_url?: string | null
+          cover_1_1_url?: string | null
+          cover_16_9_url?: string | null
+          cover_3_4_url?: string | null
+          cover_4_3_url?: string | null
+          cover_9_16_url?: string | null
           cover_url?: string | null
           created_at?: string
           display_order?: number
+          drive_root_folder_id?: string | null
+          drive_root_folder_name?: string | null
           featured?: boolean
           full_description?: string | null
           has_certificate?: boolean
+          hero_16_9_url?: string | null
+          hero_4_3_url?: string | null
           id?: string
           instructor_name?: string | null
           is_free?: boolean
@@ -193,6 +226,9 @@ export type Database = {
           login_cover_url?: string | null
           logo_url?: string | null
           pack_format?: Database["public"]["Enums"]["pack_format"] | null
+          presentation_button_enabled?: boolean
+          presentation_button_text?: string | null
+          presentation_button_url?: string | null
           product_type?: Database["public"]["Enums"]["product_type"]
           seo_description?: string | null
           seo_title?: string | null
@@ -614,34 +650,40 @@ export type Database = {
       pack_collections: {
         Row: {
           course_id: string
+          cover_ratio: Database["public"]["Enums"]["pack_item_cover_ratio"]
           cover_url: string | null
           created_at: string
           description: string | null
           id: string
           is_visible: boolean
           sort_order: number
+          tags: string[]
           title: string
           updated_at: string
         }
         Insert: {
           course_id: string
+          cover_ratio?: Database["public"]["Enums"]["pack_item_cover_ratio"]
           cover_url?: string | null
           created_at?: string
           description?: string | null
           id?: string
           is_visible?: boolean
           sort_order?: number
+          tags?: string[]
           title: string
           updated_at?: string
         }
         Update: {
           course_id?: string
+          cover_ratio?: Database["public"]["Enums"]["pack_item_cover_ratio"]
           cover_url?: string | null
           created_at?: string
           description?: string | null
           id?: string
           is_visible?: boolean
           sort_order?: number
+          tags?: string[]
           title?: string
           updated_at?: string
         }
@@ -660,6 +702,7 @@ export type Database = {
           canva_template_url: string | null
           collection_id: string | null
           course_id: string
+          cover_ratio: Database["public"]["Enums"]["pack_item_cover_ratio"]
           cover_url: string | null
           created_at: string
           description: string | null
@@ -685,6 +728,7 @@ export type Database = {
           canva_template_url?: string | null
           collection_id?: string | null
           course_id: string
+          cover_ratio?: Database["public"]["Enums"]["pack_item_cover_ratio"]
           cover_url?: string | null
           created_at?: string
           description?: string | null
@@ -710,6 +754,7 @@ export type Database = {
           canva_template_url?: string | null
           collection_id?: string | null
           course_id?: string
+          cover_ratio?: Database["public"]["Enums"]["pack_item_cover_ratio"]
           cover_url?: string | null
           created_at?: string
           description?: string | null
@@ -1606,6 +1651,7 @@ export type Database = {
         | "other"
       module_status: "draft" | "published" | "hidden"
       pack_format: "canva" | "textual" | "drive"
+      pack_item_cover_ratio: "1:1" | "16:9" | "4:3" | "3:4" | "9:16"
       pack_item_status: "draft" | "published" | "hidden"
       payment_status:
         | "pending"
@@ -1763,6 +1809,7 @@ export const Constants = {
       ],
       module_status: ["draft", "published", "hidden"],
       pack_format: ["canva", "textual", "drive"],
+      pack_item_cover_ratio: ["1:1", "16:9", "4:3", "3:4", "9:16"],
       pack_item_status: ["draft", "published", "hidden"],
       payment_status: [
         "pending",
