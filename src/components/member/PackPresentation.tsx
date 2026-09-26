@@ -2,7 +2,6 @@ import { useState } from "react";
 import { ArrowLeft, ArrowUpRight, Play, ImageOff, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import RatioMedia from "./RatioMedia";
 import WaitlistAction from "./WaitlistAction";
 import { coverCandidates, heroCandidates, safeHttps, videoEmbed } from "@/lib/productMedia";
@@ -77,18 +76,19 @@ const PackPresentation = ({ course, hasAccess, videos }: Props) => {
   </>;
 };
 
-export const PackAbout = ({ description }: { description: string }) => <section aria-labelledby="pack-about-title" className="border-t border-border bg-background">
-  <div className="mx-auto max-w-[1280px] px-4 py-10 md:px-6 lg:px-[60px]">
-    <h2 id="pack-about-title" className="text-2xl text-foreground">Sobre o pack</h2>
-    <Collapsible className="mt-5">
-      <CollapsibleTrigger asChild>
-        <Button variant="outline" className="group" aria-label="Saiba mais sobre o pack">Saiba mais <ChevronDown aria-hidden="true" className="transition-transform group-data-[state=open]:rotate-180" /></Button>
-      </CollapsibleTrigger>
-      <CollapsibleContent className="pt-6">
+export const PackAbout = ({ description }: { description: string }) => {
+  const [open, setOpen] = useState(false);
+  return <section aria-labelledby="pack-about-title" className="border-t border-border bg-background">
+    <div className="mx-auto max-w-[1280px] px-4 py-10 md:px-6 lg:px-[60px]">
+      <h2 id="pack-about-title" className="text-2xl text-foreground">Sobre o pack</h2>
+      <Button variant="outline" className="mt-5" aria-label="Saiba mais sobre o pack" aria-expanded={open} aria-controls="pack-about-description" onClick={() => setOpen((value) => !value)}>
+        Saiba mais <ChevronDown aria-hidden="true" className={`transition-transform ${open ? "rotate-180" : ""}`} />
+      </Button>
+      {open && <div id="pack-about-description" className="pt-6">
         <p className="max-w-3xl whitespace-pre-wrap break-words text-sm leading-7 text-foreground/80">{description}</p>
-      </CollapsibleContent>
-    </Collapsible>
-  </div>
-</section>;
+      </div>}
+    </div>
+  </section>;
+};
 
 export default PackPresentation;
