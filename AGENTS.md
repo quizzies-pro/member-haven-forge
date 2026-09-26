@@ -1,0 +1,1 @@
+Owned products are fetched by valid enrollment independently of storefront category placement and storefront visibility; only the discovery rows follow the storefront taxonomy, so purchased access cannot disappear when merchandising changes.
