@@ -5,6 +5,8 @@ import { useAuth } from "@/hooks/useAuth";
 import MemberLayout from "@/components/member/MemberLayout";
 import { ArrowLeft, Play, Check, Clock } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
+import { validEnrollment } from "@/lib/productMedia";
+import { Button } from "@/components/ui/button";
 
 const Module = () => {
   const { moduleId } = useParams<{ moduleId: string }>();
@@ -27,9 +29,14 @@ const Module = () => {
         .eq("id", moduleId)
         .single();
 
-      setModule(mod);
-
       if (!mod) { setLoading(false); return; }
+
+      const { data: enrollments } = await supabase.from("enrollments")
+        .select("id, status, expires_at").eq("student_id", user.id)
+        .eq("course_id", mod.course_id).eq("status", "active");
+      const enrollment = enrollments?.find((item) => validEnrollment(item));
+      if (!enrollment) { setDenied(true); setLoading(false); return; }
+      setModule(mod);
 
       // Fetch lessons
       const { data: lessonsData } = await supabase
@@ -42,14 +49,6 @@ const Module = () => {
       setLessons(lessonsData || []);
 
       // Fetch completed lessons
-      const { data: enrollment } = await supabase
-        .from("enrollments")
-        .select("id")
-        .eq("student_id", user.id)
-        .eq("course_id", mod.course_id)
-        .eq("status", "active")
-        .maybeSingle();
-
       if (enrollment) {
         const { data: completed } = await supabase
           .from("enrollment_lessons")
@@ -59,8 +58,6 @@ const Module = () => {
         if (completed) {
           setCompletedLessons(new Set(completed.map((c) => c.lesson_id)));
         }
-      } else {
-        setDenied(true);
       }
 
       setLoading(false);
@@ -102,13 +99,13 @@ const Module = () => {
     <MemberLayout>
       <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-[60px] py-8">
         {/* Header */}
-        <button
+        <Button variant="ghost"
           onClick={() => navigate(`/produto/${module.course_id}`)}
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"
         >
           <ArrowLeft size={20} />
           <span className="text-sm font-medium">Voltar</span>
-        </button>
+        </Button>
 
         {/* Module info */}
         <div className="flex items-start gap-6 mb-10">

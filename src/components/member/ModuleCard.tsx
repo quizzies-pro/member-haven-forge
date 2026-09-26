@@ -2,6 +2,8 @@ import { BookOpen, Play } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { validEnrollment } from "@/lib/productMedia";
+import { Button } from "@/components/ui/button";
 
 interface ModuleCardProps {
   id: string;
@@ -30,13 +32,14 @@ const ModuleCard = ({ id, title, coverUrl, lessonCount, isFirst }: ModuleCardPro
     if (!lessons || lessons.length === 0) { navigate(`/modulo/${id}`); return; }
 
     // Fetch enrollment
-    const { data: enrollment } = await supabase
+    const { data: enrollments } = await supabase
       .from("enrollments")
-      .select("id")
+      .select("id, status, expires_at")
       .eq("student_id", studentId)
       .eq("course_id", lessons[0].course_id)
       .eq("status", "active")
-      .maybeSingle();
+      ;
+    const enrollment = enrollments?.find((item) => validEnrollment(item));
 
     if (!enrollment) {
       navigate("/");
@@ -56,9 +59,10 @@ const ModuleCard = ({ id, title, coverUrl, lessonCount, isFirst }: ModuleCardPro
   };
 
   return (
-    <div
+    <Button variant="ghost"
+      type="button"
       onClick={handleClick}
-      className="group flex-shrink-0 w-[240px] cursor-pointer"
+      className="group h-auto w-[240px] flex-shrink-0 cursor-pointer p-0 text-left hover:bg-transparent"
     >
       <div className="relative w-[240px] h-[360px] rounded-xl overflow-hidden bg-secondary transition-all duration-300">
         {coverUrl ? (
@@ -89,7 +93,7 @@ const ModuleCard = ({ id, title, coverUrl, lessonCount, isFirst }: ModuleCardPro
           <Play size={17} fill="currentColor" aria-hidden="true" />
         </div>
       </div>
-    </div>
+    </Button>
   );
 };
 
