@@ -98,7 +98,7 @@ const Course = () => {
     <div className="pt-[60px]"><CourseBanner course={course} /></div>
     <div className="mx-auto max-w-[1280px] px-4 pb-8 pt-8 md:px-6 lg:px-[60px]">
       <Button asChild variant="ghost" className="mb-6 -ml-4 text-muted-foreground"><Link to="/"><ArrowLeft /> Início</Link></Button>
-      <p className="mb-3 text-xs font-medium uppercase text-primary">{course.product_type === "pack" ? "Pack" : "Curso"}</p>
+      <p className="mb-3 text-xs font-medium uppercase text-primary">Curso</p>
       <h1 className="max-w-3xl text-3xl text-foreground md:text-5xl">{course.title}</h1>
       {course.short_description && <p className="mt-4 max-w-2xl text-lg text-muted-foreground">{course.short_description}</p>}
       {course.full_description && <p className="mt-6 max-w-3xl whitespace-pre-wrap break-words text-sm leading-7 text-foreground/80">{course.full_description}</p>}
@@ -112,8 +112,7 @@ const Course = () => {
     </div>
     {hasAccess && <section id="conteudo" className="scroll-mt-[72px] border-t border-border">
       {error ? <p className="mx-auto max-w-[1280px] px-4 py-12 text-muted-foreground md:px-6 lg:px-[60px]">Não foi possível carregar o conteúdo. Atualize a página para tentar novamente.</p>
-        : course.product_type === "pack" ? <PackContent {...pack} format={course.pack_format} />
-          : course.product_type === "course" ? modules.length ? <ModuleCarousel modules={modules} /> : <p className="mx-auto max-w-[1280px] px-4 py-12 text-muted-foreground md:px-6 lg:px-[60px]">Conteúdo indisponível no momento.</p>
+        : course.product_type === "course" ? modules.length ? <ModuleCarousel modules={modules} /> : <p className="mx-auto max-w-[1280px] px-4 py-12 text-muted-foreground md:px-6 lg:px-[60px]">Conteúdo indisponível no momento.</p>
             : <p className="mx-auto max-w-[1280px] px-4 py-12 text-muted-foreground md:px-6 lg:px-[60px]">Conteúdo indisponível no momento.</p>}
     </section>}
   </MemberLayout>;
