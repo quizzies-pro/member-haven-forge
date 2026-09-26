@@ -29,10 +29,13 @@ describe("apresentação dos Packs", () => {
   });
   it("alterna vídeos publicados para o aluno com acesso", () => {
     show(true);
-    expect(screen.getByTitle("Primeiro vídeo")).toHaveAttribute("src", "https://www.youtube-nocookie.com/embed/abcdefghijk");
+    expect(screen.queryByTitle("Primeiro vídeo")).not.toBeInTheDocument();
+    expect(screen.getByRole("img", { hidden: true })).toHaveAttribute("src", "https://i.ytimg.com/vi/abcdefghijk/hqdefault.jpg");
     fireEvent.click(screen.getByRole("button", { name: "Reproduzir Segundo vídeo" }));
-    expect(screen.getByTitle("Segundo vídeo")).toHaveAttribute("src", "https://player.vimeo.com/video/1234");
     expect(screen.getByRole("button", { name: "Reproduzir Segundo vídeo" })).toHaveAttribute("aria-current", "true");
+    fireEvent.click(screen.getByRole("button", { name: "Reproduzir Segundo vídeo em tela ampliada" }));
+    expect(screen.getByTitle("Segundo vídeo")).toHaveAttribute("src", "https://player.vimeo.com/video/1234?autoplay=1");
+    fireEvent.keyDown(document, { key: "Escape" });
   });
   it("não incorpora endereços de vídeo não confiáveis", () => {
     render(<MemoryRouter><PackPresentation course={pack} hasAccess videos={[{ ...videos[0], video_url: "https://invalid.example/video" }]} /></MemoryRouter>);
