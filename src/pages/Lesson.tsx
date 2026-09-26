@@ -9,10 +9,11 @@ import type { SidebarLesson } from "@/components/member/LessonSidebar";
 import { ArrowLeft, Star, FileText, Send, CheckCircle, Play, Trophy, ChevronRight } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import { useToast } from "@/hooks/use-toast";
+import { validEnrollment } from "@/lib/productMedia";
 
 const Lesson = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
-  const { user } = useAuth();
+  const { user, student } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -48,16 +49,23 @@ const Lesson = () => {
         .eq("id", lessonId)
         .single();
 
-      setLesson(lessonData);
       if (!lessonData) { setLoading(false); return; }
 
+      const { data: activeEnrollments } = await supabase.from("enrollments")
+        .select("id, status, expires_at").eq("student_id", student?.id || user.id)
+        .eq("course_id", lessonData.course_id).eq("status", "active");
+      const currentEnrollment = activeEnrollments?.find((item) => validEnrollment(item));
+      if (!currentEnrollment || lessonData.status !== "published") {
+        setDenied(true); setLoading(false); return;
+      }
+      setLesson(lessonData);
+
       // Fetch module, course, materials, siblings in parallel
-      const [moduleRes, courseRes, matsRes, sibsRes, enrollmentRes, allModulesRes] = await Promise.all([
+      const [moduleRes, courseRes, matsRes, sibsRes, allModulesRes] = await Promise.all([
         supabase.from("course_modules").select("*").eq("id", lessonData.module_id).single(),
         supabase.from("courses").select("*").eq("id", lessonData.course_id).single(),
         supabase.from("lesson_materials").select("*").eq("lesson_id", lessonId).eq("is_visible", true).order("sort_order"),
         supabase.from("lessons").select("*").eq("module_id", lessonData.module_id).eq("status", "published").order("sort_order"),
-        supabase.from("enrollments").select("id").eq("student_id", user.id).eq("course_id", lessonData.course_id).eq("status", "active").single(),
         supabase.from("course_modules").select("*").eq("course_id", lessonData.course_id).eq("status", "published").order("sort_order"),
       ]);
 
@@ -105,12 +113,12 @@ const Lesson = () => {
         );
       }
 
-      if (enrollmentRes.data) {
-        setEnrollmentId(enrollmentRes.data.id);
+      if (currentEnrollment) {
+        setEnrollmentId(currentEnrollment.id);
         const { data: completedLessons } = await supabase
           .from("enrollment_lessons")
           .select("lesson_id")
-          .eq("enrollment_id", enrollmentRes.data.id);
+          .eq("enrollment_id", currentEnrollment.id);
 
         const ids = completedLessons?.map((c) => c.lesson_id) || [];
         setCompletedIds(ids);
@@ -141,7 +149,7 @@ const Lesson = () => {
     };
 
     fetchData();
-  }, [user, lessonId]);
+  }, [user, student?.id, lessonId]);
 
   if (denied) return <Navigate to="/" replace />;
 

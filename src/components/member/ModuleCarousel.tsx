@@ -1,6 +1,7 @@
 import { useRef, useState, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ModuleCard from "./ModuleCard";
+import { Button } from "@/components/ui/button";
 
 interface Module {
   id: string;
@@ -39,20 +40,20 @@ const ModuleCarousel = ({ modules }: ModuleCarouselProps) => {
   return (
     <section className="px-4 md:px-6 lg:px-[60px] py-10 max-w-[1280px] mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-[28px] font-extrabold text-foreground">Conteúdo</h2>
+        <h2 className="text-[28px] font-medium text-foreground">Conteúdo</h2>
         <div className="flex gap-2">
-          <button
+          <Button type="button" variant="ghost" size="icon" aria-label="Módulos anteriores"
             onClick={() => scroll("left")}
             className="p-1 text-primary hover:text-primary/80 transition-colors"
           >
             <ChevronLeft size={40} />
-          </button>
-          <button
+          </Button>
+          <Button type="button" variant="ghost" size="icon" aria-label="Próximos módulos"
             onClick={() => scroll("right")}
             className="p-1 text-primary hover:text-primary/80 transition-colors"
           >
             <ChevronRight size={40} />
-          </button>
+          </Button>
         </div>
       </div>
 
