@@ -19,6 +19,7 @@ const Index = () => {
   const { user, student } = useAuth();
   const navigate = useNavigate();
   const [courses, setCourses] = useState<Course[]>([]);
+  const [ownedCourses, setOwnedCourses] = useState<Course[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [links, setLinks] = useState<Link[]>([]);
   const [enrolledCourseIds, setEnrolledCourseIds] = useState<string[]>([]);
@@ -41,10 +42,20 @@ const Index = () => {
       if ([categoriesResponse, linksResponse, coursesResponse, enrollmentsResponse].some((result) => result.error)) {
         setFailed(true);
       } else {
+        const ownedIds = [...new Set((enrollmentsResponse.data || [])
+          .filter((enrollment) => validEnrollment(enrollment))
+          .map((enrollment) => enrollment.course_id))];
+        // Owned products are fetched separately: catalog visibility and category placement are not access rules.
+        const ownedResponse = ownedIds.length
+          ? await supabase.from("courses").select("*").in("id", ownedIds).eq("status", "published")
+          : null;
+        if (cancelled) return;
+        if (ownedResponse?.error) { setFailed(true); setLoading(false); return; }
         setCategories(categoriesResponse.data || []);
         setLinks(linksResponse.data || []);
         setCourses(coursesResponse.data || []);
-        setEnrolledCourseIds((enrollmentsResponse.data || []).filter((enrollment) => validEnrollment(enrollment)).map((enrollment) => enrollment.course_id));
+        setOwnedCourses(ownedResponse?.data || []);
+        setEnrolledCourseIds(ownedIds);
       }
       setLoading(false);
     };
@@ -54,9 +65,6 @@ const Index = () => {
 
   const enrollmentSet = useMemo(() => new Set(enrolledCourseIds), [enrolledCourseIds]);
   const courseMap = useMemo(() => new Map(courses.map((course) => [course.id, course])), [courses]);
-  const visibleCategoryIds = useMemo(() => new Set(categories.map((category) => category.id)), [categories]);
-  const linkedIds = useMemo(() => new Set(links.filter((link) => visibleCategoryIds.has(link.category_id)).map((link) => link.course_id)), [links, visibleCategoryIds]);
-  const ownedCourses = useMemo(() => courses.filter((course) => linkedIds.has(course.id) && enrollmentSet.has(course.id)), [courses, linkedIds, enrollmentSet]);
   const rows = useMemo(() => categories.map((category) => ({
     category,
     items: links.filter((link) => link.category_id === category.id)
@@ -94,7 +102,7 @@ const Index = () => {
             <section>
               <div className="mb-7 flex items-end justify-between gap-4"><div><p className="text-xs font-semibold uppercase text-muted-foreground">Sua biblioteca</p><h2 className="mt-1 text-2xl text-foreground">Seus produtos</h2></div><span className="text-sm text-muted-foreground">{ownedCourses.length} {ownedCourses.length === 1 ? "produto" : "produtos"}</span></div>
               {ownedCourses.length ? <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{ownedCourses.map((course) => <ProductCard key={course.id} course={course} hasAccess onOpen={() => navigate(`/produto/${course.id}`)} />)}</div>
-                : <div className="border-y border-border py-12 text-center text-muted-foreground">Você ainda não possui produtos nesta vitrine.</div>}
+                : <div className="border-y border-border py-12 text-center text-muted-foreground">Você ainda não possui produtos.</div>}
             </section>
             {rows.map(({ category, items }) => <section key={category.id} className="mt-14 border-t border-border pt-10">
               <div className="mb-7"><p className="text-xs font-semibold uppercase text-muted-foreground">Descubra</p><h2 className="mt-1 text-2xl text-foreground">{category.name}</h2>{category.description && <p className="mt-2 text-sm text-muted-foreground">{category.description}</p>}</div>
