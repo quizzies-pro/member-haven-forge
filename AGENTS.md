@@ -1,1 +1,2 @@
 Owned products are fetched by valid enrollment independently of storefront category placement and storefront visibility; only the discovery rows follow the storefront taxonomy, so purchased access cannot disappear when merchandising changes.
+Pack presentation is isolated in PackPresentation and PackDiscovery while Course remains the access/data gate; this preserves the course experience and keeps Pack-specific visual changes separate from product hierarchy.
