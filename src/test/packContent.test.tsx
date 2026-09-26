@@ -26,11 +26,11 @@ describe("conteúdo dos Packs", () => {
     expect(within(rail).getAllByRole("article")).toHaveLength(3);
     expect(screen.getByText("3 itens")).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Médicos" })).not.toBeInTheDocument();
-    fireEvent.pointerDown(screen.getByRole("combobox", { name: "Coleção" }), { button: 0, ctrlKey: false });
+    fireEvent.keyDown(screen.getByRole("combobox", { name: "Coleção" }), { key: "Enter" });
     fireEvent.click(screen.getByRole("option", { name: "Médicos" }));
     expect(within(rail).getAllByRole("article")).toHaveLength(1);
     expect(within(rail).getByRole("heading", { name: "Consultório" })).toBeInTheDocument();
-    fireEvent.pointerDown(screen.getByRole("combobox", { name: "Coleção" }), { button: 0, ctrlKey: false });
+    fireEvent.keyDown(screen.getByRole("combobox", { name: "Coleção" }), { key: "Enter" });
     fireEvent.click(screen.getByRole("option", { name: "Todos os itens" }));
     expect(within(rail).getAllByRole("article")).toHaveLength(3);
   });
