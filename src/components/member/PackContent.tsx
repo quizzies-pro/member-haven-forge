@@ -23,18 +23,17 @@ const PackItem = ({ item, format }: { item: Item; format: Props["format"] }) => 
     catch { toast.error("Não foi possível copiar o conteúdo."); }
   };
 
-  return <article className="group flex w-[210px] shrink-0 snap-start flex-col overflow-hidden rounded-md border border-border bg-card transition-colors duration-200 hover:border-primary/60 focus-within:border-primary/60 sm:w-[232px] lg:w-[248px]">
-    <Button type="button" variant="ghost" onClick={() => setOpen(true)} aria-label={`Ver detalhes de ${item.title}`} className="relative h-auto w-full rounded-none p-0 hover:bg-secondary focus-visible:ring-inset">
-      <RatioMedia candidates={item.cover_url ? [item.cover_url] : []} ratio="3:4" alt={item.title} className="w-full" imageClassName="object-contain transition-transform duration-300 motion-safe:group-hover:scale-[1.03]" />
-      <span className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background/90 text-foreground" aria-hidden="true"><ArrowUpRight className="h-4 w-4" /></span>
-    </Button>
-    <div className="flex min-w-0 flex-1 flex-col px-4 pb-4 pt-3">
-      {item.tags.length > 0 && <p className="mb-2 truncate text-xs text-primary">{item.tags.map((tag) => `#${tag}`).join("  ")}</p>}
-      <h3 className="line-clamp-2 text-lg text-foreground">{item.title}</h3>
-      {item.description && <p className="mt-1 line-clamp-2 text-sm leading-5 text-muted-foreground">{item.description}</p>}
-      <div className="mt-auto pt-4">
-        {useCanva ? <Button asChild variant="outline" size="sm" className="w-full justify-between"><a href={useCanva} target="_blank" rel="noopener noreferrer">Usar no Canva <ExternalLink className="h-4 w-4" /></a></Button>
-          : <Button type="button" variant="outline" size="sm" onClick={() => setOpen(true)} className="w-full justify-between">Ver detalhes <ArrowUpRight className="h-4 w-4" /></Button>}
+  return <article className="poster-card group relative w-[224px] shrink-0 snap-start overflow-hidden rounded-sm border border-border bg-card transition-[border-color,transform,box-shadow] duration-300 hover:border-primary/60 motion-safe:hover:-translate-y-1 focus-within:border-primary/60 sm:w-[252px] lg:w-[268px]">
+    <RatioMedia candidates={item.cover_url ? [item.cover_url] : []} ratio="3:4" alt={item.title} className="w-full" imageClassName="object-cover transition-transform duration-500 motion-safe:group-hover:scale-105" />
+    <div className="pointer-events-none absolute inset-0 bg-poster-scrim" aria-hidden="true" />
+    <Button type="button" variant="ghost" onClick={() => setOpen(true)} aria-label={`Ver detalhes de ${item.title}`} className="absolute inset-0 h-full w-full rounded-none p-0 hover:bg-transparent focus-visible:ring-inset" />
+    <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col px-4 pb-4 pt-16 sm:px-5 sm:pb-5">
+      {item.tags.length > 0 && <p className="mb-1.5 truncate text-xs font-medium text-primary">{item.tags.map((tag) => `#${tag}`).join("  ")}</p>}
+      <h3 className="line-clamp-2 text-xl leading-tight text-foreground">{item.title}</h3>
+      {item.description && <p className="mt-1 line-clamp-2 text-xs leading-5 text-foreground/75">{item.description}</p>}
+      <div className="pointer-events-auto mt-4 border-t border-foreground/20 pt-3">
+        {useCanva ? <Button asChild variant="ghost" className="h-10 w-full justify-between rounded-sm px-0 text-sm text-foreground hover:bg-transparent hover:text-primary"><a href={useCanva} target="_blank" rel="noopener noreferrer">Usar no Canva <ExternalLink className="h-4 w-4" /></a></Button>
+          : <Button type="button" variant="ghost" onClick={() => setOpen(true)} className="h-10 w-full justify-between rounded-sm px-0 text-sm text-foreground hover:bg-transparent hover:text-primary">Ver detalhes <ArrowUpRight className="h-4 w-4" /></Button>}
       </div>
     </div>
     <Dialog open={open} onOpenChange={setOpen}>
@@ -92,7 +91,7 @@ const PackContent = ({ collections, items, format }: Props) => {
       </div>}
     </div>
     {visibleItems.length ? <div className="relative">
-      <div ref={railRef} onScroll={checkScroll} aria-label="Itens do pack" className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4">
+      <div ref={railRef} onScroll={checkScroll} aria-label="Itens do pack" className="scrollbar-hide flex snap-x snap-mandatory gap-3 overflow-x-auto pb-6 pt-1 sm:gap-4">
         {visibleItems.map((item) => <PackItem key={item.id} item={item} format={format} />)}
       </div>
       <div className="mt-4 flex justify-end gap-2">
