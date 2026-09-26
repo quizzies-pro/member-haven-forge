@@ -58,10 +58,7 @@ const Course = () => {
         ]);
         if (cancelled) return;
         if (collections.error || items.error || videos.error) setError(true);
-        else {
-          const visibleIds = new Set((collections.data || []).map((item) => item.id));
-          setPack({ collections: collections.data || [], items: (items.data || []).filter((item) => !item.collection_id || visibleIds.has(item.collection_id)), videos: videos.data || [] });
-        }
+        else setPack({ collections: collections.data || [], items: items.data || [], videos: videos.data || [] });
       } else if (product.product_type === "course") {
         const [modulesRes, lessonsRes] = await Promise.all([
           supabase.from("course_modules").select("*").eq("course_id", courseId).eq("status", "published").order("sort_order"),
