@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { safeHttps } from "@/lib/productMedia";
 import type { Tables } from "@/integrations/supabase/types";
 
@@ -11,7 +10,6 @@ interface Props { courseId: string; }
 const WaitlistAction = ({ courseId }: Props) => {
   const [waitlist, setWaitlist] = useState<Waitlist | null>(null);
   const [status, setStatus] = useState<"none" | "active" | "joined" | "phone" | "error">("none");
-  const [consent, setConsent] = useState(false);
   const [saving, setSaving] = useState(false);
   useEffect(() => {
     let cancelled = false;
@@ -28,12 +26,10 @@ const WaitlistAction = ({ courseId }: Props) => {
   if (!waitlist || status === "none") return <p className="text-sm text-muted-foreground">Conteúdo indisponível no momento.</p>;
   const toggle = async () => {
     setSaving(true);
-    const { error } = status === "joined"
-      ? await supabase.rpc("leave_product_waitlist", { _waitlist_id: waitlist.id })
-      : await supabase.rpc("join_product_waitlist", { _waitlist_id: waitlist.id, _consent: consent, _source: "members" });
+    const { error } = await supabase.rpc("leave_product_waitlist", { _waitlist_id: waitlist.id });
     setSaving(false);
     if (error) setStatus("error");
-    else { setStatus(status === "joined" ? "active" : "joined"); setConsent(false); }
+    else setStatus("active");
   };
   return <div className="space-y-4">
     <h3 className="text-xl">{waitlist.name}</h3>
@@ -42,10 +38,8 @@ const WaitlistAction = ({ courseId }: Props) => {
       : status === "joined" ? <><p className="text-sm text-primary">Você está na lista de espera.</p><Button variant="outline" disabled={saving} onClick={toggle}>Sair da lista</Button></>
       : <>
         <p className="text-sm text-muted-foreground">{waitlist.consent_text}</p>
-        <label className="flex items-start gap-3 text-sm"><Checkbox checked={consent} onCheckedChange={(checked) => setConsent(checked === true)} /><span>Li e aceito as condições para participar desta lista de espera.</span></label>
         {safeHttps(waitlist.privacy_policy_url) && <a href={safeHttps(waitlist.privacy_policy_url) || "#"} target="_blank" rel="noopener noreferrer" className="text-sm text-primary underline">Política de privacidade</a>}
-        <p className="text-xs text-muted-foreground">A participação nesta lista não autoriza automaticamente comunicações de marketing.</p>
-        <Button disabled={!consent || saving} onClick={toggle}>Entrar na lista</Button>
+        <p className="text-xs text-muted-foreground">A inscrição está temporariamente indisponível. Sua escolha de receber comunicações não pode ser registrada separadamente neste momento.</p>
       </>}
     {status === "error" && <p role="alert" className="text-sm text-destructive">Não foi possível atualizar sua participação. Tente novamente.</p>}
   </div>;

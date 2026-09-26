@@ -18,7 +18,7 @@ const RatioMedia = ({ candidates, ratio, alt, className, imageClassName }: Props
     <div className={cn("relative overflow-hidden bg-secondary", ratioClass[ratio], className)}>
       {candidates[index] ? (
         <img src={candidates[index]} alt={alt} loading="lazy" onError={() => setIndex((current) => current + 1)}
-          className={cn("h-full w-full object-cover", imageClassName)} />
+          className={cn("h-full w-full", index === 0 ? "object-cover" : "object-contain", imageClassName)} />
       ) : (
         <div className="absolute inset-0 flex items-center justify-center text-muted-foreground"><ImageOff aria-hidden="true" size={28} /></div>
       )}

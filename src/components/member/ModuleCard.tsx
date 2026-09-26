@@ -37,8 +37,7 @@ const ModuleCard = ({ id, title, coverUrl, lessonCount, isFirst }: ModuleCardPro
       .select("id, status, expires_at")
       .eq("student_id", studentId)
       .eq("course_id", lessons[0].course_id)
-      .eq("status", "active")
-      ;
+      .eq("status", "active");
     const enrollment = enrollments?.find((item) => validEnrollment(item));
 
     if (!enrollment) {
