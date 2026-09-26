@@ -23,7 +23,7 @@ const PackItem = ({ item, format }: { item: Item; format: Props["format"] }) => 
     catch { toast.error("Não foi possível copiar o conteúdo."); }
   };
 
-  return <article className="group relative w-[224px] shrink-0 snap-start overflow-hidden rounded-sm border border-border bg-card transition-[border-color,transform,box-shadow] duration-300 hover:border-primary/60 hover:shadow-[0_18px_44px_hsl(var(--background)/0.8)] motion-safe:hover:-translate-y-1 focus-within:border-primary/60 sm:w-[252px] lg:w-[268px]">
+  return <article className="poster-card group relative w-[224px] shrink-0 snap-start overflow-hidden rounded-sm border border-border bg-card transition-[border-color,transform,box-shadow] duration-300 hover:border-primary/60 motion-safe:hover:-translate-y-1 focus-within:border-primary/60 sm:w-[252px] lg:w-[268px]">
     <RatioMedia candidates={item.cover_url ? [item.cover_url] : []} ratio="3:4" alt={item.title} className="w-full" imageClassName="object-cover transition-transform duration-500 motion-safe:group-hover:scale-105" />
     <div className="pointer-events-none absolute inset-0 bg-poster-scrim" aria-hidden="true" />
     <Button type="button" variant="ghost" onClick={() => setOpen(true)} aria-label={`Ver detalhes de ${item.title}`} className="absolute inset-0 h-full w-full rounded-none p-0 hover:bg-transparent focus-visible:ring-inset" />
