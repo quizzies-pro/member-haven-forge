@@ -15,9 +15,10 @@ import type { Tables } from "@/integrations/supabase/types";
 
 type CourseType = Tables<"courses">;
 type ModuleWithCount = Tables<"course_modules"> & { lessonCount: number };
+type PackItem = Pick<Tables<"pack_items">, "id" | "collection_id" | "format" | "title" | "description" | "cover_url" | "cover_ratio" | "tags" | "canva_template_url" | "textual_content" | "textual_example" | "drive_available">;
 type PackData = {
   collections: Tables<"pack_collections">[];
-  items: Tables<"pack_items">[];
+  items: PackItem[];
   videos: Tables<"pack_videos">[];
 };
 const Course = () => {
