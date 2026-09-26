@@ -7,3 +7,4 @@
 # Página de Cursos
 - [x] Colocar o banner desde o topo sob o cabeçalho translúcido.
 - [x] Exibir primeiro os módulos e depois título, descrições e ações, antes do rodapé; manter Packs inalterados.
+- [x] Mostrar os títulos completos nos cards dos módulos sem sobreposição com o botão de play.
